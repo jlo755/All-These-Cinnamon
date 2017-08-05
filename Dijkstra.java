@@ -77,8 +77,8 @@ public class Dijkstra {
 			color.put(idToDo, true); // comparing distances
 			for(Node child: graph.get(idToDo).getChildren().keySet()){ // only need to process the children
 				HashMap<Node, Integer> mapToCompare = graph.get(s).getDistance(); // create a new map for comparing , this will be the distance vector of node a
-				if(graph.get(idToDo).getChildren().get(child)+mapToCompare.get(graph.get(idToDo)) < mapToCompare.get(child)){ // go through the distance vactor of node a and then update according to the nodes which its children can reach. If this is less than what is previously stored, you update the cost in the distance vector
-					mapToCompare.put(child, graph.get(idToDo).getChildren().get(child)+mapToCompare.get(graph.get(idToDo))); // JACKY: add the distance of the node
+				if(graph.get(idToDo).getChildren().get(child)+mapToCompare.get(graph.get(idToDo)+mapToCompare.get(child).getCost()) < mapToCompare.get(child)){ // go through the distance vactor of node a and then update according to the nodes which its children can reach. If this is less than what is previously stored, you update the cost in the distance vector
+					mapToCompare.put(child, graph.get(idToDo).getChildren().get(child)+mapToCompare.get(graph.get(idToDo))+mapToCompare.get(child).getCost()); // JACKY: add the distance of the node
 				}
 			}
 		}
