@@ -48,7 +48,7 @@ public class Dijkstra {
 		for(String id:graph.keySet()){
 			Node startingMap = graph.get(s);
 			if(startingMap.getChildren().containsKey(graph.get(id))){ // starting to build the distance vector for the node
-				startingMap.updateDistance(graph.get(id), startingMap.getChildren().get(graph.get(id))+startingMap.getCost()); // adding the costs of all the nodes in the network.
+				startingMap.updateDistance(graph.get(id), startingMap.getChildren().get(graph.get(id))+startingMap.getCost()+graph.get(id).getCost()); // adding the costs of all the nodes in the network.
 				// for the nodes that are reachable, put in the weight + computation cost +the computation cost of node being reached.
 				color.put(id, false); // if this is not the current node we are on. we are not processing this right now
 			} else if(id.equals(s)){ // if the node is going to itself, put in the computation cost of that node itself
