@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Node {
@@ -8,6 +9,7 @@ public class Node {
 	private HashMap<String, Double> _distances;
 	private boolean _completed;
 	private int _processor;
+	private ArrayList<Node> _stateParents;
 
 	protected Node(String id, int cost){
 		_id = id;
@@ -16,10 +18,19 @@ public class Node {
 		_children = new HashMap<Node, Double>();
 		_distances = new HashMap<String, Double>(); // storing the distances in a matrix to all the other nodes in the network (infinitiy and actual reachable costs) 
 		_completed = false;
+		_stateParents = new ArrayList<Node>();
 	}
 
 	protected void addParent(Node node, double cost){
 		_parents.put(node, cost);
+	}
+	
+	protected void addStateParents(Node node){
+		_stateParents.add(node);
+	}
+	
+	protected ArrayList<Node> getStateParents(){
+		return _stateParents;
 	}
 
 	protected void addChild(Node node, double cost){
