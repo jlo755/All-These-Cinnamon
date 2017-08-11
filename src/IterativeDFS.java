@@ -37,20 +37,25 @@ public class IterativeDFS {
 				nodeMap.put(nameOfNode, new Node(nameOfNode, weight)); // hashmap which has for node a eg: (a, node a) as the input
 			}
 		}
-		Node hello = new Node("a", 2); // testing the node
-		hello.addStateParents(hello); // register itself as a parent to itself in the state tree
-		//expandStateSpace(nodeMap, hello);
-		DFS(nodeMap, hello);
-		
+		for(int i =  1; i<3; i++){
+			for(String s:nodeMap.keySet()){
+				if(nodeMap.get(s).getParents().keySet().isEmpty()){
+					Node test = new Node(s, nodeMap.get(s).getCost());
+					test.addStateParents(test);
+					test.setProcessor(i);
+					DFS(nodeMap, test);
+				}
+			}
+		}
 	}
-	
+
 	public static void DFS(HashMap<String, Node> graph, Node initialNode){
 		Stack<Node> s = new Stack<Node>();
 		s.push(initialNode);
 		while(!s.isEmpty()){
 			Node node = s.pop();
 			expandStateSpace(graph, node);
-			System.out.println("ID: "+node.getID());
+			System.out.println("ID: "+node.getID()+" Processor: "+node.getProcessor());
 			if(!node.getCompleted()){
 				node.setCompleted(true);
 				for(Node n:node.getChildren().keySet()){
@@ -59,7 +64,7 @@ public class IterativeDFS {
 			}
 		}
 	}
-	
+
 	/**
 	 * This method expands the current state space for the current node.
 	 * For example, if A is the node, and the nodes that are reachable are
@@ -69,7 +74,7 @@ public class IterativeDFS {
 	 * @param graph
 	 * @param currentNode
 	 */
-	
+
 	public static void expandStateSpace(HashMap<String, Node> graph, Node currentNode){
 		ArrayList<String> reachableNodes = new ArrayList<String>();
 		// This returns an ArrayList of all the node names that are currently
@@ -83,6 +88,7 @@ public class IterativeDFS {
 				int cost = graph.get(s).getCost();
 				// Instantiate a new node to generate the state space.
 				Node newChildNode = new Node(s, cost);
+				newChildNode.setProcessor(i);
 				// Stores the previous state parents of the node into the current
 				// node to keep track of what nodes have been processed.
 				for(Node n: currentNode.getStateParents()){
@@ -96,7 +102,7 @@ public class IterativeDFS {
 			}
 		}
 	}
-	
+
 	public static ArrayList<String> getReachable(HashMap<String, Node> graph, Node currentNode){
 		ArrayList<Node> completedNodes = currentNode.getStateParents();
 		ArrayList<String> reachableNodeNames = new ArrayList<String>();
@@ -113,7 +119,6 @@ public class IterativeDFS {
 				}
 			}
 			if(dependenciesDone && !graph.get(s).getCompleted()){
-				//System.out.println(s);
 				reachableNodeNames.add(s);
 			}
 		}
