@@ -13,6 +13,7 @@ public class IterativeDFS {
 		String lineToRead = "";
 		System.out.println("hello");
 		bfr.readLine(); // get rid of the first line in the input
+		
 		while(!lineToRead.equals("}")){ // if we havent reached the end of the input which ends with "}"
 			lineToRead = bfr.readLine(); // get the line
 			lineToRead=lineToRead.replaceAll("\\s", ""); // remove all the spaces
@@ -44,6 +45,12 @@ public class IterativeDFS {
 		
 	}
 	
+	/**
+	 * Iterative approach to DFS for a given graph, used in search in the 
+	 * state space of the scheduling problem.
+	 * @param graph
+	 * @param initialNode
+	 */
 	public static void DFS(HashMap<String, Node> graph, Node initialNode){
 		Stack<Node> s = new Stack<Node>();
 		s.push(initialNode);
