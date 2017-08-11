@@ -147,8 +147,78 @@ public class IterativeDFS {
 
 	 @Param list - stores the name of the processor, ie processor1 and the nodes on that processor.
 	 */
-	public static void calculateTime(HashMap<String, Node> g, Node node, HashMap<String, Node> list){
+	public static void calculateTime(HashMap<String, Node> graph, Node node, HashMap<String, Node> list){
+		Double time=0.0, maxCost = 0.0, maxProcessorTime = 0.0;
+		//check if it has a parent
+		if(node.getParents().size() != 0 ){
+			//if all the parents are on the same processor
+				if (checkListContainsParent(list,node.getParents())){
+						maxProcessorTime = calculateMaxCurrentProcessorTime(node, list);
+						maxCost = getMaxCommunicationCost(node);
+						if (maxProcessorTime < maxCost) {
+							node.setStartTime(maxCost);
+							node.setEndTime(maxCost + node.getCost());
+						} else {
+							node.setStartTime(maxProcessorTime);
+							node.setEndTime(node.getCost()+maxProcessorTime);
+						}
+				}else{
+					maxProcessorTime = calculateMaxCurrentProcessorTime(node, list);
+					node.setStartTime(maxProcessorTime);
+					node.setEndTime(node.getCost()+maxProcessorTime);
+				}
+		}else{
+			maxProcessorTime = calculateMaxCurrentProcessorTime(node, list);
+			node.setStartTime(maxProcessorTime);
+			node.setEndTime(node.getCost()+maxProcessorTime);
+		}
 
+	}
+
+
+	public static boolean checkListContainsParent(HashMap<String, Node> list, HashMap<Node, Double> parents){
+		for(Node n : parents.keySet()){
+			if(!(list.containsValue(n))){
+				return false;
+			}else{
+				continue;
+			}
+		}
+		return true;
+	}
+
+
+	public static Double calculateMaxCurrentProcessorTime(Node node, HashMap<String, Node> list){
+		Double max = 0.0;
+		for(Node n : list.values()){
+			if( n.getProcessor() == node.getProcessor() ) {
+				if (n.getEndTime() > max) {
+					max = n.getEndTime();
+				}
+			}
+		}
+		return max;
+	}
+
+	public static Double calculateCommunicationCost(Node node, Node parent ){
+			if(parent.getChildren().containsKey(node)){
+				for(Node n1: node.getChildren().keySet()){
+					if(n1.equals(node)){
+						return node.getChildren().get(n1);
+					}
+				}
+			}
+		return 0.0;
+	}
+
+	public static Double getMaxCommunicationCost(Node n){
+		Double ccost=0.0;
+		for(Node n1:n.getParents().keySet()){
+			if (calculateCommunicationCost(n,n1)+n1.getEndTime() > ccost && !(n1.getProcessor() == n.getProcessor())) {
+				ccost = calculateCommunicationCost(n,n1)+n1.getEndTime();
+			}
+		}
+		return ccost;
 	}
 
 }
