@@ -71,7 +71,6 @@ public class Node {
 		_completed = completed;
 	}
 
-
 	protected String getID(){
 		return _id;
 	}

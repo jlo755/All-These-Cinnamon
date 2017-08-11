@@ -12,11 +12,8 @@ public class IterativeDFS {
 		parser.parseInput(nodeMap);
 
 		for (int i = 1; i < 3; i++) {
-
 			for (String nodeName : nodeMap.keySet()) {
-
 				HashMap<Node, Double> parents = nodeMap.get(nodeName).getParents();
-
 				if (parents.keySet().isEmpty()) {
 					Node test = new Node(nodeName, nodeMap.get(nodeName).getCost());
 					test.addStateParents(test);
