@@ -7,16 +7,16 @@ public class IterativeDFS {
 
 	public static void main(String[] args) throws IOException {
 		HashMap<String, Node> nodeMap = new HashMap<String, Node>();
-		
+
 		InputParser parser = new InputParser();
 		parser.parseInput(nodeMap);
-		
+
 		for (int i = 1; i < 3; i++) {
-			
+
 			for (String nodeName : nodeMap.keySet()) {
-				
+
 				HashMap<Node, Double> parents = nodeMap.get(nodeName).getParents();
-				
+
 				if (parents.keySet().isEmpty()) {
 					Node test = new Node(nodeName, nodeMap.get(nodeName).getCost());
 					test.addStateParents(test);
@@ -25,7 +25,7 @@ public class IterativeDFS {
 				}
 			}
 		}
-		
+
 	}
 
 	/**
@@ -36,16 +36,27 @@ public class IterativeDFS {
 	 * @param initialNode
 	 */
 	public static void DFS(HashMap<String, Node> graph, Node initialNode) {
+		//HashMap<Integer, ArrayList<Node>> processorList = new HashMap<Integer, ArrayList<Node>>();
 		Stack<Node> s = new Stack<Node>();
 		s.push(initialNode);
 		while (!s.isEmpty()) {
 			Node node = s.pop();
 			expandStateSpace(graph, node);
-			System.out.println("ID: " + node.getID() + " Processor: " + node.getProcessor());
+			//processorList.get(node.getProcessor()).add(node);
+			calculateTime(graph, node);
+			//System.out.println("ID: " + node.getID() + " Processor: " + node.getProcessor());
 			if (!node.getCompleted()) {
 				node.setCompleted(true);
 				for (Node n : node.getChildren().keySet()) {
 					s.push(n);
+				}
+			}
+			if(node.getStateParents().size() == graph.values().size()) {
+				for(Node n : node.getStateParents()) {
+					System.out.println("Node ID: "+n.getID() + " Processor: "+n.getProcessor());
+					if(n.getID().equals("d")) {
+						System.out.println(node.getEndTime());
+					}
 				}
 			}
 		}
@@ -129,50 +140,64 @@ public class IterativeDFS {
 	 * @Param list - stores the name of the processor, ie processor1 and the nodes
 	 *        on that processor.
 	 */
-	public static void calculateTime(HashMap<String, Node> graph, Node node, HashMap<String, Node> list){
-		Double time=0.0, maxCost = 0.0, maxProcessorTime = 0.0;
+	public static void calculateTime(HashMap<String, Node> graph, Node node){
+		Double maxCost = 0.0, maxProcessorTime = 0.0;
 		//check if it has a parent
-		if(node.getParents().size() != 0 ){
+		ArrayList<Node> parentsInStateTree = node.getStateParents();
+		Node nodeOnDependGraph = graph.get(node.getID());
+		if(nodeOnDependGraph.getParents().size() != 0 ){
 			//if all the parents are on the same processor
-				if (checkListContainsParent(list,node.getParents())){
-						maxProcessorTime = calculateMaxCurrentProcessorTime(node, list);
-						maxCost = getMaxCommunicationCost(node);
-						if (maxProcessorTime < maxCost) {
-							node.setStartTime(maxCost);
-							node.setEndTime(maxCost + node.getCost());
-						} else {
-							node.setStartTime(maxProcessorTime);
-							node.setEndTime(node.getCost()+maxProcessorTime);
-						}
-				}else{
-					maxProcessorTime = calculateMaxCurrentProcessorTime(node, list);
+			if (checkListContainsParent(parentsInStateTree,nodeOnDependGraph.getParents(), node.getProcessor())){
+				// Calculating the node that has the max end time of the processor in use
+				maxProcessorTime = calculateMaxCurrentProcessorTime(parentsInStateTree, node.getProcessor());
+				maxCost = getMaxCommunicationCost(node, graph, parentsInStateTree, node.getProcessor());
+				if (maxProcessorTime < maxCost) {
+					node.setStartTime(maxCost);
+					node.setEndTime(maxCost + node.getCost());
+				} else {
 					node.setStartTime(maxProcessorTime);
 					node.setEndTime(node.getCost()+maxProcessorTime);
 				}
-		}else{
-			maxProcessorTime = calculateMaxCurrentProcessorTime(node, list);
+			} else{
+				maxProcessorTime = calculateMaxCurrentProcessorTime(parentsInStateTree, node.getProcessor());
+				node.setStartTime(maxProcessorTime);
+				node.setEndTime(node.getCost()+maxProcessorTime);
+			}
+		} else{
+			maxProcessorTime = calculateMaxCurrentProcessorTime(parentsInStateTree, node.getProcessor());
 			node.setStartTime(maxProcessorTime);
 			node.setEndTime(node.getCost()+maxProcessorTime);
 		}
+		/*if(node.getID().equals("d")) {
+			for(Node n: node.getStateParents()) {
+				System.out.println("ID: "+n.getID() + " Processor: "+n.getProcessor());
+				System.out.println("Start Time: "+n.getStartTime() + " End Time: "+n.getEndTime());
+			}
+			System.out.println(maxProcessorTime);
+		}*/
 	}
 
 
-	public static boolean checkListContainsParent(HashMap<String, Node> list, HashMap<Node, Double> parents){
-		for(Node n : parents.keySet()){
-			if(!(list.containsValue(n))){
-				return false;
-			}else{
-				continue;
+	public static boolean checkListContainsParent(ArrayList<Node> parentsInStateTree, HashMap<Node, Double> parents, int processor){
+		ArrayList<String> completedNodes = new ArrayList<String>();
+		for(Node n: parentsInStateTree) {
+			if(n.getProcessor() == processor) {
+				completedNodes.add(n.getID());
 			}
 		}
-		return true;
+		for(Node n : parents.keySet()){
+			if(!(completedNodes.contains(n.getID()))){
+				return true;
+			}
+		}
+		return false;
 	}
 
 
-	public static Double calculateMaxCurrentProcessorTime(Node node, HashMap<String, Node> list){
+	public static Double calculateMaxCurrentProcessorTime(ArrayList<Node> parentsInStateTree, int processor){
 		Double max = 0.0;
-		for(Node n : list.values()){
-			if( n.getProcessor() == node.getProcessor() ) {
+		for(Node n : parentsInStateTree){
+			if(n.getProcessor() == processor) {
 				if (n.getEndTime() > max) {
 					max = n.getEndTime();
 				}
@@ -181,23 +206,35 @@ public class IterativeDFS {
 		return max;
 	}
 
-	public static Double calculateCommunicationCost(Node node, Node parent ){
-			if(parent.getChildren().containsKey(node)){
-				for(Node n1: node.getChildren().keySet()){
-					if(n1.equals(node)){
-						return node.getChildren().get(n1);
-					}
-				}
+	public static Double calculateCommunicationCost(Node node, Node parent, HashMap<String, Node> graph){
+		//System.out.println("Hello?");
+		for(Node n1: parent.getChildren().keySet()){
+			if(n1.equals(node)){
+				return parent.getChildren().get(n1);
 			}
+		}
 		return 0.0;
 	}
 
-	public static Double getMaxCommunicationCost(Node n){
+	public static Double getMaxCommunicationCost(Node n, HashMap<String, Node> graph, ArrayList<Node> parentsInStateTree, int processor){
 		Double ccost=0.0;
-		for(Node n1:n.getParents().keySet()){
-			if (calculateCommunicationCost(n,n1)+n1.getEndTime() > ccost && !(n1.getProcessor() == n.getProcessor())) {
-				ccost = calculateCommunicationCost(n,n1)+n1.getEndTime();
+		ArrayList<Node> listOfNodes = new ArrayList<Node>();
+		for(Node node : parentsInStateTree) {
+			if(node.getProcessor() != processor) {
+				listOfNodes.add(node);
 			}
+		}
+		Node nodeDepenGraph = graph.get(n.getID());
+		//System.out.println("The current node is: "+n.getID());
+		for(Node n2:nodeDepenGraph.getParents().keySet()){
+			for(Node n1 : listOfNodes) {
+				if(n1.getID() == n2.getID()) {
+					if (calculateCommunicationCost(nodeDepenGraph,n2, graph)+n1.getEndTime() > ccost) {
+						ccost = calculateCommunicationCost(nodeDepenGraph,n2, graph)+n1.getEndTime();
+					}
+				}
+			}
+
 		}
 		return ccost;
 	}
