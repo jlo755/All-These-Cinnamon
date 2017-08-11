@@ -20,6 +20,7 @@ public class Node {
 		_children = new HashMap<Node, Double>();
 		_distances = new HashMap<String, Double>(); // storing the distances in a matrix to all the other nodes in the network (infinitiy and actual reachable costs) 
 		_completed = false;
+		// stores all the nodes we visited in the state space before this node was visited
 		_stateParents = new ArrayList<Node>();
 	}
 
