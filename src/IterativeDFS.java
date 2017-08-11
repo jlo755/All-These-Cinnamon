@@ -12,29 +12,42 @@ public class IterativeDFS {
 		BufferedReader bfr = new BufferedReader(new InputStreamReader(System.in));
 		String lineToRead = "";
 		System.out.println("hello");
-		bfr.readLine(); // get rid of the first line in the input
-		while(!lineToRead.equals("}")){ // if we havent reached the end of the input which ends with "}"
-			lineToRead = bfr.readLine(); // get the line
-			lineToRead=lineToRead.replaceAll("\\s", ""); // remove all the spaces
+		// get rid of the first line in the input
+		bfr.readLine();
+		// if we havent reached the end of the input which ends with "}"
+		while(!lineToRead.equals("}")){
+			// get the line
+			lineToRead = bfr.readLine();
+			// remove all the spaces
+			lineToRead=lineToRead.replaceAll("\\s", "");
 			int i = 0;
-			if(lineToRead.contains("->")){ // when there is an arrow in the line
-				int IndexOfArrowHead = lineToRead.indexOf("-"); // getting position of the left-side of arrow to get the parent name of node
-				int IndexOfArrowEnd = lineToRead.indexOf(">"); // getting position of the point of arrow to appropriately get the child name of node
-				int IndexOfWeight = lineToRead.indexOf("["); // determining the end position of the child node's name
+			// when there is an arrow in the line
+			if(lineToRead.contains("->")){
+				// getting position of the left-side of arrow to get the parent name of node
+				int IndexOfArrowHead = lineToRead.indexOf("-");
+				// getting position of the point of arrow to appropriately get the child name of node
+				int IndexOfArrowEnd = lineToRead.indexOf(">");
+				// determining the end position of the child node's name
+				int IndexOfWeight = lineToRead.indexOf("[");
 				String nameOfParentNode = lineToRead.substring(0, IndexOfArrowHead);
 				String nameOfChildrenNode = lineToRead.substring(IndexOfArrowEnd+1, IndexOfWeight);
-				int indexOfStartCost = lineToRead.indexOf("="); // determining position of when the weight begins
+				// determining position of when the weight begins
+				int indexOfStartCost = lineToRead.indexOf("=");
 				int weight = Integer.parseInt(lineToRead.substring(indexOfStartCost+1, lineToRead.length()-2));
 				Node parentNode = nodeMap.get(nameOfParentNode);
 				Node childNode = nodeMap.get(nameOfChildrenNode);
 				nodeMap.get(nameOfParentNode).addChild(childNode, weight);
 				nodeMap.get(nameOfChildrenNode).addParent(parentNode, weight);
-			} else if(!lineToRead.equals("}")){ // when there is no arrow in the line
+				// when there is no arrow in the line
+			} else if(!lineToRead.equals("}")){
 				int IndexOfWeight = lineToRead.indexOf("[");
-				String nameOfNode = lineToRead.substring(0, IndexOfWeight); // everything before the "]" is the name of the node
+				// everything before the "]" is the name of the node
+				String nameOfNode = lineToRead.substring(0, IndexOfWeight);
 				int indexOfStartCost = lineToRead.indexOf("=");
-				int weight = Integer.parseInt(lineToRead.substring(indexOfStartCost+1, lineToRead.length()-2)); // everything after the equals is the weight, - 2 to get rid of the " ] ;"
-				nodeMap.put(nameOfNode, new Node(nameOfNode, weight)); // hashmap which has for node a eg: (a, node a) as the input
+				// everything after the equals is the weight, - 2 to get rid of the " ] ;"
+				int weight = Integer.parseInt(lineToRead.substring(indexOfStartCost+1, lineToRead.length()-2));
+				// hashmap which has for node a eg: (a, node a) as the input
+				nodeMap.put(nameOfNode, new Node(nameOfNode, weight));
 			}
 		}
 		for(int i =  1; i<3; i++){
@@ -126,7 +139,17 @@ public class IterativeDFS {
 			graph.get(n.getID()).setCompleted(false);
 		}
 		return reachableNodeNames;
-	}	
+	}
+
+	/**@Param g - is the original dependency graph, NOT the state space. In our case, it stores HashMap<String, Node> - name of the node, to the Node itself.
+
+	 @Param node - this is the current node we’re calculating time for.
+
+	 @Param list - stores the name of the processor, ie processor1 and the nodes on that processor.
+	 */
+	public static void calculateTime(HashMap<String, Node> g, Node node, HashMap<String, Node> list){
+
+	}
 
 }
 
