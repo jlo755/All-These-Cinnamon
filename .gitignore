@@ -20,4 +20,11 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+<<<<<<< HEAD
 /build/
+=======
+.idea/All-These-Cinnamon.iml
+.idea/misc.xml
+.idea/modules.xml
+*.xml
+>>>>>>> branch 'Algorithm' of https://github.com/jlo755/All-These-Cinnamon

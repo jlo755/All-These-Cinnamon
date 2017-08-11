@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
@@ -8,91 +7,77 @@ import java.util.Stack;
 public class IterativeDFS {
 
 	public static void main(String[] args) throws IOException {
-		HashMap<String,Node> nodeMap = new HashMap<String,Node>();
-		BufferedReader bfr = new BufferedReader(new InputStreamReader(System.in));
-		String lineToRead = "";
-		System.out.println("hello");
-		bfr.readLine(); // get rid of the first line in the input
+		HashMap<String, Node> nodeMap = new HashMap<String, Node>();
 		
-		while(!lineToRead.equals("}")){ // if we havent reached the end of the input which ends with "}"
-			lineToRead = bfr.readLine(); // get the line
-			lineToRead=lineToRead.replaceAll("\\s", ""); // remove all the spaces
-			int i = 0;
-			if(lineToRead.contains("->")){ // when there is an arrow in the line
-				int IndexOfArrowHead = lineToRead.indexOf("-"); // getting position of the left-side of arrow to get the parent name of node
-				int IndexOfArrowEnd = lineToRead.indexOf(">"); // getting position of the point of arrow to appropriately get the child name of node
-				int IndexOfWeight = lineToRead.indexOf("["); // determining the end position of the child node's name
-				String nameOfParentNode = lineToRead.substring(0, IndexOfArrowHead);
-				String nameOfChildrenNode = lineToRead.substring(IndexOfArrowEnd+1, IndexOfWeight);
-				int indexOfStartCost = lineToRead.indexOf("="); // determining position of when the weight begins
-				int weight = Integer.parseInt(lineToRead.substring(indexOfStartCost+1, lineToRead.length()-2));
-				Node parentNode = nodeMap.get(nameOfParentNode);
-				Node childNode = nodeMap.get(nameOfChildrenNode);
-				nodeMap.get(nameOfParentNode).addChild(childNode, weight);
-				nodeMap.get(nameOfChildrenNode).addParent(parentNode, weight);
-			} else if(!lineToRead.equals("}")){ // when there is no arrow in the line
-				int IndexOfWeight = lineToRead.indexOf("[");
-				String nameOfNode = lineToRead.substring(0, IndexOfWeight); // everything before the "]" is the name of the node
-				int indexOfStartCost = lineToRead.indexOf("=");
-				int weight = Integer.parseInt(lineToRead.substring(indexOfStartCost+1, lineToRead.length()-2)); // everything after the equals is the weight, - 2 to get rid of the " ] ;"
-				nodeMap.put(nameOfNode, new Node(nameOfNode, weight)); // hashmap which has for node a eg: (a, node a) as the input
+		InputParser parser = new InputParser();
+		parser.parseInput(nodeMap);
+		
+		for (int i = 1; i < 3; i++) {
+			
+			for (String nodeName : nodeMap.keySet()) {
+				
+				HashMap<Node, Double> parents = nodeMap.get(nodeName).getParents();
+				
+				if (parents.keySet().isEmpty()) {
+					Node test = new Node(nodeName, nodeMap.get(nodeName).getCost());
+					test.addStateParents(test);
+					test.setProcessor(i);
+					DFS(nodeMap, test);
+				}
 			}
 		}
-		Node hello = new Node("a", 2); // testing the node
-		hello.addStateParents(hello); // register itself as a parent to itself in the state tree
-		//expandStateSpace(nodeMap, hello);
-		DFS(nodeMap, hello);
 		
 	}
-	
+
 	/**
-	 * Iterative approach to DFS for a given graph, used in search in the 
-	 * state space of the scheduling problem.
+	 * Iterative approach to DFS for a given graph, used in search in the state
+	 * space of the scheduling problem.
+	 * 
 	 * @param graph
 	 * @param initialNode
 	 */
-	public static void DFS(HashMap<String, Node> graph, Node initialNode){
+	public static void DFS(HashMap<String, Node> graph, Node initialNode) {
 		Stack<Node> s = new Stack<Node>();
 		s.push(initialNode);
-		while(!s.isEmpty()){
+		while (!s.isEmpty()) {
 			Node node = s.pop();
 			expandStateSpace(graph, node);
-			System.out.println("ID: "+node.getID());
-			if(!node.getCompleted()){
+			System.out.println("ID: " + node.getID() + " Processor: " + node.getProcessor());
+			if (!node.getCompleted()) {
 				node.setCompleted(true);
-				for(Node n:node.getChildren().keySet()){
+				for (Node n : node.getChildren().keySet()) {
 					s.push(n);
 				}
 			}
 		}
 	}
-	
+
 	/**
-	 * This method expands the current state space for the current node.
-	 * For example, if A is the node, and the nodes that are reachable are
-	 * B and C, it will instantiate a new node and register B and C as a 
-	 * child to A.
+	 * This method expands the current state space for the current node. For
+	 * example, if A is the node, and the nodes that are reachable are B and C, it
+	 * will instantiate a new node and register B and C as a child to A.
 	 * 
 	 * @param graph
 	 * @param currentNode
 	 */
-	
-	public static void expandStateSpace(HashMap<String, Node> graph, Node currentNode){
+
+	public static void expandStateSpace(HashMap<String, Node> graph, Node currentNode) {
 		ArrayList<String> reachableNodes = new ArrayList<String>();
 		// This returns an ArrayList of all the node names that are currently
 		// reachable from where the current node.
 		// Reachable is whatever node can be processed.
 		reachableNodes = getReachable(graph, currentNode);
 		int processor = 2;
-		for(int i = 1; i<=processor; i++){
-			for(String s:reachableNodes){
+		for (int i = 1; i <= processor; i++) {
+			for (String s : reachableNodes) {
 				// Task cost of the current node.
 				int cost = graph.get(s).getCost();
 				// Instantiate a new node to generate the state space.
 				Node newChildNode = new Node(s, cost);
+				newChildNode.setProcessor(i);
 				// Stores the previous state parents of the node into the current
 				// node to keep track of what nodes have been processed.
-				for(Node n: currentNode.getStateParents()){
+				for (Node n : currentNode.getStateParents()) {
 					newChildNode.addStateParents(n);
 				}
 				// Register itself into the state parents.
@@ -103,33 +88,44 @@ public class IterativeDFS {
 			}
 		}
 	}
-	
-	public static ArrayList<String> getReachable(HashMap<String, Node> graph, Node currentNode){
+
+	public static ArrayList<String> getReachable(HashMap<String, Node> graph, Node currentNode) {
 		ArrayList<Node> completedNodes = currentNode.getStateParents();
 		ArrayList<String> reachableNodeNames = new ArrayList<String>();
-		//System.out.println("Current Node: "+currentNode.getID());
-		for(Node n:completedNodes){
+		// System.out.println("Current Node: "+currentNode.getID());
+		for (Node n : completedNodes) {
 			graph.get(n.getID()).setCompleted(true);
 		}
-		for(String s:graph.keySet()){
+		for (String s : graph.keySet()) {
 			boolean dependenciesDone = true;
-			for(Node n:graph.get(s).getParents().keySet()){
-				if(!n.getCompleted()){
+			for (Node n : graph.get(s).getParents().keySet()) {
+				if (!n.getCompleted()) {
 					dependenciesDone = false;
 					break;
 				}
 			}
-			if(dependenciesDone && !graph.get(s).getCompleted()){
-				//System.out.println(s);
+			if (dependenciesDone && !graph.get(s).getCompleted()) {
 				reachableNodeNames.add(s);
 			}
 		}
-		for(Node n:completedNodes){
+		for (Node n : completedNodes) {
 			graph.get(n.getID()).setCompleted(false);
 		}
 		return reachableNodeNames;
-	}	
+	}
+
+	/**
+	 * @Param g - is the original dependency graph, NOT the state space. In our
+	 *        case, it stores HashMap<String, Node> - name of the node, to the Node
+	 *        itself.
+	 * 
+	 * @Param node - this is the current node we’re calculating time for.
+	 * 
+	 * @Param list - stores the name of the processor, ie processor1 and the nodes
+	 *        on that processor.
+	 */
+	public static void calculateTime(HashMap<String, Node> g, Node node, HashMap<String, Node> list) {
+
+	}
 
 }
-
-
