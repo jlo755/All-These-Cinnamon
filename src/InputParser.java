@@ -25,13 +25,7 @@ public class InputParser {
 		System.out.println("hello");
 		bfr.readLine(); // get rid of the first line in the input
 
-		while (!lineToRead.equals("}")) { // if we havent reached the end of the input which ends with "}"
-			
-			lineToRead = bfr.readLine(); // get the line
-			lineToRead = lineToRead.replaceAll("\\s", ""); // remove all the spaces
-			// get rid of the first line in the input
-			bfr.readLine();
-			
+
 			// if we havent reached the end of the input which ends with "}"
 			while (!lineToRead.equals("}")) {
 				
