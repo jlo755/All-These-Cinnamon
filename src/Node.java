@@ -9,6 +9,8 @@ public class Node {
 	private HashMap<String, Double> _distances;
 	private boolean _completed;
 	private int _processor;
+	private Double _startTime;
+	private Double _endTime;
 	private ArrayList<Node> _stateParents;
 
 	protected Node(String id, int cost){
@@ -47,6 +49,22 @@ public class Node {
 
 	public int getProcessor(){
 		return _processor;
+	}
+
+	public void setStartTime(Double i){
+		_startTime = i;
+	}
+
+	public Double getStartTime(){
+		return _startTime;
+	}
+
+	public void setEndTime(Double i){
+		_endTime = i;
+	}
+
+	public Double getEndTime(){
+		return _endTime;
 	}
 
 	public void setCompleted(boolean completed) {

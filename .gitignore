@@ -27,4 +27,8 @@ hs_err_pid*
 .idea/misc.xml
 .idea/modules.xml
 *.xml
+<<<<<<< HEAD
+>>>>>>> branch 'Algorithm' of https://github.com/jlo755/All-These-Cinnamon
+=======
+.DS_Store
 >>>>>>> branch 'Algorithm' of https://github.com/jlo755/All-These-Cinnamon
