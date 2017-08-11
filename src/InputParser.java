@@ -3,8 +3,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+/**
+ * Class that is responsible for parsing input for 
+ * multi-processor task scheduling problem.
+ * @author victor
+ *
+ */
 public class InputParser {
 	
+	/**
+	 * This method reads a dot format input in the terminal describing a series of tasks
+	 * and their dependencies and places the information in a HashMap of the Node class
+	 * representing a task scheduling graph.
+	 * @param nodeMap
+	 * @throws IOException
+	 */
 	public void parseInput(HashMap<String, Node> nodeMap) throws IOException {
 		
 		BufferedReader bfr = new BufferedReader(new InputStreamReader(System.in));
