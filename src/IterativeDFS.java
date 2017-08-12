@@ -6,20 +6,20 @@ import java.util.Stack;
 public class IterativeDFS {
 
 	public static void main(String[] args) throws IOException {
-		HashMap<String, Node> nodeMap = new HashMap<String, Node>();
+		HashMap<String, DependencyNode> nodeMap = new HashMap<String, DependencyNode>();
 
 		InputParser parser = new InputParser();
 		parser.parseInput(nodeMap);
-		Node bestNode = new Node("test", 0);
+		StateSpaceNode bestNode = new StateSpaceNode("test", 0, 0);
 		double bestSolution = Double.POSITIVE_INFINITY;
 		for (int i = 1; i < 3; i++) {
 			for (String nodeName : nodeMap.keySet()) {
-				HashMap<Node, Double> parents = nodeMap.get(nodeName).getParents();
+				HashMap<DependencyNode, Double> parents = nodeMap.get(nodeName).getParents();
 				if (parents.keySet().isEmpty()) {
-					Node test = new Node(nodeName, nodeMap.get(nodeName).getCost());
+					StateSpaceNode test = new StateSpaceNode(nodeName, nodeMap.get(nodeName).getCost(), i);
 					test.addStateParents(test);
 					test.setProcessor(i);
-					Node node = DFS(nodeMap, test);
+					StateSpaceNode node = DFS(nodeMap, test);
 					if(node.getEndTime() < bestSolution) {
 						bestSolution = node.getEndTime();
 						bestNode = node;
@@ -27,7 +27,7 @@ public class IterativeDFS {
 				}
 			}
 		}
-		for(Node n:bestNode.getStateParents()) {
+		for(StateSpaceNode n:bestNode.getStateParents()) {
 			System.out.println("ID: "+n.getID() + " Processor: "+n.getProcessor() + " Start Time: "+n.getStartTime() + " End Time: "+n.getEndTime());
 		}
 
@@ -37,37 +37,37 @@ public class IterativeDFS {
 	 * Iterative approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem.
 	 * 
-	 * @param graph
+	 * @param nodeMap
 	 * @param initialNode
 	 */
-	public static Node DFS(HashMap<String, Node> graph, Node initialNode) {
+	public static StateSpaceNode DFS(HashMap<String, DependencyNode> nodeMap, StateSpaceNode initialNode) {
 		//HashMap<Integer, ArrayList<Node>> processorList = new HashMap<Integer, ArrayList<Node>>();
-		Stack<Node> s = new Stack<Node>();
+		Stack<StateSpaceNode> s = new Stack<StateSpaceNode>();
 		s.push(initialNode);
-		Node bestNode = initialNode;
+		StateSpaceNode bestNode = initialNode;
 		double bestSolution = Double.POSITIVE_INFINITY;
 		while (!s.isEmpty()) {
-			Node node = s.pop();
+			StateSpaceNode node = s.pop();
 			int perfectLoadBalance = 0;
 			for(int i = 1; i<=2; i++){
 				perfectLoadBalance += calculateMaxCurrentProcessorTime(node.getStateParents(), i);
 			}
-			double idealProcessorTime = (perfectLoadBalance + calculateEstimatedCost(node, graph))/2;
+			double idealProcessorTime = (perfectLoadBalance + calculateEstimatedCost(node, nodeMap))/2;
 			if(bestSolution >= idealProcessorTime){
 				//System.out.println("Estimated cost: "+ ( calculateEstimatedCost(node, graph)));
-				expandStateSpace(graph, node);
+				expandStateSpace(nodeMap, node);
 				//processorList.get(node.getProcessor()).add(node);
-				calculateTime(graph, node);
+				calculateTime(nodeMap, node);
 				//System.out.println("ID: " + node.getID() + " Processor: " + node.getProcessor());
 				if (!node.getCompleted()) {
 					node.setCompleted(true);
 					for (Node n : node.getChildren().keySet()) {
-						s.push(n);
+						s.push((StateSpaceNode)n);
 					}
 				}
-				if(node.getStateParents().size() == graph.values().size()) {
+				if(node.getStateParents().size() == nodeMap.values().size()) {
 					double maxTime = 0;
-					for(Node n: node.getStateParents()){
+					for(StateSpaceNode n: node.getStateParents()){
 						if(maxTime < n.getEndTime()){
 							maxTime = n.getEndTime();
 						}
@@ -84,17 +84,17 @@ public class IterativeDFS {
 		return bestNode;
 	}
 
-	public static double calculateEstimatedCost(Node n, HashMap<String, Node> graph){
+	public static double calculateEstimatedCost(StateSpaceNode n, HashMap<String, DependencyNode> graph){
 		double cost = 0;
-		for(Node node: n.getStateParents()){
+		for(StateSpaceNode node: n.getStateParents()){
 			graph.get(node.getID()).setCompleted(true);
 		}
-		for(Node node: graph.values()){
+		for(DependencyNode node: graph.values()){
 			if(!node.getCompleted()){
 				cost += node.getCost();
 			}
 		}
-		for(Node node: n.getStateParents()){
+		for(StateSpaceNode node: n.getStateParents()){
 			graph.get(node.getID()).setCompleted(false);
 		}
 		return cost;
@@ -109,7 +109,7 @@ public class IterativeDFS {
 	 * @param currentNode
 	 */
 
-	public static void expandStateSpace(HashMap<String, Node> graph, Node currentNode) {
+	public static void expandStateSpace(HashMap<String, DependencyNode> graph, StateSpaceNode currentNode) {
 		ArrayList<String> reachableNodes = new ArrayList<String>();
 		// This returns an ArrayList of all the node names that are currently
 		// reachable from where the current node.
@@ -121,18 +121,17 @@ public class IterativeDFS {
 				// Task cost of the current node.
 				int cost = graph.get(s).getCost();
 				// Instantiate a new node to generate the state space.
-				Node newChildNode = new Node(s, cost);
+				StateSpaceNode newChildNode = new StateSpaceNode(s, cost, i);
 				newChildNode.setProcessor(i);
 				// Stores the previous state parents of the node into the current
 				// node to keep track of what nodes have been processed.
-				for (Node n : currentNode.getStateParents()) {
+				for (StateSpaceNode n : currentNode.getStateParents()) {
 					newChildNode.addStateParents(n);
 				}
 				// Register itself into the state parents.
 				newChildNode.addStateParents(newChildNode);
 				// Still need to allocate cost when stored.
 				currentNode.addChild(newChildNode, 0);
-				newChildNode.addParent(currentNode, 0);
 			}
 		}
 	}
@@ -143,16 +142,16 @@ public class IterativeDFS {
 	 * @param currentNode
 	 * @return
 	 */
-	public static ArrayList<String> getReachable(HashMap<String, Node> graph, Node currentNode) {
-		ArrayList<Node> completedNodes = currentNode.getStateParents();
+	public static ArrayList<String> getReachable(HashMap<String, DependencyNode> graph, StateSpaceNode currentNode) {
+		ArrayList<StateSpaceNode> completedNodes = currentNode.getStateParents();
 		ArrayList<String> reachableNodeNames = new ArrayList<String>();
 		// System.out.println("Current Node: "+currentNode.getID());
-		for (Node n : completedNodes) {
+		for (StateSpaceNode n : completedNodes) {
 			graph.get(n.getID()).setCompleted(true);
 		}
 		for (String s : graph.keySet()) {
 			boolean dependenciesDone = true;
-			for (Node n : graph.get(s).getParents().keySet()) {
+			for (DependencyNode n : graph.get(s).getParents().keySet()) {
 				if (!n.getCompleted()) {
 					dependenciesDone = false;
 					break;
@@ -162,7 +161,7 @@ public class IterativeDFS {
 				reachableNodeNames.add(s);
 			}
 		}
-		for (Node n : completedNodes) {
+		for (StateSpaceNode n : completedNodes) {
 			graph.get(n.getID()).setCompleted(false);
 		}
 		return reachableNodeNames;
@@ -178,11 +177,11 @@ public class IterativeDFS {
 	 * @Param list - stores the name of the processor, ie processor1 and the nodes
 	 *        on that processor.
 	 */
-	public static void calculateTime(HashMap<String, Node> graph, Node node){
+	public static void calculateTime(HashMap<String, DependencyNode> graph, StateSpaceNode node){
 		double maxCost = 0.0, maxProcessorTime = 0.0, longestCommunicationCost = 0.0;
 		//check if it has a parent
-		ArrayList<Node> parentsInStateTree = node.getStateParents();
-		Node nodeOnDependGraph = graph.get(node.getID());
+		ArrayList<StateSpaceNode> parentsInStateTree = node.getStateParents();
+		DependencyNode nodeOnDependGraph = graph.get(node.getID());
 		maxProcessorTime = calculateMaxCurrentProcessorTime(parentsInStateTree, node.getProcessor());
 		if(nodeOnDependGraph.getParents().size() != 0 ){
 			//if all the parents are on the same processor
@@ -219,9 +218,9 @@ public class IterativeDFS {
 	}
 
 
-	public static boolean checkListContainsParent(ArrayList<Node> parentsInStateTree, HashMap<Node, Double> parents, int processor){
+	public static boolean checkListContainsParent(ArrayList<StateSpaceNode> parentsInStateTree, HashMap<DependencyNode, Double> parents, int processor){
 		ArrayList<String> completedNodes = new ArrayList<String>();
-		for(Node n: parentsInStateTree) {
+		for(StateSpaceNode n: parentsInStateTree) {
 			if(n.getProcessor() == processor) {
 				completedNodes.add(n.getID());
 			}
@@ -235,9 +234,9 @@ public class IterativeDFS {
 	}
 
 
-	public static double calculateMaxCurrentProcessorTime(ArrayList<Node> parentsInStateTree, int processor){
+	public static double calculateMaxCurrentProcessorTime(ArrayList<StateSpaceNode> parentsInStateTree, int processor){
 		Double max = 0.0;
-		for(Node n : parentsInStateTree){
+		for(StateSpaceNode n : parentsInStateTree){
 			if(n.getProcessor() == processor) {
 				if (n.getEndTime() > max) {
 					max = n.getEndTime();
@@ -247,7 +246,7 @@ public class IterativeDFS {
 		return max;
 	}
 
-	public static double calculateCommunicationCost(Node node, Node parent, HashMap<String, Node> graph){
+	public static double calculateCommunicationCost(Node node, Node parent, HashMap<String, DependencyNode> graph){
 		//System.out.println("Hello?");
 		for(Node n1: parent.getChildren().keySet()){
 			if(n1.equals(node)){
@@ -257,18 +256,18 @@ public class IterativeDFS {
 		return 0.0;
 	}
 
-	public static double getMaxCommunicationCost(Node n, HashMap<String, Node> graph, ArrayList<Node> parentsInStateTree, int processor){
+	public static double getMaxCommunicationCost(Node n, HashMap<String, DependencyNode> graph, ArrayList<StateSpaceNode> parentsInStateTree, int processor){
 		Double ccost=0.0;
-		ArrayList<Node> listOfNodes = new ArrayList<Node>();
-		for(Node node : parentsInStateTree) {
+		ArrayList<StateSpaceNode> listOfNodes = new ArrayList<StateSpaceNode>();
+		for(StateSpaceNode node : parentsInStateTree) {
 			if(node.getProcessor() != processor) {
 				listOfNodes.add(node);
 			}
 		}
-		Node nodeDepenGraph = graph.get(n.getID());
+		DependencyNode nodeDepenGraph = graph.get(n.getID());
 		//System.out.println("The current node is: "+n.getID());
 		for(Node n2:nodeDepenGraph.getParents().keySet()){
-			for(Node n1 : listOfNodes) {
+			for(StateSpaceNode n1 : listOfNodes) {
 				if(n1.getID() == n2.getID()) {
 					if (calculateCommunicationCost(nodeDepenGraph,n2, graph)+n1.getEndTime() > ccost) {
 						ccost = calculateCommunicationCost(nodeDepenGraph,n2, graph)+n1.getEndTime();
@@ -280,15 +279,15 @@ public class IterativeDFS {
 		return ccost;
 	}
 
-	public static double getLongestCommunicationCost(Node n, HashMap<String, Node> graph, ArrayList<Node> parentsInStateTree, int processor){
+	public static double getLongestCommunicationCost(Node n, HashMap<String, DependencyNode> graph, ArrayList<StateSpaceNode> parentsInStateTree, int processor){
 		Double ccost=0.0;
 		ArrayList<Node> listOfNodes = new ArrayList<Node>();
-		for(Node node : parentsInStateTree) {
+		for(StateSpaceNode node : parentsInStateTree) {
 			if(node.getProcessor() != processor) {
 				listOfNodes.add(node);
 			}
 		}
-		Node nodeDepenGraph = graph.get(n.getID());
+		DependencyNode nodeDepenGraph = graph.get(n.getID());
 		//System.out.println("The current node is: "+n.getID());
 		for(Node n2:nodeDepenGraph.getParents().keySet()){
 			for(Node n1 : listOfNodes) {
