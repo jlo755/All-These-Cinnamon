@@ -19,7 +19,7 @@ public class InputParser {
 	 * @param nodeMap This is the dependency graph
 	 * @throws IOException
 	 */
-	public void parseInput(HashMap<String, DependencyNode> nodeMap) throws IOException {
+	public void parseInput(HashMap<String, Node> nodeMap) throws IOException {
 
 		BufferedReader bfr = new BufferedReader(new InputStreamReader(System.in));
 		String lineToRead = "";
@@ -56,8 +56,8 @@ public class InputParser {
 				int weight = Integer.parseInt(lineToRead.substring(indexOfStartCost + 1, lineToRead.length() - 2));
 
 				// adding the child and the parent into the nodemap
-				DependencyNode parentNode = nodeMap.get(nameOfParentNode);
-				DependencyNode childNode = nodeMap.get(nameOfChildrenNode);
+				Node parentNode = nodeMap.get(nameOfParentNode);
+				Node childNode = nodeMap.get(nameOfChildrenNode);
 				// add the childnode as a child to the parent node
 				nodeMap.get(nameOfParentNode).addChild(childNode, weight);
 				// add the parentnode as a parent to the child node
@@ -77,7 +77,7 @@ public class InputParser {
 				int weight = Integer.parseInt(lineToRead.substring(indexOfStartCost + 1, lineToRead.length() - 2));
 
 				// hashmap which has for node a eg: (a, node a) as the input
-				nodeMap.put(nameOfNode, new DependencyNode(nameOfNode, weight));
+				nodeMap.put(nameOfNode, new Node(nameOfNode, weight));
 			}
 		}
 	}
