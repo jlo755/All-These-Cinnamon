@@ -16,13 +16,10 @@ public class IterativeDFS {
 			HashMap<DependencyNode, Double> parents = nodeMap.get(nodeName).getParents();
 			if (parents.keySet().isEmpty()) {
 				System.out.println("Hello: "+nodeName);
-				StateSpaceNode test = new StateSpaceNode(nodeName, nodeMap.get(nodeName).getCost(), 1);
+				StateSpaceNode test = new StateSpaceNode(nodeName, nodeMap.get(nodeName).getCost(), 2);
 				test.addStateParents(test);
-				test.setProcessor(1);
-				final long startTime = System.nanoTime();
+				test.setProcessor(2);
 				StateSpaceNode node = DFS(nodeMap, test);
-				final long endTime = System.nanoTime();
-				//System.out.println(endTime-startTime)
 				double nodeTime = 0;
 				for(StateSpaceNode n: node.getStateParents()){
 					if(nodeTime < n.getEndTime()){
