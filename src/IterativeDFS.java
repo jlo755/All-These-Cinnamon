@@ -48,24 +48,56 @@ public class IterativeDFS {
 		double bestSolution = Double.POSITIVE_INFINITY;
 		while (!s.isEmpty()) {
 			Node node = s.pop();
-			expandStateSpace(graph, node);
-			//processorList.get(node.getProcessor()).add(node);
-			calculateTime(graph, node);
-			//System.out.println("ID: " + node.getID() + " Processor: " + node.getProcessor());
-			if (!node.getCompleted()) {
-				node.setCompleted(true);
-				for (Node n : node.getChildren().keySet()) {
-					s.push(n);
-				}
+			int perfectLoadBalance = 0;
+			for(int i = 1; i<=2; i++){
+				perfectLoadBalance += calculateMaxCurrentProcessorTime(node.getStateParents(), i);
 			}
-			if(node.getStateParents().size() == graph.values().size()) {
-				if(node.getEndTime() < bestSolution) {
-					bestSolution = node.getEndTime();
-					bestNode = node;
+			double idealProcessorTime = (perfectLoadBalance + calculateEstimatedCost(node, graph))/2;
+			if(bestSolution >= idealProcessorTime){
+				//System.out.println("Estimated cost: "+ ( calculateEstimatedCost(node, graph)));
+				expandStateSpace(graph, node);
+				//processorList.get(node.getProcessor()).add(node);
+				calculateTime(graph, node);
+				//System.out.println("ID: " + node.getID() + " Processor: " + node.getProcessor());
+				if (!node.getCompleted()) {
+					node.setCompleted(true);
+					for (Node n : node.getChildren().keySet()) {
+						s.push(n);
+					}
 				}
+				if(node.getStateParents().size() == graph.values().size()) {
+					double maxTime = 0;
+					for(Node n: node.getStateParents()){
+						if(maxTime < n.getEndTime()){
+							maxTime = n.getEndTime();
+						}
+					}
+					if(maxTime < bestSolution) {
+						bestSolution = maxTime;
+						bestNode = node;
+					}
+				}
+			} else {
+				System.out.println("Discarded");
 			}
 		}
 		return bestNode;
+	}
+
+	public static double calculateEstimatedCost(Node n, HashMap<String, Node> graph){
+		double cost = 0;
+		for(Node node: n.getStateParents()){
+			graph.get(node.getID()).setCompleted(true);
+		}
+		for(Node node: graph.values()){
+			if(!node.getCompleted()){
+				cost += node.getCost();
+			}
+		}
+		for(Node node: n.getStateParents()){
+			graph.get(node.getID()).setCompleted(false);
+		}
+		return cost;
 	}
 
 	/**
@@ -203,7 +235,7 @@ public class IterativeDFS {
 	}
 
 
-	public static Double calculateMaxCurrentProcessorTime(ArrayList<Node> parentsInStateTree, int processor){
+	public static double calculateMaxCurrentProcessorTime(ArrayList<Node> parentsInStateTree, int processor){
 		Double max = 0.0;
 		for(Node n : parentsInStateTree){
 			if(n.getProcessor() == processor) {
@@ -271,5 +303,5 @@ public class IterativeDFS {
 		//System.out.println("Longest Communication: "+ccost);
 		return ccost;
 	}
-	
+
 }
