@@ -18,7 +18,7 @@ public class InputParser {
 	 * @param nodeMap
 	 * @throws IOException
 	 */
-	public void parseInput(HashMap<String, Node> nodeMap) throws IOException {
+	public void parseInput(HashMap<String, DependencyNode> nodeMap) throws IOException {
 
 		BufferedReader bfr = new BufferedReader(new InputStreamReader(System.in));
 		String lineToRead = "";
@@ -54,8 +54,8 @@ public class InputParser {
 				int weight = Integer.parseInt(lineToRead.substring(indexOfStartCost + 1, lineToRead.length() - 2));
 
 				// 
-				Node parentNode = nodeMap.get(nameOfParentNode);
-				Node childNode = nodeMap.get(nameOfChildrenNode);
+				DependencyNode parentNode = nodeMap.get(nameOfParentNode);
+				DependencyNode childNode = nodeMap.get(nameOfChildrenNode);
 				nodeMap.get(nameOfParentNode).addChild(childNode, weight);
 				nodeMap.get(nameOfChildrenNode).addParent(parentNode, weight);
 
@@ -73,7 +73,7 @@ public class InputParser {
 				int weight = Integer.parseInt(lineToRead.substring(indexOfStartCost + 1, lineToRead.length() - 2));
 
 				// hashmap which has for node a eg: (a, node a) as the input
-				nodeMap.put(nameOfNode, new Node(nameOfNode, weight));
+				nodeMap.put(nameOfNode, new DependencyNode(nameOfNode, weight));
 			}
 		}
 	}
