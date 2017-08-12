@@ -4,8 +4,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 /**
- * Class that is responsible for parsing input for 
+ * Class that is responsible for parsing input for the
  * multi-processor task scheduling problem.
+ * 
  * @author victor
  *
  */
@@ -15,7 +16,7 @@ public class InputParser {
 	 * This method reads a dot format input in the terminal describing a series of tasks
 	 * and their dependencies and places the information in a HashMap of the Node class
 	 * representing a task scheduling graph.
-	 * @param nodeMap
+	 * @param nodeMap This is the dependency graph
 	 * @throws IOException
 	 */
 	public void parseInput(HashMap<String, DependencyNode> nodeMap) throws IOException {
@@ -23,7 +24,8 @@ public class InputParser {
 		BufferedReader bfr = new BufferedReader(new InputStreamReader(System.in));
 		String lineToRead = "";
 		System.out.println("hello");
-		bfr.readLine(); // get rid of the first line in the input
+		// getting the first line of the input
+		bfr.readLine(); 
 
 
 		// if we havent reached the end of the input which ends with "}"
@@ -53,10 +55,12 @@ public class InputParser {
 				int indexOfStartCost = lineToRead.indexOf("=");
 				int weight = Integer.parseInt(lineToRead.substring(indexOfStartCost + 1, lineToRead.length() - 2));
 
-				// 
+				// adding the child and the parent into the nodemap
 				DependencyNode parentNode = nodeMap.get(nameOfParentNode);
 				DependencyNode childNode = nodeMap.get(nameOfChildrenNode);
+				// add the childnode as a child to the parent node
 				nodeMap.get(nameOfParentNode).addChild(childNode, weight);
+				// add the parentnode as a parent to the child node
 				nodeMap.get(nameOfChildrenNode).addParent(parentNode, weight);
 
 				// when there is no arrow in the line, it indicates a new task being introduced
