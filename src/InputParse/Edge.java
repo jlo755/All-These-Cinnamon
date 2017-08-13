@@ -1,5 +1,7 @@
 package InputParse;
 
+import DataStructure.Node;
+
 public class Edge {
 	private Node _childNode;
 	private Node _parentNode;

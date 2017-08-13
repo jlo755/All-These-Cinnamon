@@ -1,5 +1,4 @@
-package InputParse;
-import java.util.ArrayList;
+package DataStructure;
 import java.util.HashMap;
 /**
  * This class is responsible for storing all the nodes along
@@ -25,9 +24,9 @@ public class Node {
 	private double _startTime;
 	private double _endTime;
 	// stores all the nodes we visited in the state space before this node was visited
-	private ArrayList<Node> _stateParents;
 
-	protected Node(String id, int cost){
+
+	public Node(String id, int cost){
 		_id = id;
 		_cost = cost;
 		// children and parents hashmaps with the child and parent nodes and their comunication costs
@@ -37,7 +36,6 @@ public class Node {
 		_distances = new HashMap<String, Double>();  
 		_completed = false;
 		// stores all the nodes we visited in the state space before this node was visited
-		_stateParents = new ArrayList<Node>();
 	}
 
 	/**
@@ -45,33 +43,17 @@ public class Node {
  	* @param node This is the node to be added
  	* @param cost This is the task processing cost of the node
  	*/
-	protected void addParent(Node node, double cost){
+	public void addParent(Node node, double cost){
 		_parents.put(node, cost);
 	}
-	
-	/**
-	* This method adds a node as a parent into a list which contains all the nodes we visited
- 	* in the state space before this node
- 	* @param node The node to be added into the list
- 	*/
-	protected void addStateParents(Node node){
-		_stateParents.add(node);
-	}
-	
-	/*
-	* This method returns the list of state parents
- 	* @return This returns a list consisting of all the parents
- 	*/
-	protected ArrayList<Node> getStateParents(){
-		return _stateParents;
-	}
+
 
 	/**
 	* This method adds a child node along with its cost to the children hashmap
  	* @param node This is the node to be added
  	* @param cost This is the task processing cost of the node
  	*/
-	protected void addChild(Node node, double cost){
+	public void addChild(Node node, double cost){
 		_children.put(node, cost);
 	}
 	/**	
@@ -149,27 +131,8 @@ public class Node {
 	* This method returns the id of a node
  	* @return an id for a node
  	*/
-	protected String getID(){
+	public String getID(){
 		return _id;
-	}
-
-	/**
-	* This method updates the distances between the nodes in the
-	* distances hashmap
-	* @param n This is the node whose distance is to be updated
-	* @param i This is the distance to the node
-	*/
-	protected void updateDistance(String n, double i){
-		_distances.put(n, i);
-	}
-
-	/**
-	* This method returns a hashmap which contains the distances between the nodes 
-	* in the network
-	* @return This returns a hashmap which contains the node network distances
-	*/
-	protected HashMap<String, Double> getDistances(){
-		return _distances;
 	}
 
 	/**

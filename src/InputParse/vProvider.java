@@ -3,6 +3,8 @@ import java.util.Map;
 
 import org.jgrapht.ext.VertexProvider;
 
+import DataStructure.Node;
+
 
 public class vProvider implements VertexProvider<Node> {
 
