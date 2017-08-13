@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import DataStructure.Node;
+
 /**
  * Class that is responsible for parsing input for the
  * multi-processor task scheduling problem.

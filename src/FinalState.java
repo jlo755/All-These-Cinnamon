@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import DataStructure.Node;
+
 public class FinalState {
 	HashMap<String, Node> _currentBestState;
 	

@@ -139,7 +139,7 @@ public class Node {
 	* This method returns the cost of a node
  	* @return the cost for a node
  	*/
-	protected int getCost(){
+	public int getCost(){
 		return _cost;
 	}
 
@@ -147,7 +147,7 @@ public class Node {
 	* This method returns a list of the parents of a node
  	* @return a hashmap consisting of the parents
  	*/
-	protected HashMap<Node, Double> getParents(){
+	public HashMap<Node, Double> getParents(){
 		return _parents;
 	}
 
@@ -155,7 +155,7 @@ public class Node {
 	* This method returns a list of the children of a node
  	* @return a hashmap consisting of the children
  	*/
-	protected HashMap<Node, Double> getChildren(){
+	public HashMap<Node, Double> getChildren(){
 		return _children;
 	}
 }

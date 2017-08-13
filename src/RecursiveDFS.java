@@ -3,16 +3,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
+import org.jgrapht.ext.ImportException;
+
+import DataStructure.Node;
+import InputParse.DotParser;
+
 public class RecursiveDFS {
 
 	static double currentBestSolution = Double.POSITIVE_INFINITY;
 	static FinalState bestState;
 
-	public static void main(String[] args) throws IOException {
-		HashMap<String, Node> nodeMap = new HashMap<String, Node>();
+	public static void main(String[] args) throws IOException, ImportException {
+		HashMap<String, Node> nodeMap;
 
-		InputParser parser = new InputParser();
-		parser.parseInput(nodeMap);
+		//InputParser parser = new InputParser();
+		//parser.parseInput(nodeMap);
+		DotParser dotParser = new DotParser("Nodes_7_OutTree.dot");
+		dotParser.parseInput();
+		nodeMap = dotParser.getNodeMap();
 		bestState = new FinalState(nodeMap.keySet());
 		for(int i = 1; i<=1; i++) {
 			for(Node n:nodeMap.values()) {
