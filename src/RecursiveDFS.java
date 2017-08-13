@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
+import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
 
 import DataStructure.Node;
@@ -45,9 +46,23 @@ public class RecursiveDFS {
 			}
 		}
 		OutputParser outputParse = new OutputParser();
+		DirectedAcyclicGraph graph = dotParser.getGraph();
+		HashMap<String, Node> graphSolution = bestState.getCurrentBestState();
+		for(Object n:graph.vertexSet()){
+			Node node = (Node) n;
+			for(Node n1:graphSolution.values()){
+				if(node.getID() == n1.getID()){
+					node.setStartTime(n1.getStartTime());
+					node.setEndTime(n1.getEndTime());
+					node.setProcessor(n1.getProcessor());
+				}
+			}
+		}
 		outputParse.setGraph(dotParser.getGraph());
 		outputParse.outputDot();
 		bestState.printCurrentBestState();
+
+		
 		System.out.println(currentBestSolution);
 	}
 
