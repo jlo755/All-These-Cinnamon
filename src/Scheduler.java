@@ -8,6 +8,7 @@ public class Scheduler {
 	private double currentBestSolution;
 	private FinalState bestState;
 	private HashMap<String, Node> nodeMap;
+	private int _processors;
 
 	public Scheduler() {
 		currentBestSolution = Double.POSITIVE_INFINITY;
@@ -16,7 +17,7 @@ public class Scheduler {
 	public void schedule() {
 		
 		// "Nodemap" is the input graph for the algorithm.
-		for (int i = 1; i <= 1; i++) {
+		for (int i = 1; i <= _processors; i++) {
 			for (Node n : nodeMap.values()) {
 				// If a node doesn't not have parents, it is a starting node
 				if (n.getParents().isEmpty()) {
@@ -26,13 +27,13 @@ public class Scheduler {
 					// children
 					recursiveDFS(nodeMap, n.getID());
 					long endTime = System.nanoTime();
-					System.out.println((endTime - startTime) / 1000000000.0);
+					//System.out.println((endTime - startTime) / 1000000000.0);
 
 				}
 			}
 		}
-		bestState.printCurrentBestState();
-		System.out.println(currentBestSolution);
+		//bestState.printCurrentBestState();
+		//System.out.println(currentBestSolution);
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class Scheduler {
 		// between the final times when the node
 		// is placed on each of the processors
 
-		for (int i = 1; i <= 2; i++) {
+		for (int i = 1; i <= _processors; i++) {
 			// Repeat these processes until all of the processor and node possibilities have
 			// been covered
 			for (String node1 : test) {
@@ -293,6 +294,10 @@ public class Scheduler {
 		return bestState;
 	}
 
+	public void setProcessorNumber(int processors) {
+		_processors = processors;
+	}
+	
 	/**
 	 * Sets the bestState field.
 	 * 

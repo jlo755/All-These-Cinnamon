@@ -22,10 +22,10 @@ public class RecursiveDFS {
 	public static void main(String[] args) throws IOException, ImportException {
 		
 		Scheduler scheduler = new Scheduler();
-
+		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
 		//InputParser parser = new InputParser();
 		//parser.parseInput(nodeMap);
-		DotParser dotParser = new DotParser("Nodes_7_OutTree.dot");
+		DotParser dotParser = new DotParser(args[0]);
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		//scheduler.setBestState(new FinalState(nodeMap.keySet()));
@@ -47,6 +47,6 @@ public class RecursiveDFS {
 		}
 		outputParse.setGraph(dotParser.getGraph());
 		outputParse.outputDot();
-		scheduler.getBestState().printCurrentBestState();
+		//scheduler.getBestState().printCurrentBestState();
 	}
 }
