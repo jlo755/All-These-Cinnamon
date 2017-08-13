@@ -19,4 +19,8 @@ public class Edge {
 		_parentNode.addChild(_childNode, cost);
 		_cost = cost;
 	}
+	
+	public double getCost() {
+		return _cost;
+	}
 }

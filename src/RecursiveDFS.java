@@ -7,6 +7,7 @@ import org.jgrapht.ext.ImportException;
 
 import DataStructure.Node;
 import InputParse.DotParser;
+import OutputParse.OutputParser;
 
 /**
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
@@ -43,6 +44,9 @@ public class RecursiveDFS {
 				}
 			}
 		}
+		OutputParser outputParse = new OutputParser();
+		outputParse.setGraph(dotParser.getGraph());
+		outputParse.outputDot();
 		bestState.printCurrentBestState();
 		System.out.println(currentBestSolution);
 	}
