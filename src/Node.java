@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 /**
  * This class is responsible for storing all the nodes along
@@ -24,7 +23,7 @@ public class Node {
 	private double _startTime;
 	private double _endTime;
 	// stores all the nodes we visited in the state space before this node was visited
-	private ArrayList<Node> _stateParents;
+
 
 	protected Node(String id, int cost){
 		_id = id;
@@ -36,7 +35,6 @@ public class Node {
 		_distances = new HashMap<String, Double>();  
 		_completed = false;
 		// stores all the nodes we visited in the state space before this node was visited
-		_stateParents = new ArrayList<Node>();
 	}
 
 	/**
@@ -47,23 +45,7 @@ public class Node {
 	protected void addParent(Node node, double cost){
 		_parents.put(node, cost);
 	}
-	
-	/**
-	* This method adds a node as a parent into a list which contains all the nodes we visited
- 	* in the state space before this node
- 	* @param node The node to be added into the list
- 	*/
-	protected void addStateParents(Node node){
-		_stateParents.add(node);
-	}
-	
-	/*
-	* This method returns the list of state parents
- 	* @return This returns a list consisting of all the parents
- 	*/
-	protected ArrayList<Node> getStateParents(){
-		return _stateParents;
-	}
+
 
 	/**
 	* This method adds a child node along with its cost to the children hashmap
@@ -150,25 +132,6 @@ public class Node {
  	*/
 	protected String getID(){
 		return _id;
-	}
-
-	/**
-	* This method updates the distances between the nodes in the
-	* distances hashmap
-	* @param n This is the node whose distance is to be updated
-	* @param i This is the distance to the node
-	*/
-	protected void updateDistance(String n, double i){
-		_distances.put(n, i);
-	}
-
-	/**
-	* This method returns a hashmap which contains the distances between the nodes 
-	* in the network
-	* @return This returns a hashmap which contains the node network distances
-	*/
-	protected HashMap<String, Double> getDistances(){
-		return _distances;
 	}
 
 	/**

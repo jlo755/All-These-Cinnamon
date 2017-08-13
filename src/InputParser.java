@@ -23,7 +23,6 @@ public class InputParser {
 
 		BufferedReader bfr = new BufferedReader(new InputStreamReader(System.in));
 		String lineToRead = "";
-		System.out.println("hello");
 		// getting the first line of the input
 		bfr.readLine(); 
 
