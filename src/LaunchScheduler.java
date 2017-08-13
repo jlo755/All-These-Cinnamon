@@ -18,16 +18,29 @@ import OutputParse.OutputParser;
 * in the network are visited and we have obtained the best scheduling times.
 */
 public class LaunchScheduler {
+	
+	private static Scheduler scheduler;
+	private static DotParser dotParser;
 
 	public static void main(String[] args) throws IOException, ImportException {
 		
-		Scheduler scheduler = new Scheduler();
-
-		DotParser dotParser = new DotParser("Nodes_7_OutTree.dot");
+		// Parse the dot graph input and schedule an optimal solution.
+		scheduler = new Scheduler();
+		dotParser = new DotParser("Nodes_7_OutTree.dot");
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		scheduler.schedule();
 		
+		// Output the solution in a dot format file.
+		outputSolution();
+	}
+	
+	/**
+	 * This method uses the solution found by the Scheduler to output the solution
+	 * in a dot format file.
+	 * @throws IOException
+	 */
+	private static void outputSolution() throws IOException {
 		OutputParser outputParse = new OutputParser();
 		DirectedAcyclicGraph<Node, Edge> graph = dotParser.getGraph();
 		HashMap<String, Node> graphSolution = scheduler.getBestState().getCurrentBestState();
