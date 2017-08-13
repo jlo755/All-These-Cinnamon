@@ -6,27 +6,27 @@ import java.util.Stack;
 public class RecursiveDFS {
 
 	static double currentBestSolution = Double.POSITIVE_INFINITY;
+	static FinalState bestState;
 
 	public static void main(String[] args) throws IOException {
 		HashMap<String, Node> nodeMap = new HashMap<String, Node>();
 
 		InputParser parser = new InputParser();
 		parser.parseInput(nodeMap);
-		double bestSolution = Double.POSITIVE_INFINITY;
-		/*System.out.println("Hello: "+nodeName);
-				StateSpaceNode test = new StateSpaceNode(nodeName, nodeMap.get(nodeName).getCost(), 2);
-				test.addStateParents(test);
-				test.setProcessor(2);*/
-		for(int i = 1; i<=2; i++) {
+		bestState = new FinalState(nodeMap.keySet());
+		for(int i = 1; i<=1; i++) {
 			for(Node n:nodeMap.values()) {
 				if(n.getParents().isEmpty()) {
 					n.setProcessor(i);
+					long startTime = System.nanoTime();
 					recursiveDFS(nodeMap, n.getID());
-					System.out.println(currentBestSolution);
+					long endTime = System.nanoTime();
+					System.out.println((endTime-startTime)/ 1000000000.0);
+					
 				}
 			}
 		}
-
+		bestState.printCurrentBestState();
 		System.out.println(currentBestSolution);
 	}
 	//StateSpaceNode node = DFS(nodeMap, test);
@@ -127,6 +127,7 @@ public class RecursiveDFS {
 				//System.out.println(graph.get(nodeName).getEndTime());
 				if(max < currentBestSolution) {
 					currentBestSolution = max;
+					bestState.setCurrentBestState(graph);
 				}
 			}
 		}
@@ -221,11 +222,7 @@ public class RecursiveDFS {
 				maxCost = getMaxCommunicationCost(node, graph);
 				//System.out.println("Max Cost: "+maxCost);
 				longestCommunicationCost = getLongestCommunicationCost(node, graph);
-				if(maxProcessorTime == maxCost) {
-					node.setStartTime(maxCost);
-					node.setEndTime(maxCost+node.getCost());
-				}
-				else if (maxProcessorTime < maxCost) {
+				if (maxProcessorTime <= maxCost) {
 					node.setStartTime(maxCost);
 					node.setEndTime(maxCost + node.getCost());
 				} else {
