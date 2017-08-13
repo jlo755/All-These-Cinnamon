@@ -34,4 +34,8 @@ public class DotParser {
 	public HashMap<String, Node> getNodeMap(){
 		return _nodeMap;
 	}
+	
+	public DirectedAcyclicGraph<Node, Edge> getGraph(){
+		return _graph;
+	}
 }

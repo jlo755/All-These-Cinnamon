@@ -3,10 +3,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
+import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
 
 import DataStructure.Node;
 import InputParse.DotParser;
+import InputParse.Edge;
+import OutputParse.OutputParser;
 
 /**
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
@@ -27,5 +30,23 @@ public class RecursiveDFS {
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		//scheduler.setBestState(new FinalState(nodeMap.keySet()));
 		scheduler.schedule();
+		
+		
+		OutputParser outputParse = new OutputParser();
+		DirectedAcyclicGraph<Node, Edge> graph = dotParser.getGraph();
+		HashMap<String, Node> graphSolution = scheduler.getBestState().getCurrentBestState();
+		for(Object n:graph.vertexSet()){
+			Node node = (Node) n;
+			for(Node n1:graphSolution.values()){
+				if(node.getID() == n1.getID()){
+					node.setStartTime(n1.getStartTime());
+					node.setEndTime(n1.getEndTime());
+					node.setProcessor(n1.getProcessor());
+				}
+			}
+		}
+		outputParse.setGraph(dotParser.getGraph());
+		outputParse.outputDot();
+		scheduler.getBestState().printCurrentBestState();
 	}
 }
