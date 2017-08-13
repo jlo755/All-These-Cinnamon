@@ -17,21 +17,31 @@ import OutputParse.OutputParser;
 * placed on the different processors. We then check which of these is the best time. This process continues until all the nodes
 * in the network are visited and we have obtained the best scheduling times.
 */
-public class RecursiveDFS {
+public class LaunchScheduler {
+	
+	private static Scheduler scheduler;
+	private static DotParser dotParser;
 
 	public static void main(String[] args) throws IOException, ImportException {
 		
-		Scheduler scheduler = new Scheduler();
+		// Parse the dot graph input and schedule an optimal solution.
+		scheduler = new Scheduler();
+		dotParser = new DotParser(args[0]);
 		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
-		//InputParser parser = new InputParser();
-		//parser.parseInput(nodeMap);
-		DotParser dotParser = new DotParser(args[0]);
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
-		//scheduler.setBestState(new FinalState(nodeMap.keySet()));
 		scheduler.schedule();
 		
-		
+		// Output the solution in a dot format file.
+		outputSolution();
+	}
+	
+	/**
+	 * This method uses the solution found by the Scheduler to output the solution
+	 * in a dot format file.
+	 * @throws IOException
+	 */
+	private static void outputSolution() throws IOException {
 		OutputParser outputParse = new OutputParser();
 		DirectedAcyclicGraph<Node, Edge> graph = dotParser.getGraph();
 		HashMap<String, Node> graphSolution = scheduler.getBestState().getCurrentBestState();
@@ -47,6 +57,6 @@ public class RecursiveDFS {
 		}
 		outputParse.setGraph(dotParser.getGraph());
 		outputParse.outputDot();
-		//scheduler.getBestState().printCurrentBestState();
+		scheduler.getBestState().printCurrentBestState();
 	}
 }
