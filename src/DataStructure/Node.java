@@ -61,7 +61,7 @@ public class Node {
  	* whether it is completed or not
  	* @return a boolean of whether the node is complete or not
  	*/
-	public boolean getCompleted() {
+	public boolean isCompleted() {
 		return _completed;
 	}
 
