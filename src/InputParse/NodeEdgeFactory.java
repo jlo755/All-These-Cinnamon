@@ -1,7 +1,11 @@
 package InputParse;
 import org.jgrapht.EdgeFactory;
 
-
+/**
+ * 
+ * Implements EdgeFactory to return an Edge object to build the graph.
+ *
+ */
 public class NodeEdgeFactory implements EdgeFactory {
 
 	@Override
