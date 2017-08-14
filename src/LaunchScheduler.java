@@ -57,6 +57,6 @@ public class LaunchScheduler {
 		outputParse.setGraph(dotParser.getGraph());
 		outputParse.outputDot();
 		outputParse.formatFile();
-		scheduler.getBestState().printCurrentBestState();
+		System.out.println("Output file is " + fileName.replaceAll(".dot", "Output")+".dot");
 	}
 }
