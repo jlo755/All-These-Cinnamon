@@ -13,10 +13,10 @@ import DataStructure.Node;
  */
 public class Scheduler {
 
-	private double currentBestSolution;
-	private FinalState bestState;
-	private HashMap<String, Node> nodeMap;
-	private int _processors;
+	private double currentBestSolution; // Current best scheduling time
+	private FinalState bestState; // Best solutions for all of the Nodes.
+	private HashMap<String, Node> nodeMap; // Input task scheduling graph.
+	private int _numProcessors; // Number of processors assigned for scheduling.
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
@@ -31,7 +31,7 @@ public class Scheduler {
 	public void schedule() {
 		
 		// "Nodemap" is the input graph for the algorithm.
-		for (int i = 1; i <= _processors; i++) {
+		for (int i = 1; i <= _numProcessors; i++) {
 			for (Node n : nodeMap.values()) {
 				
 				// If a node doesn't not have parents, it is a starting node
@@ -70,7 +70,7 @@ public class Scheduler {
 		// loop through the different available processors to check for and compare
 		// between the final times when the node
 		// is placed on each of the processors
-		for (int i = 1; i <= _processors; i++) {
+		for (int i = 1; i <= _numProcessors; i++) {
 			
 			// Repeat these processes until all of the processor and node possibilities have
 			// been covered
@@ -350,7 +350,7 @@ public class Scheduler {
 	}
 
 	public void setProcessorNumber(int processors) {
-		_processors = processors;
+		_numProcessors = processors;
 	}
 	
 	/**
