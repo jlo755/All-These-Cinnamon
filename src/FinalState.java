@@ -6,7 +6,8 @@ import DataStructure.Node;
 /**
  * 
  * This class stores and manages the currently found "best solution" for a Node object,
- * used while traversing state space. A separate Node object is used to track this. 
+ * used while traversing state space. A separate Node object is used to track this within
+ * a HashMap. 
  *
  */
 

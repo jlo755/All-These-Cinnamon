@@ -169,7 +169,7 @@ public class Scheduler {
 		maxProcessorTime = calculateMaxCurrentProcessorTime(graph, node.getProcessor());
 		if (node.getParents().size() != 0) {
 			
-			// if all the parents are on the same processor
+			// if any of the parents are on a different processor
 			if (checkListContainsParent(graph, node)) {
 				
 				// Calculating the node that has the max end time of the processor in use
@@ -177,7 +177,6 @@ public class Scheduler {
 				
 				// if communication cost of a parent in the other processor is more than
 				// the processing cost of the parent in the same processor
-				
 				if (maxProcessorTime <= maxCost) {
 				
 					// start time of task after the parent in other processor has finished
