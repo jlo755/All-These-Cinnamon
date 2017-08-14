@@ -7,7 +7,11 @@ import org.jgrapht.ext.ComponentAttributeProvider;
 
 import InputParse.Edge;
 
-
+/**
+ * Implements ComponentAttributeProvider to provide the weight of an edge
+ * within the graph.
+ *
+ */
 public class EAttributeProvider implements ComponentAttributeProvider<Edge>{
 
 	@Override
@@ -17,7 +21,6 @@ public class EAttributeProvider implements ComponentAttributeProvider<Edge>{
 
 		
 		Map<String, String> map = new HashMap<String, String>();
-		System.out.println(EdgeCost);
 		map.put("Weight", EdgeCost+"");
 
 		

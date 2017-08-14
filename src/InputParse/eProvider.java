@@ -5,8 +5,12 @@ import org.jgrapht.ext.EdgeProvider;
 
 import DataStructure.Node;
 
-
+/**
+ * Implements EdgeProvider to produce an Edge object and returns it.
+ *
+ */
 public class eProvider implements EdgeProvider<Node, Edge>{
+
 
 	@Override
 	public Edge buildEdge(Node parentNode, Node childNode, String arg2, Map<String, String> arg3) {
