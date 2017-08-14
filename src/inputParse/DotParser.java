@@ -32,7 +32,9 @@ public class DotParser {
 	 * @throws ImportException
 	 */
 	public void parseInput() throws ImportException{
+		//converts .DOT file to a DAG _graph
 		_dotImp.importGraph(_graph, _reader);
+		//populates the _nodeMap which is a graph made of Node data structures
 		for(Node e:_graph.vertexSet()){			
 			_nodeMap.put(e.getID(), e);
 		}
