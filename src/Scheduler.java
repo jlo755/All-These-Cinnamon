@@ -74,21 +74,21 @@ public class Scheduler {
 			
 			// Repeat these processes until all of the processor and node possibilities have
 			// been covered
-			for (String node1 : reachableNodes) {
+			for (String currentNode : reachableNodes) {
 				
 				// set the node on a processor
-				graph.get(node1).setProcessor(i);
+				graph.get(currentNode).setProcessor(i);
 				
 				// call the recursive DFS method to check for the processing times of the child
 				// nodes
-				dfs(graph, node1);
+				dfs(graph, currentNode);
 				
 				// set the times of the node to 0
-				graph.get(node1).setStartTime(0.0);
-				graph.get(node1).setEndTime(0.0);
+				graph.get(currentNode).setStartTime(0.0);
+				graph.get(currentNode).setEndTime(0.0);
 				
 				// set the node as not finished
-				graph.get(node1).setCompleted(false);
+				graph.get(currentNode).setCompleted(false);
 			}
 			
 			// If there are no reachable nodes, it is an exit node.
