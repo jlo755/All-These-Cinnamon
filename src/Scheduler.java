@@ -3,6 +3,14 @@ import java.util.HashMap;
 
 import DataStructure.Node;
 
+/**
+ * 
+ * This class produces an optimal solution to a multi-processor 
+ * scheduling problem. This is based on an input graph representing a 
+ * series of tasks costs and their dependencies, as well as the 
+ * number of processors specified. 
+ *
+ */
 public class Scheduler {
 
 	private double currentBestSolution;
@@ -10,34 +18,36 @@ public class Scheduler {
 	private HashMap<String, Node> nodeMap;
 	private int _processors;
 
+	/**
+	 * Initialize the best solution so far to infinity on starting.
+	 */
 	public Scheduler() {
 		currentBestSolution = Double.POSITIVE_INFINITY;
 	}
 
+	/**
+	 * Processes the input graph with DFS to calculate an optimal schedule.
+	 */
 	public void schedule() {
 		
 		// "Nodemap" is the input graph for the algorithm.
 		for (int i = 1; i <= _processors; i++) {
 			for (Node n : nodeMap.values()) {
+				
 				// If a node doesn't not have parents, it is a starting node
 				if (n.getParents().isEmpty()) {
 					n.setProcessor(i);
-					long startTime = System.nanoTime();
+					
 					// call the recursive DFS method for that node to obtain and process all of the
 					// children
-					recursiveDFS(nodeMap, n.getID());
-					long endTime = System.nanoTime();
-					//System.out.println((endTime - startTime) / 1000000000.0);
-
+					dfs(nodeMap, n.getID());
 				}
 			}
 		}
-		//bestState.printCurrentBestState();
-		//System.out.println(currentBestSolution);
 	}
 
 	/**
-	 * Iterative approach to DFS for a given graph, used in search in the state
+	 * Recursive approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem.
 	 * 
 	 *
@@ -47,38 +57,51 @@ public class Scheduler {
 	 *            This is the node which we are starting off from
 	 */
 
-	public void recursiveDFS(HashMap<String, Node> graph, String nodeName) {
+	public void dfs(HashMap<String, Node> graph, String nodeName) {
+		
 		// set the node as being completed
 		graph.get(nodeName).setCompleted(true);
-		ArrayList<String> test = getReachable(graph);
+		ArrayList<String> reachableNodes = getReachable(graph);
+		
 		// this calculates the time at which the node task can be placed in that
 		// particular processor
 		calculateTime(graph, graph.get(nodeName));
+		
 		// loop through the different available processors to check for and compare
 		// between the final times when the node
 		// is placed on each of the processors
-
 		for (int i = 1; i <= _processors; i++) {
+			
 			// Repeat these processes until all of the processor and node possibilities have
 			// been covered
-			for (String node1 : test) {
+			for (String node1 : reachableNodes) {
+				
+				// set the node on a processor
 				graph.get(node1).setProcessor(i);
+				
 				// call the recursive DFS method to check for the processing times of the child
 				// nodes
-				recursiveDFS(graph, node1);
+				dfs(graph, node1);
+				
 				// set the times of the node to 0
 				graph.get(node1).setStartTime(0.0);
 				graph.get(node1).setEndTime(0.0);
+				
 				// set the node as not finished
 				graph.get(node1).setCompleted(false);
 			}
-			if (test.isEmpty()) {
+			
+			// If there are no reachable nodes, it is an exit node.
+			if (reachableNodes.isEmpty()) {
+				
+				// Get the max endTime value for this processor branch.
 				double max = 0;
 				for (Node n : graph.values()) {
 					if (n.getEndTime() > max) {
 						max = n.getEndTime();
 					}
 				}
+				
 				// reset the best solution if a lower scheduling time has been found
 				if (max < currentBestSolution) {
 					currentBestSolution = max;
@@ -96,23 +119,29 @@ public class Scheduler {
 	 * @return reachableNodeNames the reachable nodes list
 	 */
 	public ArrayList<String> getReachable(HashMap<String, Node> graph) {
+		
 		ArrayList<String> reachableNodeNames = new ArrayList<String>();
-		for (String nodes : graph.keySet()) {
-			if (graph.get(nodes).isCompleted()) {
+		
+		for (String nodeName : graph.keySet()) {
+			
+			// skip already completed nodes
+			if (graph.get(nodeName).isCompleted()) {
 				continue;
 			}
 			boolean dependenciesDone = true;
+			
 			// if the parent nodes have not been completed, then the dependencies are not
 			// complete
-			for (Node parentNode : graph.get(nodes).getParents().keySet()) {
+			for (Node parentNode : graph.get(nodeName).getParents().keySet()) {
 				if (!parentNode.isCompleted()) {
 					dependenciesDone = false;
 					break;
 				}
 			}
+			
 			// add the node into the list as reachable if the dependencies are done
 			if (dependenciesDone) {
-				reachableNodeNames.add(nodes);
+				reachableNodeNames.add(nodeName);
 			}
 		}
 		return reachableNodeNames;
@@ -133,36 +162,50 @@ public class Scheduler {
 	 **/
 
 	public void calculateTime(HashMap<String, Node> graph, Node node) {
+		
 		double maxCost = 0.0, maxProcessorTime = 0.0;
+		
 		// check if it has a parent
 		maxProcessorTime = calculateMaxCurrentProcessorTime(graph, node.getProcessor());
 		if (node.getParents().size() != 0) {
+			
 			// if all the parents are on the same processor
 			if (checkListContainsParent(graph, node)) {
+				
 				// Calculating the node that has the max end time of the processor in use
 				maxCost = getMaxCommunicationCost(node);
+				
 				// if communication cost of a parent in the other processor is more than
 				// the processing cost of the parent in the same processor
+				
 				if (maxProcessorTime <= maxCost) {
+				
 					// start time of task after the parent in other processor has finished
 					node.setStartTime(maxCost);
+					
 					// current task finishes when it has processed ( in "cost" time )
 					node.setEndTime(maxCost + node.getCost());
 				} else {
+					
 					// current task starts as soon as parent in the same processor ends
 					node.setStartTime(maxProcessorTime);
+					
 					// current task finishes when it has processed ( in "cost" time )
 					node.setEndTime(node.getCost() + maxProcessorTime);
 				}
 			} else {
+				
 				// first node will start immediately
 				node.setStartTime(maxProcessorTime);
+				
 				// current task finishes when it has processed ( in "cost" time )
 				node.setEndTime(node.getCost() + maxProcessorTime);
 			}
 		} else {
+			
 			// first node will start immediately
 			node.setStartTime(maxProcessorTime);
+			
 			// current task finishes when it has processed ( in "cost" time )
 			node.setEndTime(node.getCost() + maxProcessorTime);
 		}
@@ -181,13 +224,16 @@ public class Scheduler {
 	 */
 
 	public boolean checkListContainsParent(HashMap<String, Node> graph, Node node) {
+		
 		ArrayList<String> completedNodes = new ArrayList<String>();
+		
 		// populate the completed nodes list according to whether it is set as completed
 		for (Node n : graph.values()) {
 			if (n.getProcessor() == node.getProcessor() && n.isCompleted()) {
 				completedNodes.add(n.getID());
 			}
 		}
+		
 		// get all the parents of that node and check if they are present in the
 		// processor
 		for (Node n : node.getParents().keySet()) {
@@ -212,12 +258,15 @@ public class Scheduler {
 	 */
 	public double calculateMaxCurrentProcessorTime(HashMap<String, Node> graph, int processor) {
 		double max = 0.0;
+		
 		// go through the graph and then obtain the maximum time in the schedule for
 		// that particular processor
 		for (Node n : graph.values()) {
+			
 			// check if the node exists in the processor we are trying to get the max time
 			// for
 			if (n.getProcessor() == processor) {
+				
 				// update the max time
 				if (n.getEndTime() > max) {
 					max = n.getEndTime();
@@ -238,10 +287,13 @@ public class Scheduler {
 	 *         doesn't exist, this returns 0.0
 	 */
 	public double calculateCommunicationCost(Node node, Node parent) {
+		
 		// get children list of parent
 		for (Node n1 : parent.getChildren().keySet()) {
+			
 			// child node in the list
 			if (n1.equals(node)) {
+				
 				// get link cost (value) of parent with the node
 				return parent.getChildren().get(n1);
 			}
@@ -261,10 +313,13 @@ public class Scheduler {
 	 *         task cost
 	 */
 	public double getMaxCommunicationCost(Node n) {
+		
 		double ccost = 0.0;
+		
 		// get parent list of a node, where parent belongs to a different processor
 		for (Node n1 : n.getParents().keySet()) {
 			if (n1.getProcessor() != n.getProcessor()) {
+				
 				// get cost of the current task that needs to be processed after its parent
 				// in the other processor i.e communication cost + task cost
 				if (calculateCommunicationCost(n, n1) + n1.getEndTime() > ccost) {
