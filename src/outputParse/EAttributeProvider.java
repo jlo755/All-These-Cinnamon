@@ -1,11 +1,11 @@
-package OutputParse;
+package outputParse;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.jgrapht.ext.ComponentAttributeProvider;
 
-import InputParse.Edge;
+import inputParse.Edge;
 
 /**
  * Implements ComponentAttributeProvider to provide the weight of an edge

@@ -1,4 +1,4 @@
-package DataStructure;
+package dataStructure;
 import java.util.HashMap;
 /**
  * This class is responsible for storing all the nodes along

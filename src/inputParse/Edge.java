@@ -1,6 +1,6 @@
-package InputParse;
+package inputParse;
 
-import DataStructure.Node;
+import dataStructure.Node;
 
 /**
  * 

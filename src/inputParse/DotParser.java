@@ -1,13 +1,13 @@
-package InputParse;
+package inputParse;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
 
-import DataStructure.Node;
-
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.DOTImporter;
 import org.jgrapht.ext.ImportException;
+
+import dataStructure.Node;
 
 /**
  * 

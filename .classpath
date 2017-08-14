@@ -6,12 +6,12 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="//uoa.auckland.ac.nz/engdfs/Home/jlo755/Desktop/jgrapht-1.0.1/lib/antlr4-runtime-4.5.3.jar"/>
-	<classpathentry kind="lib" path="//uoa.auckland.ac.nz/engdfs/Home/jlo755/Desktop/jgrapht-1.0.1/lib/jgraph-5.13.0.0.jar"/>
-	<classpathentry kind="lib" path="//uoa.auckland.ac.nz/engdfs/Home/jlo755/Desktop/jgrapht-1.0.1/lib/jgrapht-core-1.0.1.jar"/>
-	<classpathentry kind="lib" path="//uoa.auckland.ac.nz/engdfs/Home/jlo755/Desktop/jgrapht-1.0.1/lib/jgrapht-demo-1.0.1.jar"/>
-	<classpathentry kind="lib" path="//uoa.auckland.ac.nz/engdfs/Home/jlo755/Desktop/jgrapht-1.0.1/lib/jgrapht-ext-1.0.1.jar"/>
-	<classpathentry kind="lib" path="//uoa.auckland.ac.nz/engdfs/Home/jlo755/Desktop/jgrapht-1.0.1/lib/jgrapht-ext-1.0.1-uber.jar"/>
-	<classpathentry kind="lib" path="//uoa.auckland.ac.nz/engdfs/Home/jlo755/Desktop/jgrapht-1.0.1/lib/jgraphx-2.0.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/victor/Desktop/jgrapht-1.0.1/lib/antlr4-runtime-4.5.3.jar"/>
+	<classpathentry kind="lib" path="/home/victor/Desktop/jgrapht-1.0.1/lib/jgraph-5.13.0.0.jar"/>
+	<classpathentry kind="lib" path="/home/victor/Desktop/jgrapht-1.0.1/lib/jgrapht-core-1.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/victor/Desktop/jgrapht-1.0.1/lib/jgrapht-demo-1.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/victor/Desktop/jgrapht-1.0.1/lib/jgrapht-ext-1.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/victor/Desktop/jgrapht-1.0.1/lib/jgrapht-ext-1.0.1-uber.jar"/>
+	<classpathentry kind="lib" path="/home/victor/Desktop/jgrapht-1.0.1/lib/jgraphx-2.0.0.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

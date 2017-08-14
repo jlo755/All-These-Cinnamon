@@ -1,7 +1,8 @@
+package scheduling;
 import java.util.HashMap;
 import java.util.Set;
 
-import DataStructure.Node;
+import dataStructure.Node;
 
 /**
  * 

@@ -1,13 +1,14 @@
+package scheduling;
 import java.io.IOException;
 import java.util.HashMap;
 
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
 
-import DataStructure.Node;
-import InputParse.DotParser;
-import InputParse.Edge;
-import OutputParse.OutputParser;
+import dataStructure.Node;
+import inputParse.DotParser;
+import inputParse.Edge;
+import outputParse.OutputParser;
 
 /**
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,

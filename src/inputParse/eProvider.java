@@ -1,9 +1,9 @@
-package InputParse;
+package inputParse;
 import java.util.Map;
 
 import org.jgrapht.ext.EdgeProvider;
 
-import DataStructure.Node;
+import dataStructure.Node;
 
 /**
  * Implements EdgeProvider to produce an Edge object and returns it.

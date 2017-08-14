@@ -1,4 +1,4 @@
-package OutputParse;
+package outputParse;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,8 +11,8 @@ import java.util.Scanner;
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.DOTExporter;
 
-import DataStructure.Node;
-import InputParse.Edge;
+import dataStructure.Node;
+import inputParse.Edge;
 
 /**
  * OutputParser produces an output dot file from a given graph data structure.

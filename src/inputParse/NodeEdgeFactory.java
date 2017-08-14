@@ -1,7 +1,7 @@
-package InputParse;
+package inputParse;
 import org.jgrapht.EdgeFactory;
 
-import DataStructure.Node;
+import dataStructure.Node;
 
 
 /**

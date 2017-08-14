@@ -1,8 +1,8 @@
-package OutputParse;
+package outputParse;
 
 import org.jgrapht.ext.ComponentNameProvider;
 
-import DataStructure.Node;
+import dataStructure.Node;
 
 /**
  * Implements ComponentNameProvider to return a Node's name.

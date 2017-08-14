@@ -1,11 +1,11 @@
-package OutputParse;
+package outputParse;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jgrapht.ext.ComponentAttributeProvider;
 
-import DataStructure.Node;
+import dataStructure.Node;
 
 /**
  * Implements VAttributeProvider to get the weight, start time and processor number for

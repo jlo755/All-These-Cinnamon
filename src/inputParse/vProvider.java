@@ -1,9 +1,9 @@
-package InputParse;
+package inputParse;
 import java.util.Map;
 
 import org.jgrapht.ext.VertexProvider;
 
-import DataStructure.Node;
+import dataStructure.Node;
 
 /**
  * 
