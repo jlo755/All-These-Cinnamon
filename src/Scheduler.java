@@ -34,7 +34,7 @@ public class Scheduler {
 		for (int i = 1; i <= _numProcessors; i++) {
 			for (Node n : nodeMap.values()) {
 				
-				// If a node doesn't not have parents, it is a starting node
+				// If a node doesn't have parents, it is a starting node
 				if (n.getParents().isEmpty()) {
 					n.setProcessor(i);
 					
