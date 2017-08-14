@@ -4,12 +4,11 @@ import org.jgrapht.ext.ComponentNameProvider;
 
 import DataStructure.Node;
 
-public class VIDProvider implements ComponentNameProvider{
+public class VIDProvider implements ComponentNameProvider<Node>{
 
 	@Override
-	public String getName(Object node) {
-		Node theNode = (Node)(node);
-		return theNode.getID();
+	public String getName(Node node) {
+		return node.getID();
 	}
 
 }

@@ -1,6 +1,5 @@
 package OutputParse;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -8,18 +7,17 @@ import org.jgrapht.ext.ComponentAttributeProvider;
 
 import DataStructure.Node;
 
-public class VAttributeProvider implements ComponentAttributeProvider{
+public class VAttributeProvider implements ComponentAttributeProvider<Node>{
 
 	@Override
-	public Map getComponentAttributes(Object node) {
-		Node theNode = (Node)node;
-		double NodeCost = theNode.getCost();
-		double NodeStart = theNode.getStartTime();
-		double NodeProcessor = theNode.getProcessor();
+	public Map<String, String> getComponentAttributes(Node node) {
+		int NodeCost = node.getCost();
+		int NodeStart = (int)node.getStartTime();
+		int NodeProcessor = node.getProcessor();
 		
-		Map map = new LinkedHashMap<String, String>();
-		map.put("Weight", NodeCost+"");
-		map.put("Start", NodeStart+"");
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		map.put("Weight", NodeCost+",");
+		map.put("Start", NodeStart+",");
 		map.put("Processor", NodeProcessor+"");	
 		
 		

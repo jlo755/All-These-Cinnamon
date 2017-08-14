@@ -1,7 +1,5 @@
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Stack;
 
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
@@ -33,7 +31,7 @@ public class LaunchScheduler {
 		scheduler.schedule();
 		
 		// Output the solution in a dot format file.
-		outputSolution();
+		outputSolution(args[0]);
 	}
 	
 	/**
@@ -41,8 +39,9 @@ public class LaunchScheduler {
 	 * in a dot format file.
 	 * @throws IOException
 	 */
-	private static void outputSolution() throws IOException {
+	private static void outputSolution(String fileName) throws IOException {
 		OutputParser outputParse = new OutputParser();
+		outputParse.setFileName(fileName);
 		DirectedAcyclicGraph<Node, Edge> graph = dotParser.getGraph();
 		HashMap<String, Node> graphSolution = scheduler.getBestState().getCurrentBestState();
 		for(Object n:graph.vertexSet()){
@@ -57,6 +56,7 @@ public class LaunchScheduler {
 		}
 		outputParse.setGraph(dotParser.getGraph());
 		outputParse.outputDot();
+		outputParse.formatFile();
 		scheduler.getBestState().printCurrentBestState();
 	}
 }
