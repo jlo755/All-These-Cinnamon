@@ -15,7 +15,6 @@ public class Node {
 	private String _id;
 	// cost of the node itself
 	private int _cost; 
-	private HashMap<String, Double> _distances;
 	// boolean of whether the node has already been visited in the traversal
 	private boolean _completed;
 	// the processor on which to set the node on
@@ -33,7 +32,6 @@ public class Node {
 		_parents = new HashMap<Node, Double>();
 		_children = new HashMap<Node, Double>();
 		// storing the distances in a matrix to all the other nodes in the network (infinitiy and actual reachable costs)
-		_distances = new HashMap<String, Double>();  
 		_completed = false;
 		// stores all the nodes we visited in the state space before this node was visited
 	}
