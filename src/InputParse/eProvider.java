@@ -3,7 +3,10 @@ import java.util.Map;
 
 import org.jgrapht.ext.EdgeProvider;
 
-
+/**
+ * Implements EdgeProvider to produce an Edge object and returns it.
+ *
+ */
 public class eProvider implements EdgeProvider{
 
 	@Override
