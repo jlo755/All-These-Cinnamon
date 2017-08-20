@@ -22,6 +22,11 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 <<<<<<< HEAD
+*.xml
+*.iml
+.DS_Store
+=======
+<<<<<<< HEAD
 /build/
 =======
 .idea/All-These-Cinnamon.iml
@@ -33,3 +38,9 @@ hs_err_pid*
 =======
 .DS_Store
 >>>>>>> branch 'Algorithm' of https://github.com/jlo755/All-These-Cinnamon
+>>>>>>> Algorithm
+*.xml
+*.xml
+.classpath
+*.prefs
+.project
