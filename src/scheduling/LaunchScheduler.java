@@ -24,15 +24,17 @@ public class LaunchScheduler {
 	public static void main(String[] args) throws IOException, ImportException {
 		
 		// Parse the dot graph input and schedule an optimal solution.
+		long startTime = System.nanoTime();
 		scheduler = new Scheduler();
 		dotParser = new DotParser(args[0]);
 		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		scheduler.schedule();
-		
 		// Output the solution in a dot format file.
 		outputSolution(args[0]);
+		long endTime = System.nanoTime();
+		System.out.println("The program took: "+(endTime - startTime)/1000000000.0);
 	}
 	
 	/**
