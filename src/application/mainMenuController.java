@@ -62,11 +62,16 @@ public class mainMenuController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-
 	}
 
 
+	public String  getFilePath(){
+		return _filePath;
+	}
 
+	public Integer  getNumberOfProcessors(){
+		return _noOfProcessors;
+	}
 
 
 
