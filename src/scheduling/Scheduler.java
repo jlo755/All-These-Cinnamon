@@ -1,6 +1,9 @@
 package scheduling;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Stack;
 
 import dataStructure.Node;
@@ -31,22 +34,28 @@ public class Scheduler {
 	 * Processes the input graph with DFS to calculate an optimal schedule.
 	 */
 	public void schedule() {
-
+		double hello = this.findStartingOptimalBranch(nodeMap);
+		for (Node n : nodeMap.values()) {
+			n.setCompleted(false);
+			n.setEndTime(0.0);
+			n.setStartTime(0.0);
+		}
+		System.out.println(currentBestSolution);
 		// "Nodemap" is the input graph for the algorithm.
 		//for (int i = 1; i <= _numProcessors; i++) {
-			for (Node n : nodeMap.values()) {
+		for (Node n : nodeMap.values()) {
 
-				// If a node doesn't have parents, it is a starting node
-				if (n.getParents().isEmpty()) {
-					n.setProcessor(1);
+			// If a node doesn't have parents, it is a starting node
+			if (n.getParents().isEmpty()) {
+				n.setProcessor(1);
 
-					// call the recursive DFS method for that node to obtain and process all of the
-					// children
-					dfs(nodeMap, n.getID());
-				}
+				// call the recursive DFS method for that node to obtain and process all of the
+				// children
+				dfs(nodeMap, n.getID());
 			}
+		}
 		//}
-			System.out.println(currentBestSolution);
+		System.out.println(currentBestSolution);
 	}
 
 	/**
@@ -89,10 +98,12 @@ public class Scheduler {
 				double bottomLevelNode = 0;
 				for(Node n:graph.values()){
 					if(n.isCompleted()){
-						bottomLevelNode = findMaxBottomLevel(graph, nodeName);
+						bottomLevelNode = findMaxBottomLevel(graph, n.getID());
+						/*System.out.println(n.getID());
+						System.out.println("End Time: "+n.getEndTime());
+						System.out.println("Max: "+bottomLevelNode);*/
 						if(bottomLevelNode > max){
 							max = bottomLevelNode;
-							//System.out.println("Max: "+max);
 						}
 					}
 				}
@@ -106,7 +117,7 @@ public class Scheduler {
 					// set the node as not finished
 					graph.get(currentNode).setCompleted(false);
 				} else {
-
+					//System.out.println("Is this bounding?");
 					// set the times of the node to 0
 					graph.get(currentNode).setStartTime(0.0);
 					graph.get(currentNode).setEndTime(0.0);
@@ -129,6 +140,7 @@ public class Scheduler {
 
 				// reset the best solution if a lower scheduling time has been found
 				if (max < currentBestSolution) {
+
 					currentBestSolution = max;
 					bestState.setCurrentBestState(graph);
 				}
@@ -182,7 +194,7 @@ public class Scheduler {
 	 *            Node itself.
 	 * 
 	 * @param node
-	 *            - this is the current node we’re calculating time for.
+	 *            - this is the current node we're calculating time for.
 	 * 
 	 **/
 	public void calculateTime(HashMap<String, Node> graph, Node node) {
@@ -242,7 +254,7 @@ public class Scheduler {
 	 *            case, it stores HashMap<String, Node> - name of the node, to the
 	 *            Node itself.
 	 * @param node
-	 *            this is the current node we’re checking the parent for
+	 *            this is the current node we�re checking the parent for
 	 * @return returns whether the node has a parent in a processor
 	 */
 
@@ -367,11 +379,77 @@ public class Scheduler {
 		return totalTime;
 	}
 
+	public double findStartingOptimalBranch(HashMap<String, Node> graph){
+		Queue<Node> optimalBranch = new PriorityQueue<Node>();
+		/*Comparator<Node> nodeComparator = new Comparator<Node>() {
+			@Override
+			public int compare(Node left, Node right) {
+				if(left.getBottomLevel() < right.getBottomLevel()){
+					return 1;
+				} else if (left.getBottomLevel() > right.getBottomLevel()){
+					return -1;
+				} else {
+					return 0;
+				}
+			} 
+		};*/
+		for(Node n:graph.values()){
+			//System.out.println("N: "+n.getID());
+			n.setBottomLevel(findMaxBottomLevel(graph, n.getID()));
+			//System.out.println(n.getBottomLevel());
+			optimalBranch.add(n);
+		}
+		while(!optimalBranch.isEmpty()){
+			Node n = optimalBranch.poll();
+			n.setCompleted(true);
+			double currentBestTime = Double.POSITIVE_INFINITY;
+			double currentStartTime = Double.POSITIVE_INFINITY;
+			int previousProcessor = n.getProcessor();
+			for(int i = 1; i<=_numProcessors; i++){
+				n.setProcessor(i);
+				calculateTime(graph, n);
+				//System.out.println("Node: "+n.getID());
+				//System.out.println(n.getEndTime());
+				if(currentBestTime > n.getEndTime()){
+					currentBestTime = n.getEndTime();
+					currentStartTime = n.getStartTime();
+					previousProcessor = n.getProcessor();
+				}
+				n.setEndTime(0.0);
+				n.setStartTime(0.0);
+			}
+			n.setStartTime(currentStartTime);
+			n.setEndTime(currentBestTime);
+			n.setProcessor(previousProcessor);
+			if(optimalBranch.isEmpty()){
+				double max = 0;
+				for (Node n2 : graph.values()) {
+					//System.out.println("Node: "+n2.getID()+" End Time: "+n2.getEndTime());
+					if (n2.getEndTime() > max) {
+						max = n2.getEndTime();
+					}
+				}
+				if (max < currentBestSolution) {
+					currentBestSolution = max;
+					//System.out.println("Hello: "+currentBestSolution);
+					bestState.setCurrentBestState(graph);
+					for(Node n1:graph.values()){
+						//System.out.println("Node name: "+n1.getID()+" Processor: "+n1.getProcessor());
+						//System.out.println("Node end: "+n1.getEndTime());
+					}
+				}
+			}
+		}
+		return 0.0;
+	}
+
 	public double findMaxBottomLevel(HashMap<String, Node> graph, String initialNode){
 		Stack<String> s = new Stack<String>();
 		s.add(initialNode);
 		double startTime = graph.get(initialNode).getStartTime();
-		double totalTime = startTime;
+		graph.get(initialNode).setOptimalBottomLevel(startTime+graph.get(initialNode).getCost());
+		//System.out.println("Initial Node: "+initialNode);
+		//double totalTime = startTime;
 		double max = 0;
 		/*for(Node n:graph.values()){
 			if(n.isCompleted()){
@@ -384,22 +462,51 @@ public class Scheduler {
 		//System.out.println("\nNode Started: "+initialNode);
 		while(!s.isEmpty()){
 			Node node = graph.get(s.pop());
+			//System.out.println("Node popped: "+node.getID());
 			if(node.getParents().keySet().contains(graph.get(initialNode))){
-				graph.get(initialNode).setBottomLevel(startTime);
-				totalTime = startTime+graph.get(initialNode).getCost();
+				//System.out.println("Reset");
+				graph.get(initialNode).setOptimalBottomLevel(startTime+graph.get(initialNode).getCost());
+				//totalTime = startTime+graph.get(initialNode).getCost();
 			}
 			for(Node child: node.getChildren().keySet()){
-				//System.out.println("Children name: "+child.getID());
 				s.push(child.getID());
 			}
-			totalTime += node.getCost();
+			if(node.getID() != initialNode) {
+				double test = 0;
+				for(Node parent:node.getParents().keySet()) {
+					//System.out.println("Parent: "+parent.getID());
+					//System.out.println("Cost: "+parent.getOptimalBottomLevel());
+					if(test<parent.getOptimalBottomLevel()) {
+						test = parent.getOptimalBottomLevel();
+					}
+				}
+				//System.out.println(node.getCost());
+				node.setOptimalBottomLevel(test+node.getCost());
+			}
+			/*totalTime += node.getCost();
 			if(totalTime > max){
 				max = totalTime;
-			}
+			}*/
 		}
-		//System.out.println("Bottom Level: "+max);
+		for(Node n:graph.values()) {
+			if(n.getOptimalBottomLevel() > max && n.getChildren().isEmpty()) {
+				max = n.getOptimalBottomLevel();
+			}
+			n.setOptimalBottomLevel(0.0);
+		}
+		//System.out.println(max);
 		return max;
 	}
+
+	/*public double findMaxBottomLevel(HashMap<String, Node> graph, String initialNode){
+		Node node = graph.get(initialNode);
+		node.setBottomLevelFlag(true);
+		for(Node n:node.getChildren().keySet()) {
+			if(!n.getBottomLevelFlag()) {
+				findMaxBottomLevel(graph, n.getID());
+			}
+		}
+	}*/
 
 	/**
 	 * Returns the currentBestSolution field.
