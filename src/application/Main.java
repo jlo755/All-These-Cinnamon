@@ -9,7 +9,9 @@ import javafx.scene.layout.BorderPane;
 
 
 public class Main extends Application {
-	@Override
+
+	public Main(){ }
+
 	public void start(Stage primaryStage) {
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
@@ -22,7 +24,7 @@ public class Main extends Application {
 		}
 	}
 
-	public static void main(String[] args) {
-		launch(args);
+	public void launchMenu() {
+		launch();
 	}
 }
