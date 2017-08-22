@@ -8,6 +8,7 @@ import org.jgrapht.ext.ImportException;
 import dataStructure.Node;
 import inputParse.DotParser;
 import inputParse.Edge;
+import outputGraph.VisualGraph;
 import outputParse.OutputParser;
 
 /**
@@ -31,6 +32,7 @@ public class LaunchScheduler {
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		scheduler.schedule();
+		VisualGraph vg = new VisualGraph(dotParser.getNodeMap());
 		// Output the solution in a dot format file.
 		outputSolution(args[0]);
 		long endTime = System.nanoTime();
