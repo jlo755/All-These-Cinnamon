@@ -31,8 +31,8 @@ public class LaunchScheduler {
 		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
-		scheduler.schedule();
 		VisualGraph vg = new VisualGraph(dotParser.getNodeMap());
+		scheduler.schedule();
 		// Output the solution in a dot format file.
 		outputSolution(args[0]);
 		long endTime = System.nanoTime();
