@@ -1,6 +1,7 @@
 package scheduling;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 import dataStructure.Node;
 
@@ -32,19 +33,20 @@ public class Scheduler {
 	public void schedule() {
 
 		// "Nodemap" is the input graph for the algorithm.
-		for (int i = 1; i <= _numProcessors; i++) {
+		//for (int i = 1; i <= _numProcessors; i++) {
 			for (Node n : nodeMap.values()) {
 
 				// If a node doesn't have parents, it is a starting node
 				if (n.getParents().isEmpty()) {
-					n.setProcessor(i);
+					n.setProcessor(1);
 
 					// call the recursive DFS method for that node to obtain and process all of the
 					// children
 					dfs(nodeMap, n.getID());
 				}
 			}
-		}
+		//}
+			System.out.println(currentBestSolution);
 	}
 
 	/**
@@ -82,16 +84,20 @@ public class Scheduler {
 
 				// call the recursive DFS method to check for the processing times of the child
 				// nodes
-				int totalTime = 0;
-				for(int j = 1; j<= _numProcessors; j++){
-					totalTime += calculateMaxCurrentProcessorTime(graph, j);
-				}
-				for(Node node: graph.values()){
-					if(!node.isCompleted()){
-						totalTime += node.getCost();
+				int loadBalancedTime = this.getPerfectLoadBalance(graph)/_numProcessors;
+				double max = 0;
+				double bottomLevelNode = 0;
+				for(Node n:graph.values()){
+					if(n.isCompleted()){
+						bottomLevelNode = findMaxBottomLevel(graph, nodeName);
+						if(bottomLevelNode > max){
+							max = bottomLevelNode;
+							//System.out.println("Max: "+max);
+						}
 					}
 				}
-				if(totalTime/_numProcessors < currentBestSolution){
+				double totalTime = Math.max(loadBalancedTime, max);
+				if(totalTime < currentBestSolution){
 					dfs(graph, currentNode);
 					// set the times of the node to 0
 					graph.get(currentNode).setStartTime(0.0);
@@ -179,7 +185,6 @@ public class Scheduler {
 	 *            - this is the current node we’re calculating time for.
 	 * 
 	 **/
-
 	public void calculateTime(HashMap<String, Node> graph, Node node) {
 
 		double maxCost = 0.0, maxProcessorTime = 0.0;
@@ -347,6 +352,53 @@ public class Scheduler {
 		}
 
 		return ccost;
+	}
+
+	public int getPerfectLoadBalance(HashMap<String, Node> graph){
+		int totalTime = 0;
+		for(int j = 1; j<= _numProcessors; j++){
+			totalTime += calculateMaxCurrentProcessorTime(graph, j);
+		}
+		for(Node node: graph.values()){
+			if(!node.isCompleted()){
+				totalTime += node.getCost();
+			}
+		}
+		return totalTime;
+	}
+
+	public double findMaxBottomLevel(HashMap<String, Node> graph, String initialNode){
+		Stack<String> s = new Stack<String>();
+		s.add(initialNode);
+		double startTime = graph.get(initialNode).getStartTime();
+		double totalTime = startTime;
+		double max = 0;
+		/*for(Node n:graph.values()){
+			if(n.isCompleted()){
+				System.out.println("Node name: "+n.getID());
+				System.out.println("Node endTime: "+n.getEndTime());
+				System.out.println("Node processor: "+n.getProcessor());
+			}
+		}*/
+		//graph.get(initialNode).setBottomLevel(0);
+		//System.out.println("\nNode Started: "+initialNode);
+		while(!s.isEmpty()){
+			Node node = graph.get(s.pop());
+			if(node.getParents().keySet().contains(graph.get(initialNode))){
+				graph.get(initialNode).setBottomLevel(startTime);
+				totalTime = startTime+graph.get(initialNode).getCost();
+			}
+			for(Node child: node.getChildren().keySet()){
+				//System.out.println("Children name: "+child.getID());
+				s.push(child.getID());
+			}
+			totalTime += node.getCost();
+			if(totalTime > max){
+				max = totalTime;
+			}
+		}
+		//System.out.println("Bottom Level: "+max);
+		return max;
 	}
 
 	/**

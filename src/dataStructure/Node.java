@@ -22,6 +22,7 @@ public class Node {
 	// start and end times of the nodes which depend on the communication as well as the task costs
 	private double _startTime;
 	private double _endTime;
+	private double _bottomLevel;
 	// stores all the nodes we visited in the state space before this node was visited
 
 
@@ -123,6 +124,14 @@ public class Node {
  	*/
 	public void setCompleted(boolean completed) {
 		_completed = completed;
+	}
+	
+	public void setBottomLevel(double endTime){
+		_bottomLevel = endTime;
+	}
+	
+	public double getBottomLevel(int cost){
+		return _bottomLevel;
 	}
 
 	/**
