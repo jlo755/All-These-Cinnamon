@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
 
+import application.Main;
 import dataStructure.Node;
 import inputParse.DotParser;
 import inputParse.Edge;
@@ -18,14 +19,16 @@ import outputParse.OutputParser;
 * in the network are visited and we have obtained the best scheduling times.
 */
 public class LaunchScheduler {
-	
+
 	private static Scheduler scheduler;
 	private static DotParser dotParser;
 
 	public static void main(String[] args) throws IOException, ImportException {
-		
+
 		// Parse the dot graph input and schedule an optimal solution.
 		long startTime = System.nanoTime();
+		Main m = new Main();
+		m.launchMenu();
 		scheduler = new Scheduler();
 		dotParser = new DotParser(args[0]);
 		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
@@ -38,7 +41,7 @@ public class LaunchScheduler {
 		long endTime = System.nanoTime();
 		System.out.println("The program took: "+(endTime - startTime)/1000000000.0);
 	}
-	
+
 	/**
 	 * This method uses the solution found by the Scheduler to output the solution
 	 * in a dot format file.
