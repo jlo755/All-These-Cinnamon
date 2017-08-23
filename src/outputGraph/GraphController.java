@@ -3,6 +3,7 @@ package outputGraph;
 
 import dataStructure.Node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -12,16 +13,18 @@ public class GraphController {
 
 	private VisualGraph vg;
 	private HashMap<String, dataStructure.Node> _graph;
+	private ArrayList<dataStructure.Node> _nodes;
 
 	public GraphController(){ }
 
-	public void createGraph(HashMap<String, dataStructure.Node> g){
+	public void createGraph(HashMap<String, dataStructure.Node> g, ArrayList<dataStructure.Node> a){
 		vg = new VisualGraph(g);
 		_graph = g;
+		_nodes = a;
 	}
 
 	public void updateGraph(){
-
+		vg.startTraversal(_nodes.get(0).getID(), _nodes);
 	}
 
 
