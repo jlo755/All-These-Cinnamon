@@ -77,76 +77,83 @@ public class Scheduler {
 
 		// this calculates the time at which the node task can be placed in that
 		// particular processor
+		//System.out.println();
+		//System.out.println("Node Processing: "+nodeName);
 		calculateTime(graph, graph.get(nodeName));
-
+		graph.get(nodeName).setBottomLevel(findMaxBottomLevel(graph, nodeName));
+		/*for(Node n:graph.values()) {
+			if(n.isCompleted()) {
+				System.out.println("Node name: "+n.getID());
+				System.out.println("Node End Time: "+n.getEndTime());
+				System.out.println("Node Processor: "+n.getProcessor());
+			}
+		}*/
+		double loadBalanced = getPerfectLoadBalance(graph, nodeName);
+		double loadBalancedTime = (loadBalanced/(double)_numProcessors);
+		//System.out.println("Total Time: "+loadBalanced);
+		//System.out.println(loadBalancedTime);
+		double max = 0;
+		for(Node n:graph.values()){
+			if(n.isCompleted()){
+				//System.out.println(n.getID());
+				//System.out.println("End Time: "+n.getEndTime());
+				//System.out.println("Max: "+n.getBottomLevel());
+				if(n.getBottomLevel() > max){
+					max = n.getBottomLevel();
+				}
+			}
+		}
+		//System.out.println("Load Balance: "+loadBalancedTime);
+		double totalTime = Math.max(loadBalancedTime, max);
 		// loop through the different available processors to check for and compare
 		// between the final times when the node
 		// is placed on each of the processors
-		for (int i = 1; i <= _numProcessors; i++) {
+		if(totalTime < currentBestSolution){
+			//System.out.println("Max is: "+max);
+			for (int i = 1; i <= _numProcessors; i++) {
 
-			// Repeat these processes until all of the processor and node possibilities have
-			// been covered
-			for (String currentNode : reachableNodes) {
+				// Repeat these processes until all of the processor and node possibilities have
+				// been covered
+				for (String currentNode : reachableNodes) {
 
-				// set the node on a processor
-				graph.get(currentNode).setProcessor(i);
+					// set the node on a processor
+					graph.get(currentNode).setProcessor(i);
 
-				// call the recursive DFS method to check for the processing times of the child
-				// nodes
-				int loadBalancedTime = this.getPerfectLoadBalance(graph)/_numProcessors;
-				double max = 0;
-				double bottomLevelNode = 0;
-				for(Node n:graph.values()){
-					if(n.isCompleted()){
-						bottomLevelNode = findMaxBottomLevel(graph, n.getID());
-						/*System.out.println(n.getID());
-						System.out.println("End Time: "+n.getEndTime());
-						System.out.println("Max: "+bottomLevelNode);*/
-						if(bottomLevelNode > max){
-							max = bottomLevelNode;
-						}
-					}
-				}
-				double totalTime = Math.max(loadBalancedTime, max);
-				if(totalTime < currentBestSolution){
+					// call the recursive DFS method to check for the processing times of the child
+					// nodes
+
 					dfs(graph, currentNode);
 					// set the times of the node to 0
 					graph.get(currentNode).setStartTime(0.0);
 					graph.get(currentNode).setEndTime(0.0);
-
+					graph.get(currentNode).setBottomLevel(0.0);
 					// set the node as not finished
 					graph.get(currentNode).setCompleted(false);
-				} else {
-					//System.out.println("Is this bounding?");
-					// set the times of the node to 0
-					graph.get(currentNode).setStartTime(0.0);
-					graph.get(currentNode).setEndTime(0.0);
-
-					// set the node as not finished
-					graph.get(currentNode).setCompleted(false);
+					graph.get(currentNode).setProcessor(0);
 				}
 			}
-
 			// If there are no reachable nodes, it is an exit node.
 			if (reachableNodes.isEmpty()) {
 
 				// Get the max endTime value for this processor branch.
-				double max = 0;
+				double max2 = 0;
 				for (Node n : graph.values()) {
-					if (n.getEndTime() > max) {
-						max = n.getEndTime();
+					if (n.getEndTime() > max2) {
+						max2 = n.getEndTime();
 					}
 				}
 
 				// reset the best solution if a lower scheduling time has been found
-				if (max < currentBestSolution) {
-
-					currentBestSolution = max;
+				if (max2 < currentBestSolution) {
+					//System.out.println(max2);
+					currentBestSolution = max2;
 					bestState.setCurrentBestState(graph);
 				}
 			}
 		}
+
 	}
+
 
 	/**
 	 * Get a list of reachable Nodes from the supplied Node in a given graph.
@@ -366,17 +373,43 @@ public class Scheduler {
 		return ccost;
 	}
 
-	public int getPerfectLoadBalance(HashMap<String, Node> graph){
-		int totalTime = 0;
-		for(int j = 1; j<= _numProcessors; j++){
-			totalTime += calculateMaxCurrentProcessorTime(graph, j);
-		}
+	public double getPerfectLoadBalance(HashMap<String, Node> graph, String currentNode){
+		double totalTime = 0;
+		/*for(int j = 1; j<= _numProcessors; j++){
+		totalTime += calculateMaxCurrentProcessorTime(graph, j);
+	}*/
+		/*System.out.println("Hello: "+calculateMaxCurrentProcessorTime(graph, 1));
+	System.out.println("Test: "+calculateMaxCurrentProcessorTime(graph, 2));
+	System.out.println("Total Time: "+totalTime);*/
 		for(Node node: graph.values()){
-			if(!node.isCompleted()){
-				totalTime += node.getCost();
+			//if(!node.isCompleted()){
+			totalTime += node.getCost();
+			//System.out.println("Node processed: "+node.getID());
+			//System.out.println("Node end: "+node.getEndTime());
+			//}
+		}
+		double maxProcessor = 0;
+		for(int i = 1; i<=_numProcessors; i++) {
+			double cost = calculateMaxCurrentProcessorTime(graph, i);
+			if(cost > maxProcessor) {
+				maxProcessor = cost;
 			}
 		}
+		//System.out.println("Max Processor: "+maxProcessor);
+		double idleTime = maxProcessor;
+		for(Node n:graph.values()) {
+			if(n.getProcessor() == graph.get(currentNode).getProcessor()) {
+				idleTime -= n.getCost();
+			}
+		}
+		//System.out.println("Total Idle Time: "+totalIdleTime);
+
+		totalTime += idleTime;
 		return totalTime;
+	}
+
+	public int calculateIdleTime(HashMap<String, Node> graph) {
+		return 0;
 	}
 
 	public double findStartingOptimalBranch(HashMap<String, Node> graph){
@@ -431,12 +464,7 @@ public class Scheduler {
 				}
 				if (max < currentBestSolution) {
 					currentBestSolution = max;
-					//System.out.println("Hello: "+currentBestSolution);
 					bestState.setCurrentBestState(graph);
-					for(Node n1:graph.values()){
-						//System.out.println("Node name: "+n1.getID()+" Processor: "+n1.getProcessor());
-						//System.out.println("Node end: "+n1.getEndTime());
-					}
 				}
 			}
 		}
