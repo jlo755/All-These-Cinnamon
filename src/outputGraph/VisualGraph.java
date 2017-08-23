@@ -39,7 +39,7 @@ public class VisualGraph {
     }
 
     public void explore(Node source) {
-        Iterator<? extends Node> k = source.getBreadthFirstIterator();
+        Iterator<? extends Node> k = source.getDepthFirstIterator();
 
         while (k.hasNext()) {
             Node next = k.next();
