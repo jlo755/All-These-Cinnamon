@@ -2,7 +2,6 @@ package scheduling;
 import java.io.IOException;
 import java.util.HashMap;
 
-import org.jfree.ui.RefineryUtilities;
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
 
@@ -12,7 +11,6 @@ import inputParse.Edge;
 import outputGraph.GraphController;
 import outputGraph.VisualGraph;
 import outputParse.OutputParser;
-import statistics.compareSchedules;
 
 /**
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
@@ -29,11 +27,7 @@ public class LaunchScheduler {
 
 		// Parse the dot graph input and schedule an optimal solution.
 		long startTime = System.nanoTime();
-<<<<<<< HEAD
-		//Main m = new Main();
-		//m.launchMenu();
-=======
->>>>>>> ca55b522fec69b8c905abd60f94c133f57fb2853
+
 		scheduler = new Scheduler();
 		dotParser = new DotParser(args[0]);
 		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
@@ -41,13 +35,6 @@ public class LaunchScheduler {
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		GraphController gc = new GraphController();
 		//gc.createGraph(dotParser.getNodeMap());
-		compareSchedules chart = new compareSchedules(
-				"School Vs Years" ,
-				"Numer of Schools vs years");
-
-		chart.pack( );
-		RefineryUtilities.centerFrameOnScreen( chart );
-		chart.setVisible( true );
 		scheduler.schedule();
 		// Output the solution in a dot format file.
 		outputSolution(args[0]);
