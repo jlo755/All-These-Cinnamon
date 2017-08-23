@@ -100,7 +100,28 @@ public class Scheduler {
 			}
 		}*/
 		double loadBalancedTime = ((totalTaskTime+totalIdleTime)/(double)_numProcessors);
+
 		long startTime = System.nanoTime();
+		double minDRT = Double.POSITIVE_INFINITY;
+		for (String s : reachableNodes) {
+			Node n = graph.get(s);
+			double minEndTime = Double.POSITIVE_INFINITY;
+			for (int i = 1; i < _numProcessors; i++) {
+				n.setProcessor(i);
+				minEndTime = Math.min(minEndTime, calculateTime(graph, n)+n.getCost());
+			}
+			n.setProcessor(0);
+			//System.out.println(minDRT);
+			minDRT = Math.min(minEndTime, minDRT);
+		}
+		if(minDRT == Double.POSITIVE_INFINITY) {
+			minDRT = 0;
+		}
+		long endTime = System.nanoTime();
+		double time = (endTime - startTime)/1000000000.0;
+		sumAdding += time;
+		//System.out.println(reachableNodes);
+		//System.out.println("MinDRT: "+minDRT);
 		//graph.get(nodeName).setBottomLevel(findMaxBottomLevel(graph, nodeName));
 		//System.out.println("Balanced Time: "+loadBalancedTime);
 		//System.out.println("Total Time: "+loadBalanced);
@@ -117,13 +138,21 @@ public class Scheduler {
 				}
 			}
 		}
-		long endTime = System.nanoTime();
-		double time = (endTime - startTime)/1000000000.0;
-		sumAdding += time;
 		//System.out.println("Load Balanced Time: "+loadBalancedTime);
 		//System.out.println("Load Balance: "+loadBalancedTime);
 		//System.out.println("Critical Path: "+max);
 		double totalTime = Math.max(loadBalancedTime, max);
+		/*if(totalTime<minDRT) {
+			int count = 0;
+			for(Node n:graph.values()) {
+				if(n.isCompleted()) {
+					count++;
+				}				
+			}
+			System.out.println("Count: "+count);
+			System.out.println("This DRT is: "+minDRT);
+		}*/
+		totalTime = Math.max(totalTime, minDRT);
 		// loop through the different available processors to check for and compare
 		// between the final times when the node
 		// is placed on each of the processors
@@ -141,15 +170,18 @@ public class Scheduler {
 
 					// call the recursive DFS method to check for the processing times of the child
 					// nodes
-
-					dfs(graph, currentNode);
-					// set the times of the node to 0
-					graph.get(currentNode).setStartTime(0.0);
-					graph.get(currentNode).setEndTime(0.0);
-					//graph.get(currentNode).setBottomLevel(0.0);
-					// set the node as not finished
-					graph.get(currentNode).setCompleted(false);
-					graph.get(currentNode).setProcessor(0);
+					//if(calculateTime(graph, graph.get(currentNode)) + graph.get(currentNode).getCost() < currentBestSolution) {
+						dfs(graph, currentNode);
+						// set the times of the node to 0
+						graph.get(currentNode).setStartTime(0.0);
+						graph.get(currentNode).setEndTime(0.0);
+						//graph.get(currentNode).setBottomLevel(0.0);
+						// set the node as not finished
+						graph.get(currentNode).setCompleted(false);
+						graph.get(currentNode).setProcessor(0);
+					//} else {
+					//	graph.get(currentNode).setProcessor(0);
+					//}
 				}
 			}
 			// If there are no reachable nodes, it is an exit node.
@@ -228,7 +260,7 @@ public class Scheduler {
 	 *            - this is the current node we're calculating time for.
 	 * 
 	 **/
-	public void calculateTime(HashMap<String, Node> graph, Node node) {
+	public double calculateTime(HashMap<String, Node> graph, Node node) {
 
 		double maxCost = 0.0, maxProcessorTime = 0.0;
 
@@ -245,43 +277,43 @@ public class Scheduler {
 				// if communication cost of a parent in the other processor is more than
 				// the processing cost of the parent in the same processor
 				if (maxProcessorTime <= maxCost) {
-
+					return maxCost;
 					// start time of task after the parent in other processor has finished
-					node.setStartTime(maxCost);
+					//node.setStartTime(maxCost);
 
 					// current task finishes when it has processed ( in "cost" time )
-					node.setEndTime(maxCost + node.getCost());
-					
-					test[node.getProcessor()-1] = maxCost + node.getCost();
+					//node.setEndTime(maxCost + node.getCost());
+
+					//test[node.getProcessor()-1] = maxCost + node.getCost();
 				} else {
-
+					return maxProcessorTime;
 					// current task starts as soon as parent in the same processor ends
-					node.setStartTime(maxProcessorTime);
+					//node.setStartTime(maxProcessorTime);
 
 					// current task finishes when it has processed ( in "cost" time )
-					node.setEndTime(node.getCost() + maxProcessorTime);
-					
-					test[node.getProcessor()-1] = node.getCost() + maxProcessorTime;
+					//node.setEndTime(node.getCost() + maxProcessorTime);
+
+					//test[node.getProcessor()-1] = node.getCost() + maxProcessorTime;
 				}
 			} else {
-
+				return maxProcessorTime;
 				// first node will start immediately
-				node.setStartTime(maxProcessorTime);
+				//node.setStartTime(maxProcessorTime);
 
 				// current task finishes when it has processed ( in "cost" time )
-				node.setEndTime(node.getCost() + maxProcessorTime);
-				
-				test[node.getProcessor()-1] = node.getCost() + maxProcessorTime;
+				//node.setEndTime(node.getCost() + maxProcessorTime);
+
+				//test[node.getProcessor()-1] = node.getCost() + maxProcessorTime;
 			}
 		} else {
-
+			return maxProcessorTime;
 			// first node will start immediately
-			node.setStartTime(maxProcessorTime);
+			//node.setStartTime(maxProcessorTime);
 
 			// current task finishes when it has processed ( in "cost" time )
-			node.setEndTime(node.getCost() + maxProcessorTime);
-			
-			test[node.getProcessor()-1] = node.getCost() + maxProcessorTime;
+			//node.setEndTime(node.getCost() + maxProcessorTime);
+
+			//test[node.getProcessor()-1] = node.getCost() + maxProcessorTime;
 		}
 	}
 
@@ -361,11 +393,11 @@ public class Scheduler {
 	 */
 	public double calculateCommunicationCost(Node node, Node parent) {
 		// get children list of parent
-			if (parent.getChildren().containsKey(node)) {
-				// get link cost (value) of parent with the node
-				return parent.getChildren().get(node);
-			} else {
-				return 0.0;
+		if (parent.getChildren().containsKey(node)) {
+			// get link cost (value) of parent with the node
+			return parent.getChildren().get(node);
+		} else {
+			return 0.0;
 		}
 	}
 
@@ -401,7 +433,10 @@ public class Scheduler {
 
 	public double getPerfectLoadBalance(HashMap<String, Node> graph, String currentNode){
 		double processorTime = this.calculateMaxCurrentProcessorTime(graph, graph.get(currentNode).getProcessor());
-		calculateTime(graph, graph.get(currentNode));
+		double earliestStartTime = calculateTime(graph, graph.get(currentNode));
+		graph.get(currentNode).setStartTime(earliestStartTime);
+		graph.get(currentNode).setEndTime(earliestStartTime+graph.get(currentNode).getCost());
+		test[graph.get(currentNode).getProcessor()-1] = earliestStartTime+graph.get(currentNode).getCost();
 		double startTime = graph.get(currentNode).getStartTime();
 		double idleTime = startTime - processorTime;
 		totalIdleTime += idleTime;
@@ -428,7 +463,10 @@ public class Scheduler {
 			for(int i = 1; i<=_numProcessors; i++){
 				n.setProcessor(i);
 				double currentProcessorTime = test[i-1];
-				calculateTime(graph, n);
+				double earliestStartTime = calculateTime(graph, n);
+				n.setStartTime(earliestStartTime);
+				n.setEndTime(earliestStartTime+n.getCost());
+				test[i-1] = earliestStartTime+n.getCost();
 				if(currentBestTime > n.getEndTime()){
 					currentBestTime = n.getEndTime();
 					currentStartTime = n.getStartTime();
