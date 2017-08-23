@@ -22,6 +22,7 @@ public class Scheduler {
 	private FinalState bestState; // Best solutions for all of the Nodes.
 	private HashMap<String, Node> nodeMap; // Input task scheduling graph.
 	private int _numProcessors; // Number of processors assigned for scheduling.
+	private double _totalTaskWeight;
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
@@ -35,10 +36,18 @@ public class Scheduler {
 	 */
 	public void schedule() {
 		double hello = this.findStartingOptimalBranch(nodeMap);
+		for(Node node: nodeMap.values()){
+			//if(!node.isCompleted()){
+			_totalTaskWeight += node.getCost();
+			//System.out.println("Node processed: "+node.getID());
+			//System.out.println("Node end: "+node.getEndTime());
+			//}
+		}
 		for (Node n : nodeMap.values()) {
 			n.setCompleted(false);
 			n.setEndTime(0.0);
 			n.setStartTime(0.0);
+			n.setProcessor(0);
 		}
 		System.out.println(currentBestSolution);
 		// "Nodemap" is the input graph for the algorithm.
@@ -77,9 +86,11 @@ public class Scheduler {
 
 		// this calculates the time at which the node task can be placed in that
 		// particular processor
+		calculateTime(graph, graph.get(nodeName));
 		//System.out.println();
 		//System.out.println("Node Processing: "+nodeName);
-		calculateTime(graph, graph.get(nodeName));
+		double loadBalanced = getPerfectLoadBalance(graph, nodeName);
+		//calculateTime(graph, graph.get(nodeName));
 		graph.get(nodeName).setBottomLevel(findMaxBottomLevel(graph, nodeName));
 		/*for(Node n:graph.values()) {
 			if(n.isCompleted()) {
@@ -88,7 +99,6 @@ public class Scheduler {
 				System.out.println("Node Processor: "+n.getProcessor());
 			}
 		}*/
-		double loadBalanced = getPerfectLoadBalance(graph, nodeName);
 		double loadBalancedTime = (loadBalanced/(double)_numProcessors);
 		//System.out.println("Total Time: "+loadBalanced);
 		//System.out.println(loadBalancedTime);
@@ -145,7 +155,7 @@ public class Scheduler {
 
 				// reset the best solution if a lower scheduling time has been found
 				if (max2 < currentBestSolution) {
-					//System.out.println(max2);
+					System.out.println(max2);
 					currentBestSolution = max2;
 					bestState.setCurrentBestState(graph);
 				}
@@ -374,42 +384,63 @@ public class Scheduler {
 	}
 
 	public double getPerfectLoadBalance(HashMap<String, Node> graph, String currentNode){
-		double totalTime = 0;
+		//double totalTime = this._;
 		/*for(int j = 1; j<= _numProcessors; j++){
 		totalTime += calculateMaxCurrentProcessorTime(graph, j);
 	}*/
 		/*System.out.println("Hello: "+calculateMaxCurrentProcessorTime(graph, 1));
 	System.out.println("Test: "+calculateMaxCurrentProcessorTime(graph, 2));
 	System.out.println("Total Time: "+totalTime);*/
-		for(Node node: graph.values()){
+		/*for(Node node: graph.values()){
 			//if(!node.isCompleted()){
 			totalTime += node.getCost();
 			//System.out.println("Node processed: "+node.getID());
 			//System.out.println("Node end: "+node.getEndTime());
 			//}
-		}
-		double maxProcessor = 0;
-		for(int i = 1; i<=_numProcessors; i++) {
+		}*/
+		//double maxProcessor = this.calculateMaxCurrentProcessorTime(graph, graph.get(currentNode).getProcessor());
+		/*for(int i = 1; i<=_numProcessors; i++) {
 			double cost = calculateMaxCurrentProcessorTime(graph, i);
 			if(cost > maxProcessor) {
 				maxProcessor = cost;
 			}
-		}
+		}*/
 		//System.out.println("Max Processor: "+maxProcessor);
-		double idleTime = maxProcessor;
-		for(Node n:graph.values()) {
+		double idleTime = 0;
+		for(int i = 1; i<=_numProcessors; i++) {
+			double processTime = calculateMaxCurrentProcessorTime(graph, i);
+			for(Node n:graph.values()) {
+				if(n.getProcessor() == i) {
+					processTime -= n.getCost();
+				}
+			}
+			idleTime += processTime;
+		}
+		/*for(Node n:graph.values()) {
 			if(n.getProcessor() == graph.get(currentNode).getProcessor()) {
 				idleTime -= n.getCost();
 			}
-		}
+		}*/
+		//double startTime = graph.get(currentNode).getStartTime();
 		//System.out.println("Total Idle Time: "+totalIdleTime);
 
-		totalTime += idleTime;
-		return totalTime;
+		//totalTime += idleTime;
+		return this._totalTaskWeight+idleTime;
 	}
 
-	public int calculateIdleTime(HashMap<String, Node> graph) {
-		return 0;
+	public double getProcessorStartTime(HashMap<String, Node> graph, int processor) {
+		double min = Double.POSITIVE_INFINITY;
+		for(Node n:graph.values()) {
+			if(n.getProcessor() == processor) {
+				if(min < n.getStartTime()) {
+					min = n.getStartTime();
+				}
+			}
+		}
+		if(min == Double.POSITIVE_INFINITY) {
+			min = 0;
+		}
+		return min;
 	}
 
 	public double findStartingOptimalBranch(HashMap<String, Node> graph){
