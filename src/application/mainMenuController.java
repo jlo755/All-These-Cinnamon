@@ -1,6 +1,7 @@
 package application;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -55,10 +56,12 @@ public class mainMenuController implements Initializable{
 		//check for only integers and no spaces. if not. give an alert
 	}
 
-	public void StartProcessingAction() {
+	public void StartProcessingAction() throws IOException {
 		ProcessorCountAction();
-		 Stage stage = (Stage) startProcessingButton.getScene().getWindow();
-		 new SceneMediator().changeScene(stage, "/application/ProcessorScreen.fxml", "Processor");
+		Stage stage = (Stage) startProcessingButton.getScene().getWindow();
+		SwingFx s = new SwingFx();
+		s.begin(stage);
+		//new SceneMediator().changeScene(stage, "/application/GraphStream.fxml", "Graph");
 	}
 
 	@Override

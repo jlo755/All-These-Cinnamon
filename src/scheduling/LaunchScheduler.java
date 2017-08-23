@@ -6,10 +6,12 @@ import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
 
 import application.Main;
+import application.SwingFx;
 import application.mainMenuController;
 import dataStructure.Node;
 import inputParse.DotParser;
 import inputParse.Edge;
+import outputGraph.GraphController;
 import outputGraph.VisualGraph;
 import outputParse.OutputParser;
 
@@ -37,7 +39,8 @@ public class LaunchScheduler {
 		scheduler.setProcessorNumber(_noOfProcessors);
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
-		//VisualGraph vg = new VisualGraph(dotParser.getNodeMap());
+		GraphController gc = new GraphController();
+		//gc.createGraph(dotParser.getNodeMap());
 		scheduler.schedule();
 		// Output the solution in a dot format file.
 		outputSolution(args[0]);
