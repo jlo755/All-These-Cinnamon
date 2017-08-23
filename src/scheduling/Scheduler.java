@@ -52,6 +52,7 @@ public class Scheduler {
 				// call the recursive DFS method for that node to obtain and process all of the
 				// children
 				dfs(nodeMap, n.getID());
+				bestState.finalStateToGraph(nodeMap);
 			}
 		}
 		//}
@@ -254,7 +255,7 @@ public class Scheduler {
 	 *            case, it stores HashMap<String, Node> - name of the node, to the
 	 *            Node itself.
 	 * @param node
-	 *            this is the current node we’re checking the parent for
+	 *            this is the current node weï¿½re checking the parent for
 	 * @return returns whether the node has a parent in a processor
 	 */
 
