@@ -35,8 +35,8 @@ public class LaunchScheduler {
 		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
-		GraphController gc = new GraphController();
-		gc.createGraph(dotParser.getNodeMap());
+		FinalState gc = new FinalState();
+		gc.finalStateToGraph(dotParser.getNodeMap());
 		scheduler.schedule();
 		// Output the solution in a dot format file.
 		outputSolution(args[0]);
