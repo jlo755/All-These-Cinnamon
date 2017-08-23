@@ -6,9 +6,6 @@ import org.jfree.ui.RefineryUtilities;
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
 
-import application.Main;
-import application.SwingFx;
-import application.mainMenuController;
 import dataStructure.Node;
 import inputParse.DotParser;
 import inputParse.Edge;
@@ -27,15 +24,16 @@ public class LaunchScheduler {
 
 	private static Scheduler scheduler;
 	private static DotParser dotParser;
-	private static int _noOfProcessors;
-	private static String _fileName;
 
 	public static void main(String[] args) throws IOException, ImportException {
 
 		// Parse the dot graph input and schedule an optimal solution.
 		long startTime = System.nanoTime();
+<<<<<<< HEAD
 		//Main m = new Main();
 		//m.launchMenu();
+=======
+>>>>>>> ca55b522fec69b8c905abd60f94c133f57fb2853
 		scheduler = new Scheduler();
 		dotParser = new DotParser(args[0]);
 		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
@@ -83,12 +81,4 @@ public class LaunchScheduler {
 		System.out.println("Output file is " + fileName.replaceAll(".dot", "Output")+".dot");
 	}
 
-	public static void setProcessor(int test) {
-		_noOfProcessors = test;
-
-	}
-	public static void setFileName(String fileName) {
-		_fileName = fileName;
-
-	}
 }
