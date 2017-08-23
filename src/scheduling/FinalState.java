@@ -1,8 +1,12 @@
 package scheduling;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
 import dataStructure.Node;
+import outputGraph.GraphController;
 
 /**
  * 
@@ -15,7 +19,10 @@ import dataStructure.Node;
 public class FinalState {
 	// Current best solution for a Node mapped to an ID in String.
 	HashMap<String, Node> _currentBestState;
-	
+
+	public FinalState(){
+
+	}
 	/**
 	 * Instantiate a set of Nodes' best solution to be 0.
 	 * @param set
@@ -56,7 +63,20 @@ public class FinalState {
 	public void printCurrentBestState(){
 		for(String s:_currentBestState.keySet()){
 			Node n = _currentBestState.get(s);
-			System.out.println("Node ID: "+n.getID()+" Start Time: "+n.getStartTime()+" Processor: "+n.getProcessor() +" End Time: "+n.getEndTime());
+			System.out.println("Node ID: "+n.getID()+
+					" Start Time: "+n.getStartTime()+
+					" Processor: "+n.getProcessor() +
+					" End Time: "+n.getEndTime());
 		}
+	}
+
+	public void finalStateToGraph(HashMap<String, dataStructure.Node> g){
+		GraphController gc = new GraphController();
+		ArrayList<dataStructure.Node> nodes = new ArrayList<dataStructure.Node>();
+		for(Node n : g.values()){
+			nodes.add(n);
+		}
+		Collections.sort(nodes, Node.startTimes());
+		gc.createGraph(g);
 	}
 }
