@@ -50,3 +50,4 @@ bin/application/application.css
 /bin/
 *.fxml
 *.css
+*.java
