@@ -6,7 +6,7 @@ import java.util.HashMap;
  * the name of the node, the task cost of that node itself and whether the node has
  * already been completed in the traversal.
  */
-public class Node {
+public class Node implements Comparable{
 	// this is the parents hashmap with the parent node and their communication cost
 	private HashMap<Node, Double> _parents; 
 	// this is the children hashmap with the child node and their comunication cost
@@ -23,7 +23,7 @@ public class Node {
 	private double _startTime;
 	private double _endTime;
 	private double _bottomLevel;
-	// stores all the nodes we visited in the state space before this node was visited
+	private double _optimalBottomLevel;
 
 
 	public Node(String id, int cost){
@@ -126,12 +126,20 @@ public class Node {
 		_completed = completed;
 	}
 	
-	public void setBottomLevel(double endTime){
-		_bottomLevel = endTime;
+	public void setBottomLevel(double time){
+		_bottomLevel = time;
 	}
 	
-	public double getBottomLevel(int cost){
+	public double getBottomLevel(){
 		return _bottomLevel;
+	}
+	
+	public void setOptimalBottomLevel(double time){
+		_optimalBottomLevel = time;
+	}
+	
+	public double getOptimalBottomLevel(){
+		return _optimalBottomLevel;
 	}
 
 	/**
@@ -164,5 +172,17 @@ public class Node {
  	*/
 	public HashMap<Node, Double> getChildren(){
 		return _children;
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		Node right = (Node)arg0;
+		if(getBottomLevel() < right.getBottomLevel()){
+			return 1;
+		} else if (getBottomLevel() > right.getBottomLevel()){
+			return -1;
+		} else {
+			return 1;
+		}
 	}
 }
