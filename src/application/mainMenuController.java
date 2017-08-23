@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import scheduling.LaunchScheduler;
 
 public class mainMenuController implements Initializable{
 	@FXML Button chooseFileButton;
@@ -22,7 +23,6 @@ public class mainMenuController implements Initializable{
 	@FXML Button startProcessingButton;
 
 	private String _fileName;
-	private String _filePath;
 	private Integer _noOfProcessors;
 
 	public void uploadFileAction(){
@@ -36,8 +36,8 @@ public class mainMenuController implements Initializable{
 		File file = fileChooser.showOpenDialog((Stage)chooseFileButton.getScene().getWindow());
 		if(file.getAbsolutePath().contains(".dot")){ // checks if the file contains the .dot extension
 			_fileName=file.getName();
-			_filePath=file.getAbsolutePath();
 			fileInfoLabel.setText("File Name: "+_fileName);
+			LaunchScheduler.setFileName(_fileName);
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error");
@@ -51,29 +51,20 @@ public class mainMenuController implements Initializable{
 	public void ProcessorCountAction() {
 		String inputText = processorCountField.getText();
 		_noOfProcessors = Integer.parseInt(inputText);
+		LaunchScheduler.setProcessor(_noOfProcessors);
 		//check for only integers and no spaces. if not. give an alert
 	}
 
 	public void StartProcessingAction() {
 		ProcessorCountAction();
-
+		 Stage stage = (Stage) startProcessingButton.getScene().getWindow();
+		 new SceneMediator().changeScene(stage, "/application/ProcessorScreen.fxml", "Processor");
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 	}
-
-
-	public String  getFilePath(){
-		return _filePath;
-	}
-
-	public Integer  getNumberOfProcessors(){
-		return _noOfProcessors;
-	}
-
-
 
 
 

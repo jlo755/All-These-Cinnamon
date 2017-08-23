@@ -45,3 +45,6 @@ hs_err_pid*
 *.prefs
 .project
 *.dot
+bin/application/mainMenu.fxml
+bin/application/application.css
+/bin/
