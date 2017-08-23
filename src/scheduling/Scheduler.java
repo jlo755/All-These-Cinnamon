@@ -22,7 +22,10 @@ public class Scheduler {
 	private FinalState bestState; // Best solutions for all of the Nodes.
 	private HashMap<String, Node> nodeMap; // Input task scheduling graph.
 	private int _numProcessors; // Number of processors assigned for scheduling.
-
+	private double sumAdding = 0;
+	private double totalIdleTime = 0;
+	private double totalTaskTime = 0;
+	private double[] currentProcessorTimes;
 	/**
 	 * Initialize the best solution so far to infinity on starting.
 	 */
@@ -34,11 +37,14 @@ public class Scheduler {
 	 * Processes the input graph with DFS to calculate an optimal schedule.
 	 */
 	public void schedule() {
+		currentProcessorTimes = new double[_numProcessors];
 		double hello = this.findStartingOptimalBranch(nodeMap);
+		totalIdleTime = 0;
 		for (Node n : nodeMap.values()) {
 			n.setCompleted(false);
 			n.setEndTime(0.0);
 			n.setStartTime(0.0);
+			totalTaskTime += n.getCost();
 		}
 		System.out.println(currentBestSolution);
 		// "Nodemap" is the input graph for the algorithm.
@@ -55,6 +61,7 @@ public class Scheduler {
 			}
 		}
 		//}
+		System.out.println("Sum adding: "+this.sumAdding);
 		System.out.println(currentBestSolution);
 	}
 
@@ -79,8 +86,9 @@ public class Scheduler {
 		// particular processor
 		//System.out.println();
 		//System.out.println("Node Processing: "+nodeName);
-		calculateTime(graph, graph.get(nodeName));
-		graph.get(nodeName).setBottomLevel(findMaxBottomLevel(graph, nodeName));
+		//calculateTime(graph, graph.get(nodeName));
+		long startTime = System.nanoTime();
+		double loadBalanced = getPerfectLoadBalance(graph, nodeName);
 		/*for(Node n:graph.values()) {
 			if(n.isCompleted()) {
 				System.out.println("Node name: "+n.getID());
@@ -88,8 +96,12 @@ public class Scheduler {
 				System.out.println("Node Processor: "+n.getProcessor());
 			}
 		}*/
-		double loadBalanced = getPerfectLoadBalance(graph, nodeName);
-		double loadBalancedTime = (loadBalanced/(double)_numProcessors);
+		double loadBalancedTime = ((totalTaskTime+totalIdleTime)/(double)_numProcessors);
+		graph.get(nodeName).setBottomLevel(findMaxBottomLevel(graph, nodeName));
+		long endTime = System.nanoTime();
+		double time = (endTime - startTime)/1000000000.0;
+		sumAdding += time;
+		//System.out.println("Balanced Time: "+loadBalancedTime);
 		//System.out.println("Total Time: "+loadBalanced);
 		//System.out.println(loadBalancedTime);
 		double max = 0;
@@ -103,12 +115,15 @@ public class Scheduler {
 				}
 			}
 		}
+		//System.out.println("Load Balanced Time: "+loadBalancedTime);
 		//System.out.println("Load Balance: "+loadBalancedTime);
+		//System.out.println("Critical Path: "+max);
 		double totalTime = Math.max(loadBalancedTime, max);
 		// loop through the different available processors to check for and compare
 		// between the final times when the node
 		// is placed on each of the processors
 		if(totalTime < currentBestSolution){
+			//System.out.println("Hello?");
 			//System.out.println("Max is: "+max);
 			for (int i = 1; i <= _numProcessors; i++) {
 
@@ -151,6 +166,9 @@ public class Scheduler {
 				}
 			}
 		}
+		this.totalIdleTime -= loadBalanced;
+		//System.out.println(nodeName);
+		//System.out.println("Hallo: "+totalIdleTime);
 
 	}
 
@@ -374,41 +392,55 @@ public class Scheduler {
 	}
 
 	public double getPerfectLoadBalance(HashMap<String, Node> graph, String currentNode){
-		double totalTime = 0;
+		//double totalTime = 0;
 		/*for(int j = 1; j<= _numProcessors; j++){
 		totalTime += calculateMaxCurrentProcessorTime(graph, j);
 	}*/
 		/*System.out.println("Hello: "+calculateMaxCurrentProcessorTime(graph, 1));
 	System.out.println("Test: "+calculateMaxCurrentProcessorTime(graph, 2));
 	System.out.println("Total Time: "+totalTime);*/
-		for(Node node: graph.values()){
+		/*for(Node node: graph.values()){
 			//if(!node.isCompleted()){
 			totalTime += node.getCost();
 			//System.out.println("Node processed: "+node.getID());
 			//System.out.println("Node end: "+node.getEndTime());
 			//}
+		}*/
+		double processorTime = this.calculateMaxCurrentProcessorTime(graph, graph.get(currentNode).getProcessor());
+		calculateTime(graph, graph.get(currentNode));
+		double startTime = graph.get(currentNode).getStartTime();
+		double idleTime = startTime - processorTime;
+		totalIdleTime += idleTime;
+		/*System.out.println(currentNode);
+		for(Node n: graph.values()) {
+			if(n.isCompleted()) {
+				System.out.println("Name: "+n.getID());
+				System.out.println("Processor: "+n.getProcessor());
+				System.out.println("End Time: "+n.getEndTime());
+			}
 		}
-		double maxProcessor = 0;
+		System.out.println("Idle Time: "+idleTime);*/
+		/*double maxProcessor = 0;
 		for(int i = 1; i<=_numProcessors; i++) {
 			double cost = calculateMaxCurrentProcessorTime(graph, i);
 			if(cost > maxProcessor) {
 				maxProcessor = cost;
 			}
-		}
+		}*/
 		//System.out.println("Max Processor: "+maxProcessor);
-		double idleTime = maxProcessor;
+		/*double idleTime = maxProcessor;
 		for(Node n:graph.values()) {
 			if(n.getProcessor() == graph.get(currentNode).getProcessor()) {
 				idleTime -= n.getCost();
 			}
-		}
+		}*/
 		//System.out.println("Total Idle Time: "+totalIdleTime);
 
-		totalTime += idleTime;
-		return totalTime;
+		//totalTime += idleTime;
+		return idleTime;
 	}
 
-	public int calculateIdleTime(HashMap<String, Node> graph) {
+	public int calculate(HashMap<String, Node> graph) {
 		return 0;
 	}
 
@@ -476,7 +508,6 @@ public class Scheduler {
 		s.add(initialNode);
 		double startTime = graph.get(initialNode).getStartTime();
 		graph.get(initialNode).setOptimalBottomLevel(startTime+graph.get(initialNode).getCost());
-		//System.out.println("Initial Node: "+initialNode);
 		//double totalTime = startTime;
 		double max = 0;
 		/*for(Node n:graph.values()){
@@ -525,16 +556,6 @@ public class Scheduler {
 		//System.out.println(max);
 		return max;
 	}
-
-	/*public double findMaxBottomLevel(HashMap<String, Node> graph, String initialNode){
-		Node node = graph.get(initialNode);
-		node.setBottomLevelFlag(true);
-		for(Node n:node.getChildren().keySet()) {
-			if(!n.getBottomLevelFlag()) {
-				findMaxBottomLevel(graph, n.getID());
-			}
-		}
-	}*/
 
 	/**
 	 * Returns the currentBestSolution field.
