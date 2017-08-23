@@ -2,14 +2,17 @@ package scheduling;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.jfree.ui.RefineryUtilities;
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
 
 import dataStructure.Node;
 import inputParse.DotParser;
 import inputParse.Edge;
+import outputGraph.GraphController;
 import outputGraph.VisualGraph;
 import outputParse.OutputParser;
+import statistics.compareSchedules;
 
 /**
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
@@ -18,27 +21,34 @@ import outputParse.OutputParser;
 * in the network are visited and we have obtained the best scheduling times.
 */
 public class LaunchScheduler {
-	
+
 	private static Scheduler scheduler;
 	private static DotParser dotParser;
 
 	public static void main(String[] args) throws IOException, ImportException {
-		
+
 		// Parse the dot graph input and schedule an optimal solution.
 		long startTime = System.nanoTime();
+
 		scheduler = new Scheduler();
 		dotParser = new DotParser(args[0]);
 		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
-		VisualGraph vg = new VisualGraph(dotParser.getNodeMap());
 		scheduler.schedule();
 		// Output the solution in a dot format file.
 		outputSolution(args[0]);
+		//compareSchedules chart = new compareSchedules(
+		//		"School Vs Years" ,
+		//		"Number of Schools vs years");
+
+		//chart.pack( );
+		//RefineryUtilities.centerFrameOnScreen( chart );
+		//chart.setVisible( true );
 		long endTime = System.nanoTime();
 		System.out.println("The program took: "+(endTime - startTime)/1000000000.0);
 	}
-	
+
 	/**
 	 * This method uses the solution found by the Scheduler to output the solution
 	 * in a dot format file.
@@ -64,4 +74,5 @@ public class LaunchScheduler {
 		outputParse.formatFile();
 		System.out.println("Output file is " + fileName.replaceAll(".dot", "Output")+".dot");
 	}
+
 }
