@@ -13,12 +13,14 @@ import java.util.Iterator;
  * Created by DarthPenguin on 22/08/17.
  */
 public class VisualGraph {
+    Graph graph;
+
     protected String styleSheet =
             "node {" + "size: 40px; shape: circle; fill-color: white; stroke-mode: plain; stroke-color: black; text-alignment: center;}"+
                     "node.marked {	fill-color: red; }";
     public VisualGraph(HashMap<String, dataStructure.Node> g){
-        System.setProperty("gs.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-        Graph graph = new SingleGraph("MainGraph");
+        System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+        graph = new SingleGraph("MainGraph");
         graph.addAttribute("ui.stylesheet", styleSheet);
         graph.setStrict(false);
         graph.setAutoCreate( true );
@@ -32,10 +34,13 @@ public class VisualGraph {
         for (Node node : graph) {
             node.addAttribute("ui.label", "  "+node.getId()+"  ");
         }
-        org.graphstream.graph.Node n = graph.getNode("0");
-        System.out.print(graph.getNode("0").getId());
-        explore(graph.getNode("0"));
 
+
+    }
+
+    public void startTraversal(String ID){
+        org.graphstream.graph.Node n = graph.getNode(ID);
+        explore(graph.getNode(ID));
     }
 
     public void explore(Node source) {
