@@ -77,6 +77,7 @@ public class FinalState {
 			nodes.add(n);
 		}
 		Collections.sort(nodes, Node.startTimes());
-		gc.createGraph(g);
+		gc.createGraph(g, nodes);
+		gc.updateGraph();
 	}
 }
