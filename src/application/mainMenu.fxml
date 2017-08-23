@@ -19,7 +19,7 @@
                </font>
             </Button>
             <Label fx:id="fileInfoLabel" alignment="CENTER" layoutX="517.0" layoutY="313.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="17.0" prefWidth="247.0" text="No File Selected" />
-            <Button fx:id="startProcessingButton" alignment="CENTER" contentDisplay="CENTER" layoutX="494.0" layoutY="626.0" mnemonicParsing="false" prefHeight="90.0" prefWidth="294.0" text="Start Processing">
+            <Button fx:id="startProcessingButton" alignment="CENTER" contentDisplay="CENTER" layoutX="494.0" layoutY="626.0" mnemonicParsing="false" onAction="#StartProcessingAction" prefHeight="90.0" prefWidth="294.0" text="Start Processing">
                <font>
                   <Font size="29.0" />
                </font>
