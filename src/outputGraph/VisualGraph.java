@@ -3,7 +3,8 @@ package outputGraph;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
-
+import org.graphstream.ui.swingViewer.ViewPanel;
+import org.graphstream.ui.view.Viewer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,13 +22,14 @@ public class VisualGraph {
                     "node.processor2 {	fill-color: green; }";
 
 
+    public VisualGraph() {}
     public VisualGraph(HashMap<String, dataStructure.Node> g){
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
         graph = new SingleGraph("MainGraph");
         graph.addAttribute("ui.stylesheet", styleSheet);
         graph.setStrict(false);
         graph.setAutoCreate( true );
-        graph.display();
+
         for(dataStructure.Node node : g.values()) {
             for (dataStructure.Node parent : node.getParents().keySet()) {
                 graph.addEdge("" + node.getID() + parent.getID(), "" + node.getID(), "" + parent.getID());
@@ -41,6 +43,12 @@ public class VisualGraph {
 
     }
 
+    public ViewPanel display(){
+    	Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+    	ViewPanel viewPanel = viewer.addDefaultView(false);
+    	return viewPanel;
+    }
+
     public void startTraversal(String ID, ArrayList<dataStructure.Node> a, SingleGraph g){
         explore(a, g);
     }
@@ -51,11 +59,11 @@ public class VisualGraph {
             Node next = graph.getNode(n.getID());
             if(n.getProcessor() == 1) {
                 next.setAttribute("ui.class", "processor1");
-                sleep();
+                //sleep();
             }
             else if(n.getProcessor() == 2){
                 next.setAttribute("ui.class", "processor2");
-                sleep();
+                //sleep();
             }
         }
     }
