@@ -14,7 +14,7 @@ import dataStructure.Node;
 import inputParse.DotParser;
 import scheduling.Scheduler;
 
-public class TestSuite {
+public class FinalStateTestSuite {
 	Scheduler scheduler;
 	DotParser dotParser;
 	
@@ -219,48 +219,5 @@ public class TestSuite {
 		assertEquals(41,(int)scheduler.getCurrentBestSolution());
 	}
 	
-	//Tests for methods in Node class
-	@Test
-	public void test7NodesID() throws FileNotFoundException, ImportException {
-		dotParser = new DotParser("Nodes_7_OutTree.dot");
-		dotParser.parseInput();
-		//check if all node IDs are correct
-		HashMap<String, Node> nodeMap = dotParser.getNodeMap();
-		Object[] nodes = nodeMap.values().toArray();
-		String firstID = ((Node) nodes[0]).getID();
-		assertEquals("0", firstID); 
-	}
 	
-	@Test
-	public void test7NodesCost() throws FileNotFoundException, ImportException {
-		dotParser = new DotParser("Nodes_7_OutTree.dot");
-		dotParser.parseInput();
-		//check if all node costs are correct
-		HashMap<String, Node> nodeMap = dotParser.getNodeMap();
-		Object[] nodes = nodeMap.values().toArray();
-		int cost = ((Node) nodes[0]).getCost();
-		assertEquals("5", cost); 
-	}
-	
-	@Test
-	public void test7NodesChildren() throws FileNotFoundException, ImportException {
-		dotParser = new DotParser("Nodes_7_OutTree.dot");
-		dotParser.parseInput();
-		
-		//check the node "0" children
-		HashMap<String, Node> nodeMap = dotParser.getNodeMap();
-		HashMap<Node, Double> children = nodeMap.get("0").getChildren();
-		assertEquals(3, children.size()); 
-	}
-	
-	@Test
-	public void test7NodesParents() throws FileNotFoundException, ImportException {
-		dotParser = new DotParser("Nodes_7_OutTree.dot");
-		dotParser.parseInput();
-		
-		//check the node "6" parents
-		HashMap<String, Node> nodeMap = dotParser.getNodeMap();
-		HashMap<Node, Double> parents = nodeMap.get("6").getParents();
-		assertEquals(1, parents.size());
-	}
 }
