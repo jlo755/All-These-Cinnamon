@@ -1,8 +1,9 @@
 package scheduling;
 import java.io.IOException;
+import statistics.compareSchedules;
+import org.jfree.ui.RefineryUtilities;
 import java.util.HashMap;
 
-import org.jfree.ui.RefineryUtilities;
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
 
@@ -12,7 +13,7 @@ import inputParse.Edge;
 import outputGraph.GraphController;
 import outputGraph.VisualGraph;
 import outputParse.OutputParser;
-import statistics.compareSchedules;
+import visualisation.mainMenu;
 
 /**
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
@@ -24,27 +25,33 @@ public class LaunchScheduler {
 
 	private static Scheduler scheduler;
 	private static DotParser dotParser;
+	private static int _noOfProcessors;
+	private static String _fileName;
 
 	public static void main(String[] args) throws IOException, ImportException {
 
-		// Parse the dot graph input and schedule an optimal solution.
-		long startTime = System.nanoTime();
+		mainMenu m = new mainMenu();
+		m.beginLaunch();
 
+
+	}
+
+	public void beginScheduling() throws IOException, ImportException{
+		// Parse the dot graph input and schedule an optimal solution.
+				long startTime = System.nanoTime();
 		scheduler = new Scheduler();
-		dotParser = new DotParser(args[0]);
-		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
+		dotParser = new DotParser(_fileName);
+		scheduler.setProcessorNumber(_noOfProcessors);
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
+		GraphController gc = new GraphController();
+		//gc.createGraph(dotParser.getNodeMap());
 		scheduler.schedule();
 		// Output the solution in a dot format file.
-		outputSolution(args[0]);
-		//compareSchedules chart = new compareSchedules(
-		//		"School Vs Years" ,
-		//		"Number of Schools vs years");
+		outputSolution(_fileName);
 
-		//chart.pack( );
-		//RefineryUtilities.centerFrameOnScreen( chart );
-		//chart.setVisible( true );
+
+
 		long endTime = System.nanoTime();
 		System.out.println("The program took: "+(endTime - startTime)/1000000000.0);
 	}
@@ -73,6 +80,15 @@ public class LaunchScheduler {
 		outputParse.outputDot();
 		outputParse.formatFile();
 		System.out.println("Output file is " + fileName.replaceAll(".dot", "Output")+".dot");
+	}
+
+	public void setProcessor(int processorCount) {
+		_noOfProcessors = processorCount;
+
+	}
+	public void setFileName(String fileName) {
+		_fileName = fileName;
+
 	}
 
 }
