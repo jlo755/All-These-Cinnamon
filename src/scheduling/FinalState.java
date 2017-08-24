@@ -5,14 +5,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
+import javax.swing.JPanel;
+
 import dataStructure.Node;
 import outputGraph.GraphController;
 
 /**
- * 
+ *
  * This class stores and manages the currently found "best solution" for a Node object,
  * used while traversing state space. A separate Node object is used to track this within
- * a HashMap. 
+ * a HashMap.
  *
  */
 
@@ -41,7 +43,7 @@ public class FinalState {
 		}
 
 	}
-	
+
 	/**
 	 * Set the current best state for all the Nodes in a graph.
 	 * @param graph
@@ -55,7 +57,7 @@ public class FinalState {
 			n.setProcessor(bestNode.getProcessor());
 		}
 	}
-	
+
 	/**
 	 * Get HashMap for current best state of Nodes.
 	 * @return
@@ -63,7 +65,7 @@ public class FinalState {
 	public HashMap<String, Node> getCurrentBestState(){
 		return _currentBestState;
 	}
-	
+
 	/**
 	 * Print current best state of all Nodes.
 	 */
@@ -77,14 +79,14 @@ public class FinalState {
 		}
 	}
 
-	public void finalStateToGraph(HashMap<String, dataStructure.Node> g){
+	public void finalStateToGraph(HashMap<String, dataStructure.Node> g, JPanel contentPane){
 		GraphController gc = new GraphController();
 		ArrayList<dataStructure.Node> nodes = new ArrayList<dataStructure.Node>();
 		for(Node n : g.values()){
 			nodes.add(n);
 		}
 		Collections.sort(nodes, Node.startTimes());
-		gc.createGraph(g, nodes);
+		gc.createGraph(g, nodes, contentPane);
 		gc.updateGraph();
 	}
 }
