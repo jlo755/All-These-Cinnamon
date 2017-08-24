@@ -48,8 +48,8 @@ public class GraphController {
         Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         viewer.enableAutoLayout();
         ViewPanel viewPanel = viewer.addDefaultView(false);
-        panel.add(viewPanel);
-        frame.add(panel);
+        //panel.add(viewPanel);
+        //frame.add(panel);
 
 	}
 
