@@ -21,6 +21,7 @@ public class Scheduler {
 	private double currentBestSolution; // Current best scheduling time
 	private FinalState bestState; // Best solutions for all of the Nodes.
 	private HashMap<String, Node> nodeMap; // Input task scheduling graph.
+	private HashMap<String, Node> finalMap; // Input task scheduling graph.
 	private int _numProcessors; // Number of processors assigned for scheduling.
 
 	/**
@@ -52,9 +53,11 @@ public class Scheduler {
 				// call the recursive DFS method for that node to obtain and process all of the
 				// children
 				dfs(nodeMap, n.getID());
-				bestState.finalStateToGraph(nodeMap);
+
 			}
 		}
+		finalMap = bestState.getCurrentBestState();
+		bestState.finalStateToGraph(bestState.getCurrentBestState());
 		//}
 		System.out.println(currentBestSolution);
 	}
