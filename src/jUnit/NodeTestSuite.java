@@ -31,9 +31,9 @@ public class NodeTestSuite {
 		String firstID = ((Node) nodes[0]).getID();
 		String secondID = ((Node) nodes[1]).getID();
 		String lastID = ((Node) nodes[6]).getID();
-		assertEquals("0", firstID);
-		assertEquals("1", secondID);
-		assertEquals("6", lastID);
+		assertEquals(firstID, "0");
+		assertEquals(secondID, "1");
+		assertEquals(lastID, "6");
 	}
 	
 	@Test
@@ -46,9 +46,9 @@ public class NodeTestSuite {
 		int firstCost = ((Node) nodes[0]).getCost();
 		int secondCost = ((Node) nodes[1]).getCost();
 		int lastCost = ((Node) nodes[6]).getCost();
-		assertEquals(5, firstCost);
-		assertEquals(6, secondCost);
-		assertEquals(7, lastCost);
+		assertEquals(firstCost, 5);
+		assertEquals(secondCost, 6);
+		assertEquals(lastCost, 7);
 	}
 	
 	@Test
@@ -59,7 +59,7 @@ public class NodeTestSuite {
 		//check the node "0" children
 		HashMap<String, Node> nodeMap = dotParser.getNodeMap();
 		HashMap<Node, Double> children = nodeMap.get("0").getChildren();
-		assertEquals(3, children.size()); 
+		assertEquals(children.size(), 3); 
 	}
 	
 	@Test
@@ -70,6 +70,6 @@ public class NodeTestSuite {
 		//check the node "6" parents
 		HashMap<String, Node> nodeMap = dotParser.getNodeMap();
 		HashMap<Node, Double> parents = nodeMap.get("6").getParents();
-		assertEquals(1, parents.size());
+		assertEquals(parents.size(), 1);
 	}
 }

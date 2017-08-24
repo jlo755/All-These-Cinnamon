@@ -31,7 +31,7 @@ public class FinalStateTestSuite {
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		scheduler.schedule();
-		assertEquals(28,(int)scheduler.getCurrentBestSolution());
+		assertEquals((int)scheduler.getCurrentBestSolution(), 28);
 	}
 	
 	@Test(timeout=18000000)
@@ -41,7 +41,7 @@ public class FinalStateTestSuite {
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		scheduler.schedule();
-		assertEquals(22,(int)scheduler.getCurrentBestSolution());
+		assertEquals((int)scheduler.getCurrentBestSolution(), 22);
 	}
 	
 	
@@ -52,7 +52,7 @@ public class FinalStateTestSuite {
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		scheduler.schedule();
-		assertEquals(22,(int)scheduler.getCurrentBestSolution());
+		assertEquals((int)scheduler.getCurrentBestSolution(), 22);
 	}
 
 	
