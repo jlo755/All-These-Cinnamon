@@ -9,11 +9,11 @@ import java.util.Stack;
 import dataStructure.Node;
 
 /**
- * 
- * This class produces an optimal solution to a multi-processor 
- * scheduling problem. This is based on an input graph representing a 
- * series of tasks costs and their dependencies, as well as the 
- * number of processors specified. 
+ *
+ * This class produces an optimal solution to a multi-processor
+ * scheduling problem. This is based on an input graph representing a
+ * series of tasks costs and their dependencies, as well as the
+ * number of processors specified.
  *
  */
 public class Scheduler {
@@ -53,19 +53,17 @@ public class Scheduler {
 				// call the recursive DFS method for that node to obtain and process all of the
 				// children
 				dfs(nodeMap, n.getID());
-
 			}
 		}
 		finalMap = bestState.getCurrentBestState();
 		bestState.finalStateToGraph(bestState.getCurrentBestState());
-		//}
 		System.out.println(currentBestSolution);
 	}
 
 	/**
 	 * Recursive approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem.
-	 * 
+	 *
 	 *
 	 * @param graph
 	 *            This is the input graph
@@ -154,7 +152,7 @@ public class Scheduler {
 
 	/**
 	 * Get a list of reachable Nodes from the supplied Node in a given graph.
-	 * 
+	 *
 	 * @param graph
 	 *            This is the input node graph
 	 * @return reachableNodeNames the reachable nodes list
@@ -191,15 +189,15 @@ public class Scheduler {
 	/**
 	 * This calculates the time at which the node can be placed in the scheduler in
 	 * that particular processor
-	 * 
+	 *
 	 * @param graph
 	 *            - is the original dependency graph, NOT the state space. In our
 	 *            case, it stores HashMap<String, Node> - name of the node, to the
 	 *            Node itself.
-	 * 
+	 *
 	 * @param node
 	 *            - this is the current node we're calculating time for.
-	 * 
+	 *
 	 **/
 	public void calculateTime(HashMap<String, Node> graph, Node node) {
 
@@ -252,7 +250,7 @@ public class Scheduler {
 
 	/**
 	 * Checks if a node has parents in a processor and returns true or false
-	 * 
+	 *
 	 * @param graph
 	 *            is the original dependency graph, NOT the state space. In our
 	 *            case, it stores HashMap<String, Node> - name of the node, to the
@@ -288,7 +286,7 @@ public class Scheduler {
 
 	/**
 	 * This method returns the max time for a processor
-	 * 
+	 *
 	 * @param graph
 	 *            This is the graph containing all the nodes in the network
 	 * @param processor
@@ -317,7 +315,7 @@ public class Scheduler {
 
 	/**
 	 * This method calculates the commucation cost between a node and its parent
-	 * 
+	 *
 	 * @param node
 	 *            This is the node we are trying to get the communication cost for
 	 * @param parent
@@ -344,7 +342,7 @@ public class Scheduler {
 	 * This method gets the communication cost between this node and its parents and
 	 * then adds it to the task processing cost of the node and then returns this
 	 * total cost
-	 * 
+	 *
 	 * @param node
 	 *            This is the node we are trying to get the maximum communication
 	 *            cost for
@@ -395,7 +393,7 @@ public class Scheduler {
 				} else {
 					return 0;
 				}
-			} 
+			}
 		};*/
 		for(Node n:graph.values()){
 			//System.out.println("N: "+n.getID());
@@ -514,7 +512,7 @@ public class Scheduler {
 
 	/**
 	 * Returns the currentBestSolution field.
-	 * 
+	 *
 	 * @return
 	 */
 	public double getCurrentBestSolution() {
@@ -523,7 +521,7 @@ public class Scheduler {
 
 	/**
 	 * Returns the bestState field.
-	 * 
+	 *
 	 * @return
 	 */
 	public FinalState getBestState() {
@@ -536,7 +534,7 @@ public class Scheduler {
 
 	/**
 	 * Sets the bestState field.
-	 * 
+	 *
 	 * @param newBestState
 	 */
 	public void setBestState(FinalState newBestState) {
@@ -546,12 +544,12 @@ public class Scheduler {
 	/**
 	 * Pass a task dependency graph in the form of a HashMap to the Scheduler to
 	 * process.
-	 * 
+	 *
 	 * @param taskGraph
 	 */
 	public void provideTaskGraph(HashMap<String, Node> taskGraph) {
 		nodeMap = taskGraph;
-		bestState = new FinalState(nodeMap.keySet());
+		bestState = new FinalState(taskGraph);
 
 	}
 
