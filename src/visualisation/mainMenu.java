@@ -70,15 +70,17 @@ public class mainMenu extends JFrame {
 
 
 		JLabel currentFileNameLabel = new JLabel("No File Chosen");
+		currentFileNameLabel.setFont(new Font("Leelawadee", Font.PLAIN, 12));
 		currentFileNameLabel.setBounds(532, 225, 139, 15);
 		contentPane.add(currentFileNameLabel);
 
 		processorCountTextField = new JTextField();
-		processorCountTextField.setBounds(646, 290, 86, 20);
+		processorCountTextField.setBounds(661, 290, 86, 20);
 		contentPane.add(processorCountTextField);
 		processorCountTextField.setColumns(10);
 
 		JButton btnNewButton = new JButton("Start Processing");
+		btnNewButton.setFont(new Font("Leelawadee", Font.PLAIN, 20));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
@@ -106,6 +108,7 @@ public class mainMenu extends JFrame {
 		contentPane.add(btnNewButton);
 
 		JButton btnChooseFile = new JButton("Choose File...");
+		btnChooseFile.setFont(new Font("Leelawadee", Font.PLAIN, 15));
 		btnChooseFile.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -126,8 +129,8 @@ public class mainMenu extends JFrame {
 		contentPane.add(btnChooseFile);
 
 		JLabel processorCountLabel = new JLabel("Number of Processors:");
-		processorCountLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		processorCountLabel.setBounds(510, 287, 126, 25);
+		processorCountLabel.setFont(new Font("Leelawadee", Font.PLAIN, 14));
+		processorCountLabel.setBounds(510, 287, 141, 25);
 		contentPane.add(processorCountLabel);
 
 	}
