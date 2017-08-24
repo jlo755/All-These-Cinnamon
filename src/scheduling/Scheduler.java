@@ -55,8 +55,8 @@ public class Scheduler {
 				dfs(nodeMap, n.getID());
 			}
 		}
-		finalMap = bestState.getCurrentBestState();
-		bestState.finalStateToGraph(bestState.getCurrentBestState());
+		//finalMap = bestState.getCurrentBestState();
+		//bestState.finalStateToGraph(bestState.getCurrentBestState());
 		System.out.println(currentBestSolution);
 	}
 
