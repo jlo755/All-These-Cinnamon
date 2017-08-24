@@ -20,9 +20,6 @@ public class FinalState {
 	// Current best solution for a Node mapped to an ID in String.
 	HashMap<String, Node> _currentBestState;
 
-	public FinalState(){
-
-	}
 	/**
 	 * Instantiate a set of Nodes' best solution to be 0.
 	 * @param set
