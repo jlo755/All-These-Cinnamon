@@ -25,7 +25,7 @@ public class Scheduler {
 	private double sumAdding = 0;
 	private double totalIdleTime = 0;
 	private double totalTaskTime = 0;
-	private double[] test;
+	private double[] processorTimes;
 	/**
 	 * Initialize the best solution so far to infinity on starting.
 	 */
@@ -37,11 +37,11 @@ public class Scheduler {
 	 * Processes the input graph with DFS to calculate an optimal schedule.
 	 */
 	public void schedule() {
-		test = new double[_numProcessors];
+		processorTimes = new double[_numProcessors];
 		double hello = this.findStartingOptimalBranch(nodeMap);
 		//currentBestSolution = 429.0;
-		for(int i =0; i<test.length; i++) {
-			test[i] = 0.0;
+		for(int i =0; i<processorTimes.length; i++) {
+			processorTimes[i] = 0.0;
 		}
 		totalIdleTime = 0;
 		for (Node n : nodeMap.values()) {
@@ -204,7 +204,7 @@ public class Scheduler {
 			}
 		}
 		this.totalIdleTime -= loadBalanced;
-		test[graph.get(nodeName).getProcessor()-1] = test[graph.get(nodeName).getProcessor()-1] - loadBalanced - graph.get(nodeName).getCost();
+		processorTimes[graph.get(nodeName).getProcessor()-1] = processorTimes[graph.get(nodeName).getProcessor()-1] - loadBalanced - graph.get(nodeName).getCost();
 		//System.out.println(nodeName);
 		//System.out.println("Hallo: "+totalIdleTime);
 
@@ -378,7 +378,7 @@ public class Scheduler {
 				}
 			}
 		}*/
-		return test[processor-1];
+		return processorTimes[processor-1];
 	}
 
 	/**
@@ -436,7 +436,7 @@ public class Scheduler {
 		double earliestStartTime = calculateTime(graph, graph.get(currentNode));
 		graph.get(currentNode).setStartTime(earliestStartTime);
 		graph.get(currentNode).setEndTime(earliestStartTime+graph.get(currentNode).getCost());
-		test[graph.get(currentNode).getProcessor()-1] = earliestStartTime+graph.get(currentNode).getCost();
+		processorTimes[graph.get(currentNode).getProcessor()-1] = earliestStartTime+graph.get(currentNode).getCost();
 		double startTime = graph.get(currentNode).getStartTime();
 		double idleTime = startTime - processorTime;
 		totalIdleTime += idleTime;
@@ -462,24 +462,24 @@ public class Scheduler {
 			//double bestAnswer = 0;
 			for(int i = 1; i<=_numProcessors; i++){
 				n.setProcessor(i);
-				double currentProcessorTime = test[i-1];
+				double currentProcessorTime = processorTimes[i-1];
 				double earliestStartTime = calculateTime(graph, n);
 				n.setStartTime(earliestStartTime);
 				n.setEndTime(earliestStartTime+n.getCost());
-				test[i-1] = earliestStartTime+n.getCost();
+				processorTimes[i-1] = earliestStartTime+n.getCost();
 				if(currentBestTime > n.getEndTime()){
 					currentBestTime = n.getEndTime();
 					currentStartTime = n.getStartTime();
 					previousProcessor = n.getProcessor();
 				} 
-				test[i-1] = currentProcessorTime;
+				processorTimes[i-1] = currentProcessorTime;
 				n.setEndTime(0.0);
 				n.setStartTime(0.0);
 			}
 			n.setStartTime(currentStartTime);
 			n.setEndTime(currentBestTime);
 			n.setProcessor(previousProcessor);
-			test[previousProcessor-1] = n.getEndTime();
+			processorTimes[previousProcessor-1] = n.getEndTime();
 			if(optimalBranch.isEmpty()){
 				double max = 0;
 				for (Node n2 : graph.values()) {
@@ -504,11 +504,8 @@ public class Scheduler {
 		double max = 0;
 		while(!s.isEmpty()){
 			Node node = graph.get(s.pop());
-			//System.out.println("Node popped: "+node.getID());
 			if(node.getParents().keySet().contains(graph.get(initialNode))){
-				//System.out.println("Reset");
 				graph.get(initialNode).setOptimalBottomLevel(startTime+graph.get(initialNode).getCost());
-				//totalTime = startTime+graph.get(initialNode).getCost();
 			}
 			for(Node child: node.getChildren().keySet()){
 				s.push(child.getID());
@@ -516,19 +513,12 @@ public class Scheduler {
 			if(node.getID() != initialNode) {
 				double test = 0;
 				for(Node parent:node.getParents().keySet()) {
-					//System.out.println("Parent: "+parent.getID());
-					//System.out.println("Cost: "+parent.getOptimalBottomLevel());
 					if(test<parent.getOptimalBottomLevel()) {
 						test = parent.getOptimalBottomLevel();
 					}
 				}
-				//System.out.println(node.getCost());
 				node.setOptimalBottomLevel(test+node.getCost());
 			}
-			/*totalTime += node.getCost();
-			if(totalTime > max){
-				max = totalTime;
-			}*/
 		}
 		for(Node n:graph.values()) {
 			if(n.getOptimalBottomLevel() > max && n.getChildren().isEmpty()) {

@@ -2,6 +2,7 @@ package inputParse;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.DOTImporter;
@@ -18,13 +19,13 @@ public class DotParser {
 	private DOTImporter<Node, Edge> _dotImp;
 	private DirectedAcyclicGraph<Node,Edge> _graph;
 	private FileReader _reader;
-	private HashMap<String, Node> _nodeMap;
+	private LinkedHashMap<String, Node> _nodeMap;
 	
 	public DotParser(String fileName) throws FileNotFoundException{
 		_dotImp = new DOTImporter<Node, Edge>(new vProvider(), new eProvider());
 		_graph = new DirectedAcyclicGraph<Node, Edge>(new NodeEdgeFactory());
 		_reader = new FileReader(fileName);
-		_nodeMap = new HashMap<String, Node>();
+		_nodeMap = new LinkedHashMap<String, Node>();
 	}
 
 	/**
@@ -44,7 +45,7 @@ public class DotParser {
 	 * Returns the HashMap of Nodes.
 	 * @return
 	 */
-	public HashMap<String, Node> getNodeMap(){
+	public LinkedHashMap<String, Node> getNodeMap(){
 		return _nodeMap;
 	}
 	
