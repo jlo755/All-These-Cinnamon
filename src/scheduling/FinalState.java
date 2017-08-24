@@ -25,14 +25,25 @@ public class FinalState {
 	}
 	/**
 	 * Instantiate a set of Nodes' best solution to be 0.
-	 * @param set
+	 * @param taskGraph
 	 */
-	public FinalState(Set<String> set){
+	public FinalState(HashMap<String, Node> taskGraph){
 		_currentBestState = new HashMap<String, Node>();
-		for(String s: set){
-			_currentBestState.put(s, new Node(s,0));
+		_currentBestState = new HashMap<String, Node>();
+		for(Node n: taskGraph.values()){
+			String name = n.getID();
+			_currentBestState.put(n.getID(), new Node(name,n.getCost()));
+		}
+		for(Node n: taskGraph.values()){
+			Node parent = _currentBestState.get(n.getID());
+			for(Node child:n.getChildren().keySet()){
+				Node node = _currentBestState.get(child.getID());
+				parent.addChild(node, n.getChildren().get(child));
+				node.addParent(parent, n.getChildren().get(child));
+			}
 		}
 
+	}
 	}
 	
 	/**

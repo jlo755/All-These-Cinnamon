@@ -548,7 +548,7 @@ public class Scheduler {
 	 */
 	public void provideTaskGraph(HashMap<String, Node> taskGraph) {
 		nodeMap = taskGraph;
-		bestState = new FinalState(nodeMap.keySet());
+		bestState = new FinalState(taskGraph);
 
 	}
 
