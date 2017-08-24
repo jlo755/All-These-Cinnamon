@@ -24,6 +24,9 @@ import javax.swing.border.LineBorder;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ProcessorScreen extends JFrame {
 
@@ -78,7 +81,7 @@ public class ProcessorScreen extends JFrame {
 
 		 JPanel ProcessingDetailsPanel = new JPanel();
 		 ProcessingDetailsPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		 ProcessingDetailsPanel.setBounds(492, 467, 582, 184);
+		 ProcessingDetailsPanel.setBounds(492, 467, 582, 130);
 		 contentPane.add(ProcessingDetailsPanel);
 		 ProcessingDetailsPanel.setLayout(null);
 
@@ -89,17 +92,17 @@ public class ProcessorScreen extends JFrame {
 
 		 JLabel lblStartTime = new JLabel("Start Time:");
 		 lblStartTime.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		 lblStartTime.setBounds(22, 56, 74, 21);
+		 lblStartTime.setBounds(22, 36, 74, 21);
 		 ProcessingDetailsPanel.add(lblStartTime);
 
 		 JLabel lblEndTime = new JLabel("End Time:");
 		 lblEndTime.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		 lblEndTime.setBounds(22, 101, 74, 28);
+		 lblEndTime.setBounds(22, 60, 74, 28);
 		 ProcessingDetailsPanel.add(lblEndTime);
 
 		 JLabel lblProcessor = new JLabel("Processor:");
 		 lblProcessor.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		 lblProcessor.setBounds(22, 159, 74, 14);
+		 lblProcessor.setBounds(22, 95, 74, 14);
 		 ProcessingDetailsPanel.add(lblProcessor);
 
 		 JLabel NodeNameOuputLabel = new JLabel("-");
@@ -108,15 +111,15 @@ public class ProcessorScreen extends JFrame {
 		 ProcessingDetailsPanel.add(NodeNameOuputLabel);
 
 		 JLabel StartTimeOutputLabel = new JLabel("-");
-		 StartTimeOutputLabel.setBounds(139, 59, 433, 14);
+		 StartTimeOutputLabel.setBounds(139, 41, 433, 14);
 		 ProcessingDetailsPanel.add(StartTimeOutputLabel);
 
 		 JLabel EndTimeOutputLabel = new JLabel("-");
-		 EndTimeOutputLabel.setBounds(137, 108, 435, 14);
+		 EndTimeOutputLabel.setBounds(139, 69, 435, 14);
 		 ProcessingDetailsPanel.add(EndTimeOutputLabel);
 
 		 JLabel ProcessorOuputLabel = new JLabel("-");
-		 ProcessorOuputLabel.setBounds(137, 159, 435, 14);
+		 ProcessorOuputLabel.setBounds(139, 97, 435, 14);
 		 ProcessingDetailsPanel.add(ProcessorOuputLabel);
 
 		 JPanel graphPanel = new JPanel();
@@ -131,7 +134,20 @@ public class ProcessorScreen extends JFrame {
 		 contentPane.add(timerPanel);
 
 		 JLabel lblTime = new JLabel("Time Elapsed:  00:00:00");
-		 lblTime.setFont(new Font("Leelawadee", Font.PLAIN, 17));
+		 lblTime.setFont(new Font("Leelawadee", Font.PLAIN, 16));
 		 timerPanel.add(lblTime);
+
+		 JButton btnRunAgain = new JButton("Run Again");
+		 btnRunAgain.addActionListener(new ActionListener() {
+		 	public void actionPerformed(ActionEvent e) {
+
+		 		mainMenu m = new mainMenu();
+		 		m.beginLaunch();
+		 		dispose();
+
+		 	}
+		 });
+		 btnRunAgain.setBounds(947, 628, 127, 23);
+		 contentPane.add(btnRunAgain);
 	}
 }
