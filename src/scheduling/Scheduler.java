@@ -58,7 +58,7 @@ public class Scheduler {
 			}
 		}
 		finalMap = bestState.getCurrentBestState();
-		bestState.finalStateToGraph(bestState.getCurrentBestState(),contentPane);
+		bestState.finalStateToGraph(finalMap,contentPane);
 		System.out.println(currentBestSolution);
 	}
 

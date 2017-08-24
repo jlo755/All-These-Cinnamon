@@ -13,10 +13,8 @@ import dataStructure.Node;
 import inputParse.DotParser;
 import inputParse.Edge;
 import outputGraph.GraphController;
-import outputGraph.VisualGraph;
 import outputParse.OutputParser;
 import visualisation.ProcessorScreen;
-import visualisation.mainMenu;
 
 /**
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
