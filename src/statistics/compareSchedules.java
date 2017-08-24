@@ -19,8 +19,8 @@ import org.jfree.ui.ApplicationFrame;
 public class compareSchedules {
 
 
-    public JFreeChart createDataset() {
-    	XYSeries series = new XYSeries("XYGraph");
+    public JFreeChart createStateSpaceGraph() {
+    	XYSeries series = new XYSeries("State Space Time Graph");
 		   series.add(1, 1);
 		   series.add(1, 2);
 		   series.add(2, 1);
@@ -33,9 +33,9 @@ public class compareSchedules {
 
 		// Generate the graph
 		   JFreeChart chart = ChartFactory.createXYLineChart(
-		   "XY Chart", // Title
-		   "x-axis", // x-axis Label
-		   "y-axis", // y-axis Label
+		   "State Space Time Graph", // Title
+		   "State Space", // x-axis Label
+		   "Time", // y-axis Label
 		   dataset, // Dataset
 		   PlotOrientation.VERTICAL, // Plot Orientation
 		   true, // Show Legend

@@ -59,7 +59,7 @@ public class ProcessorScreen extends JFrame {
 
 		compareSchedules compare = new compareSchedules();
 
-		JFreeChart chart = compare.createDataset();
+		JFreeChart chart = compare.createStateSpaceGraph();
 
 		 JPanel panel = new JPanel();
 		 panel.setLayout(new java.awt.BorderLayout());
