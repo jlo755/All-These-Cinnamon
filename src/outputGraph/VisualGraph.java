@@ -14,12 +14,13 @@ import java.util.Iterator;
  * Created by DarthPenguin on 22/08/17.
  */
 public class VisualGraph {
-    Graph graph;
-
+    SingleGraph graph;
     protected String styleSheet =
             "node {" + "size: 40px; shape: circle; fill-color: white; stroke-mode: plain; stroke-color: black; text-alignment: center;}"+
                     "node.processor1 {	fill-color: red; }"+
                     "node.processor2 {	fill-color: green; }";
+
+
     public VisualGraph(HashMap<String, dataStructure.Node> g){
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
         graph = new SingleGraph("MainGraph");
@@ -40,11 +41,11 @@ public class VisualGraph {
 
     }
 
-    public void startTraversal(String ID, ArrayList<dataStructure.Node> a){
-        explore(a);
+    public void startTraversal(String ID, ArrayList<dataStructure.Node> a, SingleGraph g){
+        explore(a, g);
     }
 
-    public void explore(ArrayList<dataStructure.Node> a) {
+    public void explore(ArrayList<dataStructure.Node> a, SingleGraph g) {
 
         for(dataStructure.Node n : a) {
             Node next = graph.getNode(n.getID());
