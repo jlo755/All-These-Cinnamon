@@ -6,6 +6,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
 
+import javax.swing.JPanel;
+
 import dataStructure.Node;
 
 /**
@@ -34,7 +36,7 @@ public class Scheduler {
 	/**
 	 * Processes the input graph with DFS to calculate an optimal schedule.
 	 */
-	public void schedule() {
+	public void schedule(JPanel contentPane) {
 		double hello = this.findStartingOptimalBranch(nodeMap);
 		for (Node n : nodeMap.values()) {
 			n.setCompleted(false);
@@ -55,8 +57,8 @@ public class Scheduler {
 				dfs(nodeMap, n.getID());
 			}
 		}
-		//finalMap = bestState.getCurrentBestState();
-		//bestState.finalStateToGraph(bestState.getCurrentBestState());
+		finalMap = bestState.getCurrentBestState();
+		bestState.finalStateToGraph(bestState.getCurrentBestState(),contentPane);
 		System.out.println(currentBestSolution);
 	}
 
