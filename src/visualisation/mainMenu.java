@@ -29,7 +29,6 @@ public class mainMenu extends JFrame {
 
 	private JPanel contentPane;
 	private String _fileName;
-	private JTextField processorCountTextField;
 	private Integer _noOfProcessors;
 
 	/**
@@ -67,38 +66,12 @@ public class mainMenu extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		LaunchScheduler ls = new LaunchScheduler();
-
-
-		JLabel currentFileNameLabel = new JLabel("No File Chosen");
-		currentFileNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		currentFileNameLabel.setFont(new Font("Leelawadee", Font.PLAIN, 12));
-		currentFileNameLabel.setBounds(484, 232, 139, 15);
-		contentPane.add(currentFileNameLabel);
-
-		processorCountTextField = new JTextField();
-		processorCountTextField.setBounds(612, 290, 86, 20);
-		contentPane.add(processorCountTextField);
-		processorCountTextField.setColumns(10);
 
 		JButton btnNewButton = new JButton("Start Processing");
 		btnNewButton.setFont(new Font("Leelawadee", Font.PLAIN, 20));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
-				ls.setFileName(_fileName);
-				ls.setProcessor(_noOfProcessors);
-				try {
-					ls.beginScheduling();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ImportException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 
-				//this will move on to the next screen for processing and showing data
 
 				ProcessorScreen p = new ProcessorScreen();
 				p.beginProcessing();
@@ -108,32 +81,6 @@ public class mainMenu extends JFrame {
 		});
 		btnNewButton.setBounds(391, 541, 359, 58);
 		contentPane.add(btnNewButton);
-
-		JButton btnChooseFile = new JButton("Choose File...");
-		btnChooseFile.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		btnChooseFile.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("dot file", "dot");
-				chooser.setFileFilter(filter);
-				int returnVal = chooser.showOpenDialog(null);
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getName());
-					_fileName = chooser.getSelectedFile().getName();
-				}
-				if (_fileName != null) {
-					currentFileNameLabel.setText(_fileName);
-				}
-			}
-		});
-		btnChooseFile.setBounds(439, 196, 222, 25);
-		contentPane.add(btnChooseFile);
-
-		JLabel processorCountLabel = new JLabel("Number of Processors:");
-		processorCountLabel.setFont(new Font("Leelawadee", Font.PLAIN, 14));
-		processorCountLabel.setBounds(426, 287, 188, 25);
-		contentPane.add(processorCountLabel);
 
 	}
 }
