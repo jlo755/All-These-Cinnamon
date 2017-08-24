@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.graphstream.ui.swingViewer.ViewPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -14,23 +15,37 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.RefineryUtilities;
+import org.jgrapht.ext.ImportException;
 
+import outputGraph.VisualGraph;
+import scheduling.LaunchScheduler;
 import statistics.compareSchedules;
 
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.border.LineBorder;
 import java.awt.Font;
+import java.awt.GridLayout;
+
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class ProcessorScreen extends JFrame {
 
 	private JPanel contentPane;
+	private String _fileName;
+	private JTextField processorCountTextField;
+	private Integer _noOfProcessors;
 
 	/**
 	 * Launch the application.
@@ -122,11 +137,6 @@ public class ProcessorScreen extends JFrame {
 		 ProcessorOuputLabel.setBounds(139, 97, 435, 14);
 		 ProcessingDetailsPanel.add(ProcessorOuputLabel);
 
-		 JPanel graphPanel = new JPanel();
-		 graphPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		 graphPanel.setBounds(10, 30, 472, 567);
-		 contentPane.add(graphPanel);
-
 		 JPanel timerPanel = new JPanel();
 		 FlowLayout flowLayout = (FlowLayout) timerPanel.getLayout();
 		 flowLayout.setAlignment(FlowLayout.LEFT);
@@ -137,17 +147,43 @@ public class ProcessorScreen extends JFrame {
 		 lblTime.setFont(new Font("Leelawadee", Font.PLAIN, 16));
 		 timerPanel.add(lblTime);
 
-		 JButton btnRunAgain = new JButton("Run Again");
-		 btnRunAgain.addActionListener(new ActionListener() {
+		 JPanel graphPanel = new JPanel(new GridLayout()){
+	            @Override
+	            public Dimension getPreferredSize() {
+	                return new Dimension(460,567);
+	            }
+	        };
+		 graphPanel.setBounds(10, 30, 460, 567);
+		 contentPane.add(graphPanel);
+
+		 JButton btnStartProcessing = new JButton("Start Processing");
+		 btnStartProcessing.addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent e) {
 
-		 		mainMenu m = new mainMenu();
-		 		m.beginLaunch();
-		 		dispose();
+		 		LaunchScheduler ls = new LaunchScheduler();
+		 		//_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
+				//ls.setFileName(_fileName);
+				//ls.setProcessor(_noOfProcessors);
+				try {
+					ls.beginScheduling(graphPanel);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ImportException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				//this will move on to the next screen for processing and showing data
+
+
+
 
 		 	}
 		 });
-		 btnRunAgain.setBounds(947, 628, 127, 23);
-		 contentPane.add(btnRunAgain);
+		 btnStartProcessing.setBounds(576, 628, 138, 23);
+		 contentPane.add(btnStartProcessing);
+
+
 	}
 }
