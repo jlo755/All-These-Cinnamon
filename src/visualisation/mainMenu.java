@@ -19,6 +19,9 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import java.awt.Font;
 
 public class mainMenu extends JFrame {
@@ -32,6 +35,14 @@ public class mainMenu extends JFrame {
 	 * Launch the application.
 	 */
 	public static void beginLaunch() {
+		 try {
+	            // Set cross-platform Java L&F (also called "Metal")
+	        UIManager.setLookAndFeel(
+	        		"com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+	    }
+	    catch (Exception e) {
+	      e.printStackTrace();
+	    }
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
