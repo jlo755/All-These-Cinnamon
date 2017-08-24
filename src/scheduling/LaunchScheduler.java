@@ -4,6 +4,8 @@ import statistics.compareSchedules;
 import org.jfree.ui.RefineryUtilities;
 import java.util.HashMap;
 
+import javax.swing.JPanel;
+
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.ext.ImportException;
 
@@ -13,6 +15,7 @@ import inputParse.Edge;
 import outputGraph.GraphController;
 import outputGraph.VisualGraph;
 import outputParse.OutputParser;
+import visualisation.ProcessorScreen;
 import visualisation.mainMenu;
 
 /**
@@ -30,13 +33,15 @@ public class LaunchScheduler {
 
 	public static void main(String[] args) throws IOException, ImportException {
 
-		mainMenu m = new mainMenu();
-		m.beginLaunch();
+		_fileName=args[0];
+		_noOfProcessors = Integer.parseInt(args[1]);
+		ProcessorScreen processor = new ProcessorScreen();
+		processor.beginProcessing();
 
 
 	}
 
-	public void beginScheduling() throws IOException, ImportException{
+	public void beginScheduling(JPanel contentPane) throws IOException, ImportException{
 		// Parse the dot graph input and schedule an optimal solution.
 				long startTime = System.nanoTime();
 		scheduler = new Scheduler();
@@ -46,7 +51,7 @@ public class LaunchScheduler {
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		GraphController gc = new GraphController();
 		//gc.createGraph(dotParser.getNodeMap());
-		scheduler.schedule();
+		scheduler.schedule(contentPane);
 		// Output the solution in a dot format file.
 		outputSolution(_fileName);
 
