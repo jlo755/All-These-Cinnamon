@@ -44,7 +44,6 @@ public class FinalState {
 		}
 
 	}
-	}
 	
 	/**
 	 * Set the current best state for all the Nodes in a graph.
