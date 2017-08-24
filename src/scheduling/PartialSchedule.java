@@ -292,12 +292,8 @@ public class PartialSchedule {
 		return count;
 	}
 	
-	public int getStartZeroProcessor() {
-		for(int i = 0; i<_processorTimes.length; i++) {
-			if(_processorTimes[i] == 0.0) {
-				return i+1;
-			}
-		}
-		return 0;
+	public double getProcessorTime(int processor) {
+		return _processorTimes[processor-1];
+		
 	}
 }

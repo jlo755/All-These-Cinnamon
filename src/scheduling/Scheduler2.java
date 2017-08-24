@@ -42,7 +42,7 @@ public class Scheduler2 {
 			totalTaskTime += n.getCost();
 			n.setBottomLevel(findMaxBottomLevel(nodeMap, n.getID()));
 		}
-		findStartingOptimalBranch(nodeMap);
+		//findStartingOptimalBranch(nodeMap);
 		System.out.println(currentBestSolution);
 		// "Nodemap" is the input graph for the algorithm.
 		//for (int i = 1; i <= _numProcessors; i++) {
@@ -88,16 +88,43 @@ public class Scheduler2 {
 			PartialSchedule schedule = scheduleStack.pop();
 			ArrayList<String> reachable = schedule.getReachable();
 			for(String s:reachable) {
-				for(int i = 1; i<=_numProcessors; i++) {
+				if(schedule.startTimeZeroProcessors() > 1) {
 					Node n = nodeMap.get(s);
-					//long startTime = System.nanoTime();
-					PartialSchedule childSchedule = schedule.makeChildSchedule();
-					//long endTime = System.nanoTime();
-					//time = time+((endTime-startTime)/1000000000.0);
-					childSchedule.solve(n, i);
-					double maxHeuristic = childSchedule.getMaxHeuristic(n);
-					if(maxHeuristic < currentBestSolution) {
-						scheduleStack.push(childSchedule);
+					boolean discovered = false;
+					for(int i = 1; i<=_numProcessors; i++) {
+						double time = schedule.getProcessorTime(i);
+						if(time == 0.0 && !discovered) {
+							discovered = true;
+							PartialSchedule childSchedule = schedule.makeChildSchedule();
+							childSchedule.solve(n, i);
+							double maxHeuristic = childSchedule.getMaxHeuristic(n);
+							if(maxHeuristic < currentBestSolution) {
+								scheduleStack.push(childSchedule);
+							}
+						} else if(time != 0.0){
+							PartialSchedule childSchedule = schedule.makeChildSchedule();
+							childSchedule.solve(n, i);
+							double maxHeuristic = childSchedule.getMaxHeuristic(n);
+							if(maxHeuristic < currentBestSolution) {
+								scheduleStack.push(childSchedule);
+							}
+						} else {
+							
+						}
+					}
+				}
+				else {
+					for(int i = 1; i<=_numProcessors; i++) {
+						Node n = nodeMap.get(s);
+						//long startTime = System.nanoTime();
+						PartialSchedule childSchedule = schedule.makeChildSchedule();
+						//long endTime = System.nanoTime();
+						//time = time+((endTime-startTime)/1000000000.0);
+						childSchedule.solve(n, i);
+						double maxHeuristic = childSchedule.getMaxHeuristic(n);
+						if(maxHeuristic < currentBestSolution) {
+							scheduleStack.push(childSchedule);
+						}
 					}
 				}
 			}
@@ -171,18 +198,18 @@ public class Scheduler2 {
 				childSchedule.solve(n, i);
 				partialSchedules[i-1] = childSchedule;
 			}
-			int maxIndex = 0;
-			Double max = Double.POSITIVE_INFINITY;
+			int minIndex = 0;
+			Double min = Double.POSITIVE_INFINITY;
 			for(int i = 1; i<=_numProcessors; i++) {
 				PartialSchedule scheduleToCompare = partialSchedules[i-1];
-				if(max>scheduleToCompare.getNodeEndTime(n)) {
-					max = scheduleToCompare.getNodeEndTime(n);
-					maxIndex = i;
+				if(min>scheduleToCompare.getNodeEndTime(n)) {
+					min = scheduleToCompare.getNodeEndTime(n);
+					minIndex = i;
 				}
 			}
-			scheduleStack.push(partialSchedules[maxIndex-1]);
+			scheduleStack.push(partialSchedules[minIndex-1]);
 			if(optimalBranch.isEmpty()){
-				currentBestSolution = max;
+				currentBestSolution = min;
 				break;
 			}
 		}
