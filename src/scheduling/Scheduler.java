@@ -102,17 +102,17 @@ public class Scheduler {
 		double loadBalancedTime = ((totalTaskTime+totalIdleTime)/(double)_numProcessors);
 
 		long startTime = System.nanoTime();
-		double minDRT = Double.POSITIVE_INFINITY;
+		double minDRT = 0;
 		for (String s : reachableNodes) {
 			Node n = graph.get(s);
 			double minEndTime = Double.POSITIVE_INFINITY;
-			for (int i = 1; i < _numProcessors; i++) {
+			for (int i = 1; i <= _numProcessors; i++) {
 				n.setProcessor(i);
-				minEndTime = Math.min(minEndTime, calculateTime(graph, n)+n.getCost());
+				minEndTime = Math.min(minEndTime, calculateTime(graph, n)+n.getBottomLevel());
 			}
 			n.setProcessor(0);
 			//System.out.println(minDRT);
-			minDRT = Math.min(minEndTime, minDRT);
+			minDRT = Math.max(minEndTime, minDRT);
 		}
 		if(minDRT == Double.POSITIVE_INFINITY) {
 			minDRT = 0;
@@ -579,7 +579,7 @@ public class Scheduler {
 	 */
 	public void provideTaskGraph(HashMap<String, Node> taskGraph) {
 		nodeMap = taskGraph;
-		bestState = new FinalState(nodeMap.keySet());
+		bestState = new FinalState(taskGraph);
 
 	}
 

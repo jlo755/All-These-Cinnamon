@@ -15,19 +15,28 @@ import dataStructure.Node;
 public class FinalState {
 	// Current best solution for a Node mapped to an ID in String.
 	HashMap<String, Node> _currentBestState;
-	
+
 	/**
 	 * Instantiate a set of Nodes' best solution to be 0.
-	 * @param set
+	 * @param taskGraph
 	 */
-	public FinalState(Set<String> set){
+	public FinalState(HashMap<String, Node> taskGraph){
 		_currentBestState = new HashMap<String, Node>();
-		for(String s: set){
-			_currentBestState.put(s, new Node(s,0));
+		for(Node n: taskGraph.values()){
+			String name = n.getID();
+			_currentBestState.put(n.getID(), new Node(name,n.getCost()));
+		}
+		for(Node n: taskGraph.values()){
+			Node parent = _currentBestState.get(n.getID());
+			for(Node child:n.getChildren().keySet()){
+				Node node = _currentBestState.get(child.getID());
+				parent.addChild(node, n.getChildren().get(child));
+				node.addParent(parent, n.getChildren().get(child));
+			}
 		}
 
 	}
-	
+
 	/**
 	 * Set the current best state for all the Nodes in a graph.
 	 * @param graph
@@ -41,7 +50,7 @@ public class FinalState {
 			n.setProcessor(bestNode.getProcessor());
 		}
 	}
-	
+
 	/**
 	 * Get HashMap for current best state of Nodes.
 	 * @return
@@ -49,7 +58,7 @@ public class FinalState {
 	public HashMap<String, Node> getCurrentBestState(){
 		return _currentBestState;
 	}
-	
+
 	/**
 	 * Print current best state of all Nodes.
 	 */
