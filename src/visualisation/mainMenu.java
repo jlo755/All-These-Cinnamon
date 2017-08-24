@@ -23,6 +23,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class mainMenu extends JFrame {
 
@@ -37,8 +38,8 @@ public class mainMenu extends JFrame {
 	public static void beginLaunch() {
 		 try {
 	            // Set cross-platform Java L&F (also called "Metal")
-	        UIManager.setLookAndFeel(
-	        		"com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+	       // UIManager.setLookAndFeel(
+	        //		"com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 	    }
 	    catch (Exception e) {
 	      e.printStackTrace();
@@ -61,7 +62,7 @@ public class mainMenu extends JFrame {
 	public mainMenu() {
 		setTitle("Processor Main Menu");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1280, 800);
+		setBounds(100, 100, 1100, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -70,12 +71,13 @@ public class mainMenu extends JFrame {
 
 
 		JLabel currentFileNameLabel = new JLabel("No File Chosen");
+		currentFileNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		currentFileNameLabel.setFont(new Font("Leelawadee", Font.PLAIN, 12));
-		currentFileNameLabel.setBounds(532, 225, 139, 15);
+		currentFileNameLabel.setBounds(484, 232, 139, 15);
 		contentPane.add(currentFileNameLabel);
 
 		processorCountTextField = new JTextField();
-		processorCountTextField.setBounds(661, 290, 86, 20);
+		processorCountTextField.setBounds(612, 290, 86, 20);
 		contentPane.add(processorCountTextField);
 		processorCountTextField.setColumns(10);
 
@@ -104,7 +106,7 @@ public class mainMenu extends JFrame {
 
 			}
 		});
-		btnNewButton.setBounds(461, 541, 359, 58);
+		btnNewButton.setBounds(391, 541, 359, 58);
 		contentPane.add(btnNewButton);
 
 		JButton btnChooseFile = new JButton("Choose File...");
@@ -125,12 +127,12 @@ public class mainMenu extends JFrame {
 				}
 			}
 		});
-		btnChooseFile.setBounds(510, 194, 222, 25);
+		btnChooseFile.setBounds(439, 196, 222, 25);
 		contentPane.add(btnChooseFile);
 
 		JLabel processorCountLabel = new JLabel("Number of Processors:");
 		processorCountLabel.setFont(new Font("Leelawadee", Font.PLAIN, 14));
-		processorCountLabel.setBounds(510, 287, 141, 25);
+		processorCountLabel.setBounds(426, 287, 188, 25);
 		contentPane.add(processorCountLabel);
 
 	}
