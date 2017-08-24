@@ -45,20 +45,11 @@ public class GraphController {
 		JPanel contentPane = (JPanel) panel.getParent();
 		JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(contentPane);
         panel.setBorder(BorderFactory.createLineBorder(Color.blue, 5));
-        //Graph graph = new SingleGraph("Tutorial", false, true);
-        //graph.addEdge("AB", "A", "B");
-        //org.graphstream.graph.Node a = graph.getNode("A");
-        //a.setAttribute("xy", 1, 1);
-        //org.graphstream.graph.Node b = graph.getNode("B");
-        //b.setAttribute("xy", -1, -1);
         Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
         viewer.enableAutoLayout();
         ViewPanel viewPanel = viewer.addDefaultView(false);
         panel.add(viewPanel);
         frame.add(panel);
-
-
-		//graph.display();
 
 	}
 
