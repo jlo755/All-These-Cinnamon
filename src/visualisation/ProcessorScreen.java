@@ -19,7 +19,7 @@ import org.jgrapht.ext.ImportException;
 
 import com.sun.prism.Image;
 
-import outputGraph.VisualGraph;
+import visualisation.VisualGraph;
 import scheduling.LaunchScheduler;
 import statistics.compareSchedules;
 
@@ -89,6 +89,29 @@ public class ProcessorScreen extends JFrame {
 		//chart.pack( );
 		 //RefineryUtilities.centerFrameOnScreen( chart );
 		 //chart.setVisible( true );
+
+        JPanel graphPanel = new JPanel(new GridLayout()){
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(460,567);
+            }
+        };
+        graphPanel.setBounds(10, 30, 460, 567);
+        contentPane.add(graphPanel);
+
+        LaunchScheduler ls = new LaunchScheduler();
+        //_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
+        //ls.setFileName(_fileName);
+        //ls.setProcessor(_noOfProcessors);
+        try {
+            ls.beginScheduling(graphPanel);
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (ImportException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
 
 
 
@@ -162,30 +185,11 @@ public class ProcessorScreen extends JFrame {
 		 lblTime.setFont(new Font("Leelawadee", Font.PLAIN, 16));
 		 timerPanel.add(lblTime);
 
-		 JPanel graphPanel = new JPanel(new GridLayout()){
-	            @Override
-	            public Dimension getPreferredSize() {
-	                return new Dimension(460,567);
-	            }
-	        };
-		 graphPanel.setBounds(10, 30, 460, 567);
-		 contentPane.add(graphPanel);
+
 
 		 /// START PROCESSING
 
-		 LaunchScheduler ls = new LaunchScheduler();
-	 		//_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
-			//ls.setFileName(_fileName);
-			//ls.setProcessor(_noOfProcessors);
-			try {
-				ls.beginScheduling(graphPanel);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ImportException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+
 
 
 		 JButton btnStartProcessing = new JButton("Start Processing");
