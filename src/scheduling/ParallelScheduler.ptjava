@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.HashSet;
 
 import dataStructure.Node;
-import pt.runtime.TaskIDGroup;
 
 /**
  * 
@@ -124,6 +123,7 @@ public class ParallelScheduler extends Scheduler{
 					}
 				}
 				if(endTime < currentBestSolution) {
+					bestSchedule.setCurrentBestState(schedule);
 					currentBestSolution = endTime;
 				}
 			}

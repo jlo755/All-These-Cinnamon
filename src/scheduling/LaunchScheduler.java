@@ -11,32 +11,32 @@ import inputParse.Edge;
 import outputParse.OutputParser;
 
 /**
-* This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
-* we traverse through the entire graph. When a node is visited, we check all possible time costs for that particular node being
-* placed on the different processors. We then check which of these is the best time. This process continues until all the nodes
-* in the network are visited and we have obtained the best scheduling times.
-*/
+ * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
+ * we traverse through the entire graph. When a node is visited, we check all possible time costs for that particular node being
+ * placed on the different processors. We then check which of these is the best time. This process continues until all the nodes
+ * in the network are visited and we have obtained the best scheduling times.
+ */
 public class LaunchScheduler {
-	
-	private static ParallelScheduler scheduler;
+
+	private static Scheduler scheduler;
 	private static DotParser dotParser;
 
 	public static void main(String[] args) throws IOException, ImportException {
-		
+
 		// Parse the dot graph input and schedule an optimal solution.
 		long startTime = System.nanoTime();
-		scheduler = new ParallelScheduler();
+		scheduler = new Scheduler();
 		dotParser = new DotParser(args[0]);
 		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
 		scheduler.schedule();
 		// Output the solution in a dot format file.
-		//outputSolution(args[0]);
+		outputSolution(args[0]);
 		long endTime = System.nanoTime();
 		System.out.println("The program took: "+(endTime - startTime)/1000000000.0);
 	}
-	
+
 	/**
 	 * This method uses the solution found by the Scheduler to output the solution
 	 * in a dot format file.
@@ -46,16 +46,16 @@ public class LaunchScheduler {
 		OutputParser outputParse = new OutputParser();
 		outputParse.setFileName(fileName);
 		DirectedAcyclicGraph<Node, Edge> graph = dotParser.getGraph();
-		HashMap<String, Node> graphSolution = scheduler.getBestState().getCurrentBestState();
+		PartialSchedule graphSolution = scheduler.getBestState().getCurrentBestSchedule();
+		int[] processors = graphSolution.getNodeProcessors();
+		double[] endTimes = graphSolution.getEndTimes();
+		double[] startTimes = graphSolution.getStartTimes();
 		for(Object n:graph.vertexSet()){
 			Node node = (Node) n;
-			for(Node n1:graphSolution.values()){
-				if(node.getID() == n1.getID()){
-					node.setStartTime(n1.getStartTime());
-					node.setEndTime(n1.getEndTime());
-					node.setProcessor(n1.getProcessor());
-				}
-			}
+			int index = graphSolution.getNodeOrdering().get(node.getID());
+			node.setStartTime(startTimes[index]);
+			node.setEndTime(endTimes[index]);
+			node.setProcessor(processors[index]);
 		}
 		outputParse.setGraph(dotParser.getGraph());
 		outputParse.outputDot();

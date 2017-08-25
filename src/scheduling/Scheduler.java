@@ -21,7 +21,7 @@ import dataStructure.Node;
 public class Scheduler {
 
 	protected double currentBestSolution; // Current best scheduling time
-	protected FinalState bestState; // Best solutions for all of the Nodes.
+	protected FinalState bestSchedule; // Best solutions for all of the Nodes.
 	protected LinkedHashMap<String, Node> nodeMap; // Input task scheduling graph.
 	protected double sumAdding = 0;
 	protected double totalTaskTime = 0;
@@ -42,7 +42,6 @@ public class Scheduler {
 	public void schedule() {
 		
 		initializeNodes();
-		
 		System.out.println(currentBestSolution);
 		
 		// "Nodemap" is the input graph for the algorithm.
@@ -143,6 +142,7 @@ public class Scheduler {
 				}
 				if(endTime < currentBestSolution) {
 					currentBestSolution = endTime;
+					bestSchedule.setCurrentBestState(schedule);
 				}
 			}
 		}
@@ -236,7 +236,7 @@ public class Scheduler {
 	 * @return
 	 */
 	public FinalState getBestState() {
-		return bestState;
+		return bestSchedule;
 	}
 
 	public void setProcessorNumber(int processors) {
@@ -249,7 +249,7 @@ public class Scheduler {
 	 * @param newBestState
 	 */
 	public void setBestState(FinalState newBestState) {
-		bestState = newBestState;
+		bestSchedule = newBestState;
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class Scheduler {
 	 */
 	public void provideTaskGraph(LinkedHashMap<String, Node> taskGraph) {
 		nodeMap = taskGraph;
-		bestState = new FinalState(taskGraph);
+		bestSchedule = new FinalState();
 
 	}
 

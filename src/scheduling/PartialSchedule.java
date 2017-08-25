@@ -278,8 +278,25 @@ public class PartialSchedule {
 		return Math.max(totalIdleTime, max);
 	}
 
+	public double[] getProcessorTimes() {
+		return _processorTimes;
+	}
+	
 	public double[] getEndTimes() {
 		return _endTimes;
+	}
+	
+	public double[] getStartTimes() {
+		return _startTimes;
+	}
+	
+	public HashMap<String, Integer> getNodeOrdering(){
+		return _nodeOrdering;
+		
+	}
+	
+	public int[] getNodeProcessors() {
+		return _processors;
 	}
 	
 	public int startTimeZeroProcessors() {
@@ -295,5 +312,10 @@ public class PartialSchedule {
 	public double getProcessorTime(int processor) {
 		return _processorTimes[processor-1];
 		
+	}
+
+	public double getNodeStartTime(Node node) {
+		int index = _nodeOrdering.get(node.getID());
+		return _startTimes[index];
 	}
 }
