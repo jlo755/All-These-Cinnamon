@@ -1,29 +1,23 @@
 package visualisation;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.graphstream.ui.swingViewer.ViewPanel;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.RefineryUtilities;
 import org.jgrapht.ext.ImportException;
+
 
 import com.sun.prism.Image;
 
 import visualisation.VisualGraph;
+
 import scheduling.LaunchScheduler;
 import statistics.compareSchedules;
 
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Color;
@@ -33,21 +27,13 @@ import javax.swing.border.LineBorder;
 import java.awt.Font;
 import java.awt.GridLayout;
 
-import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
-import javax.swing.JCheckBox;
-import java.awt.Checkbox;
-import javax.swing.JProgressBar;
+
 
 public class ProcessorScreen extends JFrame {
 
