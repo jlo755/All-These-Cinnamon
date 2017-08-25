@@ -18,14 +18,14 @@ import outputParse.OutputParser;
 */
 public class LaunchScheduler {
 	
-	private static Scheduler2 scheduler;
+	private static ParallelScheduler scheduler;
 	private static DotParser dotParser;
 
 	public static void main(String[] args) throws IOException, ImportException {
 		
 		// Parse the dot graph input and schedule an optimal solution.
 		long startTime = System.nanoTime();
-		scheduler = new Scheduler2();
+		scheduler = new ParallelScheduler();
 		dotParser = new DotParser(args[0]);
 		scheduler.setProcessorNumber(Integer.parseInt(args[1]));
 		dotParser.parseInput();

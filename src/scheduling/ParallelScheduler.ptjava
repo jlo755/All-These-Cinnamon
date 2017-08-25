@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.Set;
+import java.util.HashSet;
 
 import dataStructure.Node;
 import pt.runtime.TaskIDGroup;
@@ -29,12 +31,14 @@ public class ParallelScheduler {
 	private int _numProcessors;
 	private ArrayList<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
 	private double time = 0;
+	private Set<PartialSchedule> prevPartialSchedules;
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
 	 */
 	public ParallelScheduler() {
 		currentBestSolution = Double.POSITIVE_INFINITY;
+		prevPartialSchedules = new HashSet<PartialSchedule>();
 	}
 
 	/**
@@ -72,9 +76,9 @@ public class ParallelScheduler {
 
 	TASK(*)
 
-	private void fuckTask(Stack<PartialSchedule> scheduleStack) {
+	private void dfsTask(Stack<PartialSchedule> scheduleStack) {
 		while (!scheduleStack.isEmpty()) {
-			fuck(scheduleStack);
+			dfs(scheduleStack);
 		}
 	}
 
@@ -97,17 +101,11 @@ public class ParallelScheduler {
 			scheduleStack.add(schedule);
 		}
 		TaskIDGroup g = new TaskIDGroup(2);
-		if (scheduleStack.size() >= 2) {
 
 			for (int i = 0; i < 2; i++) {
-				TaskID id = fuckTask(scheduleStack);
+				TaskID id = dfsTask(scheduleStack);
 				g.add(id);
 			}
-
-		} else {
-			TaskID id = fuckTask(scheduleStack);
-			g.add(id);
-		}
 
 		try {
 			g.waitTillFinished();
@@ -117,7 +115,7 @@ public class ParallelScheduler {
 
 	}
 
-	private void fuck(Stack<PartialSchedule> scheduleStack) {
+	private void dfs(Stack<PartialSchedule> scheduleStack) {
 		try{
 			PartialSchedule schedule = scheduleStack.pop();
 			ArrayList<String> reachable = schedule.getReachable();
@@ -176,7 +174,7 @@ public class ParallelScheduler {
 				}
 			}
 		}  catch (EmptyStackException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
