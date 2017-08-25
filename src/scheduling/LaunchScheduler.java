@@ -1,7 +1,5 @@
 package scheduling;
 import java.io.IOException;
-import statistics.compareSchedules;
-import org.jfree.ui.RefineryUtilities;
 import java.util.HashMap;
 
 import javax.swing.JPanel;
@@ -12,11 +10,12 @@ import org.jgrapht.ext.ImportException;
 import dataStructure.Node;
 import inputParse.DotParser;
 import inputParse.Edge;
-import outputGraph.GraphController;
-import outputGraph.VisualGraph;
 import outputParse.OutputParser;
 import visualisation.ProcessorScreen;
+<<<<<<< HEAD
 
+=======
+>>>>>>> f472f82512ab0ae08fec33fb71ac2396971256e8
 
 /**
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
@@ -49,8 +48,6 @@ public class LaunchScheduler {
 		scheduler.setProcessorNumber(_noOfProcessors);
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
-		GraphController gc = new GraphController();
-		//gc.createGraph(dotParser.getNodeMap());
 		scheduler.schedule(contentPane);
 		// Output the solution in a dot format file.
 		outputSolution(_fileName);
