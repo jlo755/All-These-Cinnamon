@@ -1,6 +1,6 @@
 package jUnit;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -8,6 +8,7 @@ import java.util.HashMap;
 import org.jgrapht.ext.ImportException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 
 import dataStructure.Node;
 import inputParse.DotParser;
@@ -21,6 +22,30 @@ public class NodeTestSuite {
 	public void initialise(){
 		scheduler = new Scheduler();
 	}
+	
+	@Test
+	public void testEmptyInputFile() throws FileNotFoundException {
+		try {
+			dotParser = new DotParser("EmptyFile.dot");
+			dotParser.parseInput();
+			fail("Should have failed: empty file");
+		} catch (ImportException e){
+			//this should fail so the exception will not be caught
+		}
+	}
+	
+	@Test
+	public void testNoInputFile() throws ImportException {
+		try {
+			dotParser = new DotParser("NotaFile.dot");
+			dotParser.parseInput();
+			fail("Should have failed: no file");
+		} catch (FileNotFoundException e){
+			//this should fail so the exception will not be caught
+		}
+	}
+	
+
 	@Test
 	public void test7NodesID() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("Nodes_7_OutTree.dot");
