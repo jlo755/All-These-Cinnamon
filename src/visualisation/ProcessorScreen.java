@@ -17,6 +17,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.RefineryUtilities;
 import org.jgrapht.ext.ImportException;
 
+import com.sun.prism.Image;
+
 import outputGraph.VisualGraph;
 import scheduling.LaunchScheduler;
 import statistics.compareSchedules;
@@ -34,11 +36,18 @@ import java.awt.GridLayout;
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
+import javax.swing.JCheckBox;
+import java.awt.Checkbox;
+import javax.swing.JProgressBar;
 
 public class ProcessorScreen extends JFrame {
 
@@ -65,8 +74,9 @@ public class ProcessorScreen extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws IOException
 	 */
-	public ProcessorScreen() {
+	public ProcessorScreen() throws IOException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1100, 700);
 		contentPane = new JPanel();
@@ -79,6 +89,7 @@ public class ProcessorScreen extends JFrame {
 		//chart.pack( );
 		 //RefineryUtilities.centerFrameOnScreen( chart );
 		 //chart.setVisible( true );
+
 
 
 		compareSchedules compare = new compareSchedules();
@@ -140,10 +151,14 @@ public class ProcessorScreen extends JFrame {
 		 JPanel timerPanel = new JPanel();
 		 FlowLayout flowLayout = (FlowLayout) timerPanel.getLayout();
 		 flowLayout.setAlignment(FlowLayout.LEFT);
-		 timerPanel.setBounds(10, 608, 472, 43);
+		 timerPanel.setBounds(677, 628, 169, 30);
 		 contentPane.add(timerPanel);
 
-		 JLabel lblTime = new JLabel("Time Elapsed:  00:00:00");
+		 JLabel lblNewLabel = new JLabel("Time Elapsed:");
+		 lblNewLabel.setFont(new Font("Leelawadee", Font.PLAIN, 16));
+		 timerPanel.add(lblNewLabel);
+
+		 JLabel lblTime = new JLabel("00:00:00");
 		 lblTime.setFont(new Font("Leelawadee", Font.PLAIN, 16));
 		 timerPanel.add(lblTime);
 
@@ -156,33 +171,49 @@ public class ProcessorScreen extends JFrame {
 		 graphPanel.setBounds(10, 30, 460, 567);
 		 contentPane.add(graphPanel);
 
+		 /// START PROCESSING
+
+		 LaunchScheduler ls = new LaunchScheduler();
+	 		//_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
+			//ls.setFileName(_fileName);
+			//ls.setProcessor(_noOfProcessors);
+			try {
+				ls.beginScheduling(graphPanel);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ImportException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+
 		 JButton btnStartProcessing = new JButton("Start Processing");
+		 btnStartProcessing.setVisible(false);
+		 btnStartProcessing.setFont(new Font("Leelawadee", Font.PLAIN, 16));
 		 btnStartProcessing.addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent e) {
 
-		 		LaunchScheduler ls = new LaunchScheduler();
-		 		//_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
-				//ls.setFileName(_fileName);
-				//ls.setProcessor(_noOfProcessors);
-				try {
-					ls.beginScheduling(graphPanel);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ImportException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 
-				//this will move on to the next screen for processing and showing data
+
 
 
 
 
 		 	}
 		 });
-		 btnStartProcessing.setBounds(576, 628, 138, 23);
+		 btnStartProcessing.setBounds(856, 628, 218, 23);
 		 contentPane.add(btnStartProcessing);
+
+
+
+
+		 //BufferedImage myPicture = ImageIO.read(new File("./P1"));
+		 //JLabel imageLabel = new JLabel(new ImageIcon(myPicture));
+		 //imageLabel.setBounds(10, 608, 109, 14);
+		 //getContentPane().add(imageLabel);
+
+
 
 
 	}
