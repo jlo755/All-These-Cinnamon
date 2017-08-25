@@ -1,5 +1,7 @@
 package jUnit;
 
+import static org.junit.Assert.fail;
+
 import java.io.FileNotFoundException;
 
 import org.jgrapht.ext.ImportException;
@@ -19,9 +21,28 @@ public class ExceptionTestSuite {
 	}
 	
 	@Test
-	public void TestEmptyFile() throws FileNotFoundException, ImportException {
-		dotParser = new DotParser("EmptyFile.dot");
-		dotParser.parseInput();
-		
+	public void TestNoFile() throws ImportException {
+		try {
+			dotParser = new DotParser("NotAFile.dot");
+			dotParser.parseInput();
+			fail("Should have failed: no file found");
+		} catch (Exception e) {
+			// Nothing here - just ignore the fact that the
+			// exception occurred (since that’s the expected
+			// behaviour in this case).
+		}
+	}
+	
+	@Test
+	public void TestEmptyFile() throws ImportException {
+		try {
+			dotParser = new DotParser("EmptyFile.dot");
+			dotParser.parseInput();
+			fail("Should have failed: empty found");
+		} catch (Exception e) {
+			// Nothing here - just ignore the fact that the
+			// exception occurred (since that’s the expected
+			// behaviour in this case).
+		}
 	}
 }

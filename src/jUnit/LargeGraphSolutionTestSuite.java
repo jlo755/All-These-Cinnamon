@@ -119,68 +119,81 @@ public class LargeGraphSolutionTestSuite {
 		//change the integer to the bestFinalState
 		assertEquals(41,(int)scheduler.getCurrentBestSolution());
 	}
-	
-	
+
+
 
 	//this will have high task cost and low communication cost between nodes with 2 4 8 processors respectively
-		@Test(timeout=18000000)
-		public void testForkTreeLargeHighTaskLowCC2Processors() throws FileNotFoundException, ImportException {
-			dotParser = new DotParser("ForkTreeLargeHighTaskLowCC.dot");
-			scheduler.setProcessorNumber(2);
-			dotParser.parseInput();
-			scheduler.provideTaskGraph(dotParser.getNodeMap());
-			scheduler.schedule();
-			assertEquals(351,(int)scheduler.getCurrentBestSolution());
-		}
-		
-		@Test(timeout=18000000)
-		public void testForkTreeLargeHighTaskLowCC4Processors() throws FileNotFoundException, ImportException {
-			dotParser = new DotParser("ForkTreeLargeHighTaskLowCC.dot");
-			scheduler.setProcessorNumber(4);
-			dotParser.parseInput();
-			scheduler.provideTaskGraph(dotParser.getNodeMap());
-			scheduler.schedule();
-			assertEquals(89,(int)scheduler.getCurrentBestSolution());
-		}
+	@Test(timeout=18000000)
+	public void testForkTreeLargeHighTaskLowCC2Processors() throws FileNotFoundException, ImportException {
+		dotParser = new DotParser("ForkTreeLargeHighTaskLowCC.dot");
+		scheduler.setProcessorNumber(2);
+		dotParser.parseInput();
+		scheduler.provideTaskGraph(dotParser.getNodeMap());
+		scheduler.schedule();
+		assertEquals(351,(int)scheduler.getCurrentBestSolution());
+	}
 
-		@Test(timeout=18000000)
-		public void testForkTreeLargeHighTaskLowCC8Processors() throws FileNotFoundException, ImportException {
-			dotParser = new DotParser("ForkTreeLargeHighTaskLowCC.dot");
-			scheduler.setProcessorNumber(8);
-			dotParser.parseInput();
-			scheduler.provideTaskGraph(dotParser.getNodeMap());
-			scheduler.schedule();
-			assertEquals(89,(int)scheduler.getCurrentBestSolution());
-		}
+	@Test(timeout=18000000)
+	public void testForkTreeLargeHighTaskLowCC4Processors() throws FileNotFoundException, ImportException {
+		dotParser = new DotParser("ForkTreeLargeHighTaskLowCC.dot");
+		scheduler.setProcessorNumber(4);
+		dotParser.parseInput();
+		scheduler.provideTaskGraph(dotParser.getNodeMap());
+		scheduler.schedule();
+		//change the integer to the bestFinalState
+		assertEquals(89,(int)scheduler.getCurrentBestSolution());
+	}
 
-		//this will have low task cost and high communication cost between nodes with 2 4 8 processors respectively
-		@Test(timeout=18000000)
-		public void testForkTreeLargeLowTaskHighCC2Processors() throws FileNotFoundException, ImportException {
-			dotParser = new DotParser("ForkTreeLargeLowTaskHighCC.dot");
-			scheduler.setProcessorNumber(2);
-			dotParser.parseInput();
-			scheduler.provideTaskGraph(dotParser.getNodeMap());
-			scheduler.schedule();
-			assertEquals(52,(int)scheduler.getCurrentBestSolution());
-		}
+	@Test(timeout=18000000)
+	public void testForkTreeLargeHighTaskLowCC8Processors() throws FileNotFoundException, ImportException {
+		dotParser = new DotParser("ForkTreeLargeHighTaskLowCC.dot");
+		scheduler.setProcessorNumber(8);
+		dotParser.parseInput();
+		scheduler.provideTaskGraph(dotParser.getNodeMap());
+		scheduler.schedule();
+		//change the integer to the bestFinalState
+		assertEquals(89,(int)scheduler.getCurrentBestSolution());
+	}
 
-		@Test(timeout=18000000)
-		public void testForkTreeLargeLowTaskHighCC4Processors() throws FileNotFoundException, ImportException {
-			dotParser = new DotParser("ForkTreeLargeLowTaskHighCC.dot");
-			scheduler.setProcessorNumber(4);
-			dotParser.parseInput();
-			scheduler.provideTaskGraph(dotParser.getNodeMap());
-			scheduler.schedule();
-			assertEquals(52,(int)scheduler.getCurrentBestSolution());
-		}
+	//this will have low task cost and high communication cost between nodes with 2 4 8 processors respectively
+	@Test(timeout=18000000)
+	public void testForkTreeLargeLowTaskHighCC2Processors() throws FileNotFoundException, ImportException {
+		dotParser = new DotParser("ForkTreeLargeLowTaskHighCC.dot");
+		scheduler.setProcessorNumber(2);
+		dotParser.parseInput();
+		scheduler.provideTaskGraph(dotParser.getNodeMap());
+		scheduler.schedule();
+		assertEquals(52,(int)scheduler.getCurrentBestSolution());
+	}
 
-		@Test(timeout=18000000)
-		public void testForkTreeLargeLowTaskHighCC8Processors() throws FileNotFoundException, ImportException {
-			dotParser = new DotParser("ForkTreeLargeLowTaskHighCC.dot");
-			scheduler.setProcessorNumber(8);
-			dotParser.parseInput();
-			scheduler.provideTaskGraph(dotParser.getNodeMap());
-			scheduler.schedule();
-			assertEquals(52,(int)scheduler.getCurrentBestSolution());
-		}
+	@Test(timeout=18000000)
+	public void testForkTreeLargeLowTaskHighCC4Processors() throws FileNotFoundException, ImportException {
+		dotParser = new DotParser("ForkTreeLargeLowTaskHighCC.dot");
+		scheduler.setProcessorNumber(4);
+		dotParser.parseInput();
+		scheduler.provideTaskGraph(dotParser.getNodeMap());
+		scheduler.schedule();
+		assertEquals(52,(int)scheduler.getCurrentBestSolution());
+	}
+
+	@Test(timeout=18000000)
+	public void testForkTreeLargeLowTaskHighCC8Processors() throws FileNotFoundException, ImportException {
+		dotParser = new DotParser("ForkTreeLargeLowTaskHighCC.dot");
+		scheduler.setProcessorNumber(8);
+		dotParser.parseInput();
+		scheduler.provideTaskGraph(dotParser.getNodeMap());
+		scheduler.schedule();
+		assertEquals(52,(int)scheduler.getCurrentBestSolution());
+	}
+
+	//independent task of 7 nodes
+	@Test(timeout=18000000)
+	public void testIndependentTasksLarge() throws FileNotFoundException, ImportException {
+		dotParser = new DotParser("Independent_Nodes_7_WeightType_Random.dot");
+		scheduler.setProcessorNumber(2);
+		dotParser.parseInput();
+		scheduler.provideTaskGraph(dotParser.getNodeMap());
+		scheduler.schedule();
+		assertEquals(238,(int)scheduler.getCurrentBestSolution());
+	}
 }

@@ -194,6 +194,19 @@ public class SmallGraphSolutionTestSuite {
 		assertEquals(18,(int)scheduler.getCurrentBestSolution());
 	}
 
+	//independent task of 5 nodes
+	@Test(timeout=18000000)
+	public void testIndependentTasksSmall() throws FileNotFoundException, ImportException {
+		dotParser = new DotParser("Independent_Nodes_5_WeightType_Random.dot");
+		scheduler.setProcessorNumber(2);
+		dotParser.parseInput();
+		scheduler.provideTaskGraph(dotParser.getNodeMap());
+		scheduler.schedule();
+		assertEquals(16,(int)scheduler.getCurrentBestSolution());
+	}
+
+
+
 
 
 }
