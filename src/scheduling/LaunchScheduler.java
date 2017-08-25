@@ -12,10 +12,7 @@ import inputParse.DotParser;
 import inputParse.Edge;
 import outputParse.OutputParser;
 import visualisation.ProcessorScreen;
-<<<<<<< HEAD
 
-=======
->>>>>>> f472f82512ab0ae08fec33fb71ac2396971256e8
 
 /**
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
