@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.concurrent.ForkJoinPool;
 
 import dataStructure.Node;
 
@@ -27,6 +28,9 @@ public class Scheduler2 {
 	private int _numProcessors;
 	private ArrayList<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
 	private double time = 0;
+	
+	private static final ForkJoinPool pool = new ForkJoinPool();
+	
 	/**
 	 * Initialize the best solution so far to infinity on starting.
 	 */
