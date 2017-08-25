@@ -325,14 +325,13 @@ public class Scheduler {
 	 *            case, it stores HashMap<String, Node> - name of the node, to the
 	 *            Node itself.
 	 * @param node
-	 *            this is the current node we’re checking the parent for
+	 *            this is the current node weÂ’re checking the parent for
 	 * @return returns whether the node has a parent in a processor
 	 */
 
 	public boolean checkListContainsParent(HashMap<String, Node> graph, Node node) {
 
 		/*ArrayList<String> completedNodes = new ArrayList<String>();
-
 		// populate the completed nodes list according to whether it is set as completed
 		for (Node n : graph.values()) {
 			if (n.getProcessor() == node.getProcessor() && n.isCompleted()) {
@@ -367,11 +366,9 @@ public class Scheduler {
 		// go through the graph and then obtain the maximum time in the schedule for
 		// that particular processor
 		/*for (Node n : graph.values()) {
-
 			// check if the node exists in the processor we are trying to get the max time
 			// for
 			if (n.getProcessor() == processor) {
-
 				// update the max time
 				if (n.getEndTime() > max) {
 					max = n.getEndTime();
