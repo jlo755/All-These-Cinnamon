@@ -16,6 +16,7 @@ import com.sun.prism.Image;
 import visualisation.VisualGraph;
 
 import scheduling.LaunchScheduler;
+import scheduling.ScheduleWorker;
 import statistics.compareSchedules;
 
 import javax.swing.JTextField;
@@ -41,6 +42,9 @@ public class ProcessorScreen extends JFrame {
 	private String _fileName;
 	private JTextField processorCountTextField;
 	private Integer _noOfProcessors;
+	private JPanel graphPanel;
+	private VisualGraph _visualGraph;
+	private VisualController vc;
 
 	/**
 	 * Launch the application.
@@ -49,8 +53,10 @@ public class ProcessorScreen extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProcessorScreen frame = new ProcessorScreen();
-					frame.setVisible(true);
+					//ProcessorScreen frame = new ProcessorScreen();
+					setVisible(true);
+					ScheduleWorker sw = new ScheduleWorker(LaunchScheduler._noOfProcessors, vc);
+					sw.execute();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -76,7 +82,7 @@ public class ProcessorScreen extends JFrame {
 		 //RefineryUtilities.centerFrameOnScreen( chart );
 		 //chart.setVisible( true );
 
-        JPanel graphPanel = new JPanel(new GridLayout()){
+        graphPanel = new JPanel(new GridLayout()){
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(460,567);
@@ -84,22 +90,12 @@ public class ProcessorScreen extends JFrame {
         };
         graphPanel.setBounds(10, 30, 460, 567);
         contentPane.add(graphPanel);
+        vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), graphPanel);
 
         LaunchScheduler ls = new LaunchScheduler();
         //_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
         //ls.setFileName(_fileName);
         //ls.setProcessor(_noOfProcessors);
-        try {
-            ls.beginScheduling(graphPanel);
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (ImportException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-
-
 
 		compareSchedules compare = new compareSchedules();
 

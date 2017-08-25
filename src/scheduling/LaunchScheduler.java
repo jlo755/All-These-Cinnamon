@@ -23,29 +23,30 @@ import visualisation.ProcessorScreen;
 public class LaunchScheduler {
 
    private static Scheduler scheduler;
-   private static DotParser dotParser;
-   private static int _noOfProcessors;
-   private static String _fileName;
+   public static DotParser dotParser;
+   public static int _noOfProcessors;
+   public static String _fileName;
 
    public static void main(String[] args) throws IOException, ImportException {
 
       _fileName=args[0];
       _noOfProcessors = Integer.parseInt(args[1]);
+      dotParser = new DotParser(_fileName);
+      dotParser.parseInput();
       ProcessorScreen processor = new ProcessorScreen();
       processor.beginProcessing();
-
-
    }
 
-   public void beginScheduling(JPanel contentPane) throws IOException, ImportException{
+ /*  public void beginScheduling(JPanel contentPane) throws IOException, ImportException{
       // Parse the dot graph input and schedule an optimal solution.
-            long startTime = System.nanoTime();
+           long startTime = System.nanoTime();
       scheduler = new Scheduler();
       dotParser = new DotParser(_fileName);
       scheduler.setProcessorNumber(_noOfProcessors);
       dotParser.parseInput();
       scheduler.provideTaskGraph(dotParser.getNodeMap());
-      scheduler.schedule(contentPane);
+      scheduler.setPanel(contentPane);
+      scheduler.execute();
       // Output the solution in a dot format file.
       outputSolution(_fileName);
 
