@@ -1,14 +1,12 @@
 package scheduling;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Set;
 
 import javax.swing.JPanel;
 
 import dataStructure.Node;
-import outputGraph.GraphController;
+import viewInterface.VisualController;
 
 /**
  *
@@ -80,7 +78,7 @@ public class FinalState {
 	}
 
 	public void finalStateToGraph(HashMap<String, dataStructure.Node> g, JPanel contentPane){
-		GraphController gc = new GraphController();
+		VisualController gc = new VisualController();
 		ArrayList<dataStructure.Node> nodes = new ArrayList<dataStructure.Node>();
 		for(Node n : g.values()){
 			nodes.add(n);
