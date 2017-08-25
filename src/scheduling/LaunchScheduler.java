@@ -10,9 +10,8 @@ import org.jgrapht.ext.ImportException;
 import dataStructure.Node;
 import inputParse.DotParser;
 import inputParse.Edge;
-import viewInterface.VisualController;
 import outputParse.OutputParser;
-import viewInterface.ProcessorScreen;
+import visualisation.ProcessorScreen;
 
 /**
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
@@ -45,8 +44,6 @@ public class LaunchScheduler {
 		scheduler.setProcessorNumber(_noOfProcessors);
 		dotParser.parseInput();
 		scheduler.provideTaskGraph(dotParser.getNodeMap());
-		VisualController gc = new VisualController();
-		//gc.createGraph(dotParser.getNodeMap());
 		scheduler.schedule(contentPane);
 		// Output the solution in a dot format file.
 		outputSolution(_fileName);

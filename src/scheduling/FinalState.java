@@ -6,7 +6,7 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 
 import dataStructure.Node;
-import viewInterface.VisualController;
+import visualisation.VisualController;
 
 /**
  *
@@ -77,6 +77,7 @@ public class FinalState {
 		}
 	}
 
+	/**
 	public void finalStateToGraph(HashMap<String, dataStructure.Node> g, JPanel contentPane){
 		VisualController gc = new VisualController();
 		ArrayList<dataStructure.Node> nodes = new ArrayList<dataStructure.Node>();
@@ -86,5 +87,5 @@ public class FinalState {
 		Collections.sort(nodes, Node.startTimes());
 		gc.createGraph(g, nodes, contentPane);
 		gc.updateGraph();
-	}
+	}*/
 }
