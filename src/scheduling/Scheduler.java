@@ -9,6 +9,7 @@ import java.util.Stack;
 import javax.swing.JPanel;
 
 import dataStructure.Node;
+import visualisation.VisualController;
 
 /**
  *
@@ -23,8 +24,10 @@ public class Scheduler {
 	private double currentBestSolution; // Current best scheduling time
 	private FinalState bestState; // Best solutions for all of the Nodes.
 	private HashMap<String, Node> nodeMap; // Input task scheduling graph.
-	private HashMap<String, Node> finalMap; // Input task scheduling graph.
+	private HashMap<String, Node> updatedMap;
+	private ArrayList<ScheduleListener> _listeners = new ArrayList<ScheduleListener>();
 	private int _numProcessors; // Number of processors assigned for scheduling.
+	private VisualController vc;
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
@@ -37,6 +40,8 @@ public class Scheduler {
 	 * Processes the input graph with DFS to calculate an optimal schedule.
 	 */
 	public void schedule(JPanel contentPane) {
+		vc = new VisualController(nodeMap,contentPane);
+		vc.createGraph();
 		double hello = this.findStartingOptimalBranch(nodeMap);
 		for (Node n : nodeMap.values()) {
 			n.setCompleted(false);
@@ -57,8 +62,7 @@ public class Scheduler {
 				dfs(nodeMap, n.getID());
 			}
 		}
-		finalMap = bestState.getCurrentBestState();
-		bestState.finalStateToGraph(finalMap,contentPane);
+
 		System.out.println(currentBestSolution);
 	}
 
@@ -134,6 +138,8 @@ public class Scheduler {
 			// If there are no reachable nodes, it is an exit node.
 			if (reachableNodes.isEmpty()) {
 
+				vc.setGraph(graph);
+				fireGraphUpdate();
 				// Get the max endTime value for this processor branch.
 				double max = 0;
 				for (Node n : graph.values()) {
@@ -553,6 +559,10 @@ public class Scheduler {
 		nodeMap = taskGraph;
 		bestState = new FinalState(taskGraph);
 
+	}
+
+	public void fireGraphUpdate() {
+		for(ScheduleListener l : _listeners) { l.update(); }
 	}
 
 }
