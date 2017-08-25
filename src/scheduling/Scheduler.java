@@ -1,6 +1,5 @@
 package scheduling;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -41,7 +40,7 @@ public class Scheduler {
 	 */
 	public void schedule(JPanel contentPane) {
 		vc = new VisualController(nodeMap,contentPane);
-		vc.createGraph();
+		_listeners.add(vc);
 		double hello = this.findStartingOptimalBranch(nodeMap);
 		for (Node n : nodeMap.values()) {
 			n.setCompleted(false);
