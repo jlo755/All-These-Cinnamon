@@ -192,7 +192,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
                         {//####[83]####
                             discovered = true;//####[84]####
                             PartialSchedule childSchedule = schedule.makeChildSchedule();//####[85]####
-                            childSchedule.solve(n, i);//####[86]####
+                            childSchedule.update(n, i);//####[86]####
                             double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[87]####
                             if (maxHeuristic < currentBestSolution) //####[88]####
                             {//####[88]####
@@ -201,7 +201,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
                         } else if (time != 0.0) //####[91]####
                         {//####[91]####
                             PartialSchedule childSchedule = schedule.makeChildSchedule();//####[92]####
-                            childSchedule.solve(n, i);//####[93]####
+                            childSchedule.update(n, i);//####[93]####
                             double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[94]####
                             if (maxHeuristic < currentBestSolution) //####[95]####
                             {//####[95]####
@@ -214,7 +214,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
                     {//####[102]####
                         Node n = nodeMap.get(s);//####[104]####
                         PartialSchedule childSchedule = schedule.makeChildSchedule();//####[106]####
-                        childSchedule.solve(n, i);//####[108]####
+                        childSchedule.update(n, i);//####[108]####
                         double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[109]####
                         if (maxHeuristic < currentBestSolution) //####[110]####
                         {//####[110]####
