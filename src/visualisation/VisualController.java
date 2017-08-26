@@ -105,6 +105,6 @@ public class VisualController implements ScheduleListener {
    public void update() {
 
       vg.startTraversal( _nodes);
-      vs.setInput(bestTimes);
+      vs.updatePlot(bestTimes);
    }
 }
