@@ -41,6 +41,9 @@ public class ProcessorScreen extends JFrame {
 	private VisualGraph _visualGraph;
 	private VisualController vc;
 	JLabel lblNewLabel;
+	JLabel lblEndTime;
+	JLabel lblCurrentBestCost;
+	JLabel lblMemoryUsage;
 
 	/**
 	 * Launch the application.
@@ -130,27 +133,22 @@ public class ProcessorScreen extends JFrame {
 		 lblStartTime.setBounds(22, 36, 550, 21);
 		 ProcessingDetailsPanel.add(lblStartTime);
 
-		 JLabel lblEndTime = new JLabel("Current Status:");
+		 lblEndTime = new JLabel("Current Status: Processing...");
 		 lblEndTime.setFont(new Font("Leelawadee", Font.PLAIN, 15));
 		 lblEndTime.setBounds(22, 60, 550, 28);
 		 ProcessingDetailsPanel.add(lblEndTime);
 
-		 JLabel lblProcessor = new JLabel("Time Elapsed:");
-		 lblProcessor.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		 lblProcessor.setBounds(22, 88, 550, 21);
-		 ProcessingDetailsPanel.add(lblProcessor);
-
-		 JLabel lblCurrentBestCost = new JLabel("Current Best Cost Found:");
+		 lblCurrentBestCost = new JLabel("Current Best Cost Found:");
 		 lblCurrentBestCost.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		 lblCurrentBestCost.setBounds(22, 120, 550, 14);
+		 lblCurrentBestCost.setBounds(22, 99, 550, 14);
 		 ProcessingDetailsPanel.add(lblCurrentBestCost);
 
 		 lblNewLabel = new JLabel("Number of States Processed:");
 		 lblNewLabel.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		 lblNewLabel.setBounds(22, 145, 550, 14);
+		 lblNewLabel.setBounds(22, 135, 550, 14);
 		 ProcessingDetailsPanel.add(lblNewLabel);
 
-		 JLabel lblMemoryUsage = new JLabel("Memory Usage:");
+		 lblMemoryUsage = new JLabel("Memory Usage:");
 		 lblMemoryUsage.setFont(new Font("Leelawadee", Font.PLAIN, 15));
 		 lblMemoryUsage.setBounds(22, 170, 550, 20);
 		 ProcessingDetailsPanel.add(lblMemoryUsage);
@@ -211,8 +209,16 @@ public class ProcessorScreen extends JFrame {
 
 
 	}
-	
-	public void setNewLabel(String lblNewLabel){
+
+	public void setNewLabel(String lblNewLabel, Double bestCost){
 		this.lblNewLabel.setText("Number of states processed: "+lblNewLabel);
+		this.lblCurrentBestCost.setText("Current Best Cost Found: " + bestCost);
 	}
+
+	public void setNewLabel2(String status, long mem){
+		this.lblEndTime.setText(status);
+		this.lblMemoryUsage.setText("Memory Usage: " + mem);
+	}
+
+
 }
