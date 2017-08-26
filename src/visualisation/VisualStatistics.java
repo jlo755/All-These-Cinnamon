@@ -59,9 +59,14 @@ public class VisualStatistics {
 
 	  public void updatePlot(ArrayList<Double> arrayList){
 	  	setInput(arrayList);
-	  	incrementBranchNumber();
-	  	series1.add(count, arrayList.get(arrayList.size()-1));
+
+	  	for(Double a :arrayList){
+				series1.add(count, a);
+			incrementBranchNumber();
+		}
+
 
 	  }
+
 
 }
