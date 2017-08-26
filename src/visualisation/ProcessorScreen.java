@@ -8,14 +8,13 @@ import javax.swing.border.EmptyBorder;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jgrapht.ext.ImportException;
-
-import visualisation.VisualGraph;
 
 import scheduling.LaunchScheduler;
 import scheduling.ScheduleWorker;
+
 import statistics.LineGraph;
-import statistics.compareSchedules;
+
+
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -75,7 +74,7 @@ public class ProcessorScreen extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		//compareSchedules chart = new compareSchedules("School Vs Years" , "Number of Schools vs years");
+		//VisualStatistics chart = new VisualStatistics("School Vs Years" , "Number of Schools vs years");
 
 		//chart.pack( );
 		 //RefineryUtilities.centerFrameOnScreen( chart );
@@ -96,17 +95,24 @@ public class ProcessorScreen extends JFrame {
         //ls.setFileName(_fileName);
         //ls.setProcessor(_noOfProcessors);
 
+
 		//compareSchedules compare = new compareSchedules();
-        LineGraph compare = new LineGraph();
-		JFreeChart chart = compare.createLineGraph();
+        LineGraph compareLine = new LineGraph();
+		JFreeChart chartLine = compareLine.createLineGraph();
+
+		//VisualStatistics compare = new VisualStatistics();
+
+		//JFreeChart chart = compare.createStateSpaceGraph();
+
+
 		 JPanel scatterPanel = new JPanel();
 		 scatterPanel.setBounds(492, 11, 572, 435);
 		 contentPane.add(scatterPanel);
 		 scatterPanel.setLayout(null);
-		 ChartPanel CP = new ChartPanel(chart);
-		 CP.setBorder(new LineBorder(new Color(0, 0, 0)));
-		 CP.setBounds(0, 0, 572, 434);
-		 scatterPanel.add(CP);
+//		 ChartPanel CP = new ChartPanel(chart);
+//		 CP.setBorder(new LineBorder(new Color(0, 0, 0)));
+//		 CP.setBounds(0, 0, 572, 434);
+//		 scatterPanel.add(CP);
 
 		 JPanel ProcessingDetailsPanel = new JPanel();
 		 ProcessingDetailsPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
