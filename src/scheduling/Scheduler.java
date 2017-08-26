@@ -35,19 +35,10 @@ public class Scheduler {
 	protected double currentBestSolution; // Current best scheduling time
 	protected FinalState bestSchedule; // Best solutions for all of the Nodes.
 	protected LinkedHashMap<String, Node> nodeMap; // Input task scheduling graph.
-	protected double sumAdding = 0;
 	protected double totalTaskTime = 0;
 	protected int _numProcessors;
-	protected int _numSchedules=0;
 	protected ArrayList<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
-	protected ArrayList<Double> bestTimes = new ArrayList<Double>();
-	protected ArrayList<Double> bestTimesCopy = new ArrayList<Double>();
-	protected double time = 0;
-	private VisualController _vc;
 	private PartialSchedule _currentSchedule;
-	private long startTime;
-	private long actualMemUsed;
-	private String status = "Current Status: Processing...";
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
@@ -61,37 +52,10 @@ public class Scheduler {
 	 * @throws IOException
 	 */
 	public void schedule() {
-		long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
 
 		initializeNodes();
 
 		// "Nodemap" is the input graph for the algorithm.
-		Timer time2;
-		int timeDelay = 300;
-		ActionListener time;
-		time = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fire();
-
-			}
-		};
-
-		ActionListener Time;
-		Time = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//System.out.println("FIRE");
-				fireLabelUpdate();
-
-			}
-		};
-		Timer Time2;
-		Time2 = new Timer(timeDelay, Time);
-		startTime = System.nanoTime();
-		time2 = new Timer(timeDelay, time);
 		for (Node n : nodeMap.values()) {
 			// If a node doesn't have parents, it is a starting node
 			if (n.getParents().isEmpty()) {
@@ -103,63 +67,9 @@ public class Scheduler {
 
 			}
 		}
-		time2.start();
-		Time2.start();
 		dfs();
-		time2.stop();
-		Time2.stop();
-		fireBest();
-
-		try {
-			long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-			status="Current Status: Finished";
-			actualMemUsed=afterUsedMem-beforeUsedMem;
-			_vc.setStateLabel2(status,actualMemUsed);
-			outputSolution();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 	}
 
-	/**
-	 * Fires an event to VisualController to notify the graph to update its state.
-	 */
-	private void fire() {
-		_vc.setSchedule(_currentSchedule);
-		_numSchedules++;
-		_vc.updateGraph();
-
-	}
-
-	private void fireLabelUpdate(){
-		_vc.setStateLabel(this.sumAdding+"",currentBestSolution);
-	}
-
-	private void fireBest() {
-		_vc.setSchedule(bestSchedule.getCurrentBestSchedule());
-		//_numSchedules++;
-		_vc.updateGraph();
-
-	}
-
-	private void fireSecondUpdate() {
-		if(bestTimesCopy.size() != 0) {
-			_vc.setScatterPlotInput(bestTimesCopy);
-			//System.out.println("Hi");
-			//System.out.println((System.nanoTime()-startTime)/1000000000.0);
-			_vc.updateStats((System.nanoTime()-startTime)/1000000000.0);
-			bestTimesCopy.clear();
-		}
-	}
-
-
-	/**
-	 * Sets the visual controller.
-	 * @param vc
-	 */
-	public void setVisualController(VisualController vc){
-		_vc = vc;
-	}
 
 	/**
 	 * Initializes the nodes final time and bottom level.
@@ -213,7 +123,6 @@ public class Scheduler {
 			scheduleStack.add(schedule);
 		}
 		while(!scheduleStack.isEmpty()) {
-			sumAdding++;
 			PartialSchedule schedule = scheduleStack.pop();
 			_currentSchedule = schedule;
 			ArrayList<String> reachable = schedule.getReachable();
@@ -264,13 +173,6 @@ public class Scheduler {
 					if(solution[i] > endTime) {
 						endTime = solution[i];
 					}
-				}
-
-				if(!bestTimes.contains(endTime)) {
-					bestTimes.add(endTime);
-					bestTimesCopy.add(endTime);
-					sumAdding++;
-					fireSecondUpdate();
 				}
 
 				if(endTime < currentBestSolution) {
