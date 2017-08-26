@@ -5,6 +5,8 @@ import dataStructure.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
+
+import scheduling.PartialSchedule;
 import scheduling.ScheduleListener;
 import scheduling.ScheduleWorker;
 import scheduling.Scheduler;
@@ -31,6 +33,7 @@ public class VisualController implements ScheduleListener {
    private ArrayList<dataStructure.Node> _nodes = new ArrayList<>();
    private JPanel panel;
    private Scheduler _model;
+   private PartialSchedule _schedule;
 
    public VisualController(HashMap<String, dataStructure.Node> g, JPanel Panel){
       panel = Panel;
@@ -45,11 +48,24 @@ public class VisualController implements ScheduleListener {
       _nodes = this.sortStartTimes();
    }
 
+   public void setSchedule(PartialSchedule schedule){
+	   _schedule = schedule;
+   }
+   
+   public void updateGraph(){
+		double[] endTimes = _schedule.getEndTimes();
+		int[] processors = _schedule.getNodeProcessors();
+		double[] startTimes = _schedule.getStartTimes();
+		for(Node node:_graph.values()){
+			int index = _schedule.getNodeOrdering().get(node.getID());
+			node.setStartTime(startTimes[index]);
+			node.setEndTime(endTimes[index]);
+			node.setProcessor(processors[index]);
+		}
+		updateGUI();
+   }
 
-   public void setGraph(HashMap<String, dataStructure.Node> g){
-      _graph = g;
-      //vg = new VisualGraph(g, panel);
-      ArrayList<Node> test = new ArrayList<Node>();
+   public void updateGUI(){
       Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
       viewer.enableAutoLayout();
       //panel.removeAll();

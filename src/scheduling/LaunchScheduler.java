@@ -13,6 +13,7 @@ import inputParse.Edge;
 import outputParse.OutputParser;
 import visualisation.ProcessorScreen;
 
+/*
 * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
 * we traverse through the entire graph. When a node is visited, we check all possible time costs for that particular node being
 * placed on the different processors. We then check which of these is the best time. This process continues until all the nodes
@@ -33,6 +34,7 @@ public class LaunchScheduler {
       dotParser.parseInput();
       ProcessorScreen processor = new ProcessorScreen();
       processor.beginProcessing();
+      //outputSolution(_fileName);
    }
   
     /**

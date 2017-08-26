@@ -10,9 +10,6 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jgrapht.ext.ImportException;
 
-
-import com.sun.prism.Image;
-
 import visualisation.VisualGraph;
 
 import scheduling.LaunchScheduler;

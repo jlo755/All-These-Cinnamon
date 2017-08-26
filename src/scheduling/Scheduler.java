@@ -1,5 +1,7 @@
 package scheduling;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -9,7 +11,10 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.ForkJoinPool;
 
+import javax.swing.Timer;
+
 import dataStructure.Node;
+import visualisation.VisualController;
 
 
 /**
@@ -31,6 +36,7 @@ public class Scheduler {
 	protected ArrayList<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
 	protected double time = 0;
 	private VisualController _vc;
+	private PartialSchedule _currentSchedule;
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
@@ -42,19 +48,10 @@ public class Scheduler {
 	/**
 	 * Processes the input graph with DFS to calculate an optimal schedule.
 	 */
-  
+
 	public void schedule() {
-		
+
 		initializeNodes();
-		System.out.println(currentBestSolution);
-		
-  }
-
-	public void setVisualController(VisualController vc){
-		_vc = vc;
-	}
-
-	public void schedule() {
 		long startTime = System.nanoTime();;
 		System.out.println(currentBestSolution);
 		// "Nodemap" is the input graph for the algorithm.
@@ -76,22 +73,32 @@ public class Scheduler {
 		for (Node n : nodeMap.values()) {
 			// If a node doesn't have parents, it is a starting node
 			if (n.getParents().isEmpty()) {
-				
+
 				PartialSchedule schedule = new PartialSchedule(nodeMap, _numProcessors, totalTaskTime);
 				schedule.decideIndex();
 				schedule.solve(n, 1);
 				schedules.add(schedule);
-				
+
 			}
 		}
-    time2.start()
+		time2.start();
 		dfs();
-    time2.stop();
+		time2.stop();
 
 		System.out.println(time);
 		System.out.println("Best Solution: "+currentBestSolution);
+
+	}
+
+	private void fire() {
+		_vc.setSchedule(_currentSchedule);
+		_vc.updateGraph();
 	}
 	
+	public void setVisualController(VisualController vc){
+		_vc = vc;
+	}
+
 	/**
 	 * Initializes the nodes final time and bottom level.
 	 */
@@ -122,7 +129,7 @@ public class Scheduler {
 	 * @param nodeName
 	 *            This is the node which we are starting off from
 	 **/
-  
+
 	public void dfs() {
 
 		// set the node as being completed
@@ -132,6 +139,7 @@ public class Scheduler {
 		}
 		while(!scheduleStack.isEmpty()) {
 			PartialSchedule schedule = scheduleStack.pop();
+			_currentSchedule = schedule;
 			ArrayList<String> reachable = schedule.getReachable();
 			for(String s:reachable) {
 				if(schedule.startTimeZeroProcessors() > 1) {
@@ -160,9 +168,9 @@ public class Scheduler {
 				else {
 					for(int i = 1; i<=_numProcessors; i++) {
 						Node n = nodeMap.get(s);
-						
+
 						PartialSchedule childSchedule = schedule.makeChildSchedule();
-						
+
 						childSchedule.solve(n, i);
 						double maxHeuristic = childSchedule.getMaxHeuristic(n);
 						if(maxHeuristic < currentBestSolution) {
@@ -185,6 +193,7 @@ public class Scheduler {
 				}
 			}
 		}
+	}
 
 
 	public double findMaxBottomLevel(HashMap<String, Node> graph, String initialNode){
@@ -204,22 +213,12 @@ public class Scheduler {
 			if(node.getID() != initialNode) {
 				double test = 0;
 				for(Node parent:node.getParents().keySet()) {
-					//System.out.println("Parent: "+parent.getID());
-					//System.out.println("Cost: "+parent.getOptimalBottomLevel())
-          
 					if(test<parent.getOptimalBottomLevel()) {
 						test = parent.getOptimalBottomLevel();
 					}
 				}
 				node.setOptimalBottomLevel(test+node.getCost());
 			}
-				//System.out.println(node.getCost());
-				node.setOptimalBottomLevel(test+node.getCost());
-			}
-			/*totalTime += node.getCost();
-			if(totalTime > max){
-				max = totalTime;
-			}*/
 		}
 		for(Node n:graph.values()) {
 			if(n.getOptimalBottomLevel() > max && n.getChildren().isEmpty()) {
@@ -229,44 +228,6 @@ public class Scheduler {
 		}
 		
 		return max;
-	}
-
-	public double findStartingOptimalBranch(HashMap<String, Node> graph){
-		Queue<Node> optimalBranch = new PriorityQueue<Node>();
-		for(Node n:graph.values()){
-			optimalBranch.add(n);
-		}
-		Stack<PartialSchedule> scheduleStack = new Stack<PartialSchedule>();
-		PartialSchedule schedule = new PartialSchedule(nodeMap, _numProcessors, totalTaskTime);
-		schedule.decideIndex();
-		
-		scheduleStack.add(schedule);
-		while(!optimalBranch.isEmpty()){
-			
-			Node n = optimalBranch.poll();
-			PartialSchedule scheduleOnStack = scheduleStack.pop();
-			PartialSchedule[] partialSchedules = new PartialSchedule[_numProcessors];
-			for(int i = 1; i<=_numProcessors; i++){
-				PartialSchedule childSchedule = scheduleOnStack.makeChildSchedule();
-				childSchedule.solve(n, i);
-				partialSchedules[i-1] = childSchedule;
-			}
-			int minIndex = 0;
-			Double min = Double.POSITIVE_INFINITY;
-			for(int i = 1; i<=_numProcessors; i++) {
-				PartialSchedule scheduleToCompare = partialSchedules[i-1];
-				if(min>scheduleToCompare.getNodeEndTime(n)) {
-					min = scheduleToCompare.getNodeEndTime(n);
-					minIndex = i;
-				}
-			}
-			scheduleStack.push(partialSchedules[minIndex-1]);
-			if(optimalBranch.isEmpty()){
-				currentBestSolution = min;
-				break;
-			}
-		}
-		return 0.0;
 	}
 
 	/**

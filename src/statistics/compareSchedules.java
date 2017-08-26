@@ -15,7 +15,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 
-import com.sun.prism.paint.Color;
 
 /**
  * Created by DarthPenguin on 23/08/17.
