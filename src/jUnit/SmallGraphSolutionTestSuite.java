@@ -23,6 +23,17 @@ public class SmallGraphSolutionTestSuite {
 		scheduler = new Scheduler();
 	}
 	
+	//independent task of 5 nodes
+	@Test(timeout=1800000)
+	public void testIndependentTasksSmall() throws FileNotFoundException, ImportException {
+		dotParser = new DotParser("Independent_Nodes_5_WeightType_Random.dot");
+		scheduler.setProcessorNumber(2);
+		dotParser.parseInput();
+		scheduler.provideTaskGraph(dotParser.getNodeMap());
+		scheduler.schedule();
+		assertEquals(16,(int)scheduler.getCurrentBestSolution());
+	}
+
 	//Test for 7 nodes and processors of 2 4 and 8
 	@Test(timeout=1800000)
 	public void test7Nodes2Processors() throws FileNotFoundException, ImportException{
@@ -194,18 +205,68 @@ public class SmallGraphSolutionTestSuite {
 		assertEquals(18,(int)scheduler.getCurrentBestSolution());
 	}
 
-	//independent task of 5 nodes
-	@Test(timeout=1800000)
-	public void testIndependentTasksSmall() throws FileNotFoundException, ImportException {
-		dotParser = new DotParser("Independent_Nodes_5_WeightType_Random.dot");
-		scheduler.setProcessorNumber(2);
-		dotParser.parseInput();
-		scheduler.provideTaskGraph(dotParser.getNodeMap());
-		scheduler.schedule();
-		assertEquals(16,(int)scheduler.getCurrentBestSolution());
-	}
+	//this will have high task cost and low communication cost between nodes with 2 4 8 processors respectively
+		//contains 6 nodes
+		@Test(timeout=1800000)
+		public void testStencilSmallHighTaskLowCC2Processors() throws FileNotFoundException, ImportException {
+			dotParser = new DotParser("StencilSmallHighTaskLowCC.dot");
+			scheduler.setProcessorNumber(2);
+			dotParser.parseInput();
+			scheduler.provideTaskGraph(dotParser.getNodeMap());
+			scheduler.schedule();
+			assertEquals(347,(int)scheduler.getCurrentBestSolution());
+		}
 
+		@Test(timeout=1800000)
+		public void testStencilSmallHighTaskLowCC4Processors() throws FileNotFoundException, ImportException {
+			dotParser = new DotParser("StencilSmallHighTaskLowCC.dot");
+			scheduler.setProcessorNumber(4);
+			dotParser.parseInput();
+			scheduler.provideTaskGraph(dotParser.getNodeMap());
+			scheduler.schedule();
+			assertEquals(347,(int)scheduler.getCurrentBestSolution());
+		}
 
+		@Test(timeout=1800000)
+		public void testStencilSmallHighTaskLowCC8Processors() throws FileNotFoundException, ImportException {
+			dotParser = new DotParser("StencilSmallHighTaskLowCC.dot");
+			scheduler.setProcessorNumber(8);
+			dotParser.parseInput();
+			scheduler.provideTaskGraph(dotParser.getNodeMap());
+			scheduler.schedule();
+			assertEquals(347,(int)scheduler.getCurrentBestSolution());
+		}
+
+		//this will have low task cost and high communication cost between nodes with 2 4 8 processors respectively
+		@Test(timeout=1800000)
+		public void testStencilSmallLowTaskHighCC2Processors() throws FileNotFoundException, ImportException {
+			dotParser = new DotParser("StencilSmallLowTaskHighCC.dot");
+			scheduler.setProcessorNumber(2);
+			dotParser.parseInput();
+			scheduler.provideTaskGraph(dotParser.getNodeMap());
+			scheduler.schedule();
+			assertEquals(31,(int)scheduler.getCurrentBestSolution());
+		}
+
+		@Test(timeout=1800000)
+		public void testStencilSmallLowTaskHighCC4Processors() throws FileNotFoundException, ImportException {
+			dotParser = new DotParser("StencilSmallLowTaskHighCC.dot");
+			scheduler.setProcessorNumber(4);
+			dotParser.parseInput();
+			scheduler.provideTaskGraph(dotParser.getNodeMap());
+			scheduler.schedule();
+			assertEquals(31,(int)scheduler.getCurrentBestSolution());
+		}
+
+		@Test(timeout=1800000)
+		public void testStencilSmallLowTaskHighCC8Processors() throws FileNotFoundException, ImportException {
+			dotParser = new DotParser("StencilSmallLowTaskHighCC.dot");
+			scheduler.setProcessorNumber(8);
+			dotParser.parseInput();
+			scheduler.provideTaskGraph(dotParser.getNodeMap());
+			scheduler.schedule();
+			assertEquals(31,(int)scheduler.getCurrentBestSolution());
+		}
 
 
 
