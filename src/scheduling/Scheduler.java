@@ -2,6 +2,7 @@ package scheduling;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -13,7 +14,11 @@ import java.util.concurrent.ForkJoinPool;
 
 import javax.swing.Timer;
 
+import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
+
 import dataStructure.Node;
+import inputParse.Edge;
+import outputParse.OutputParser;
 import visualisation.VisualController;
 
 
@@ -50,15 +55,13 @@ public class Scheduler {
 
 	/**
 	 * Processes the input graph with DFS to calculate an optimal schedule.
+	 * @throws IOException 
 	 */
-
-	public void schedule() {
+	public void schedule() throws IOException {
 
 		initializeNodes();
-		long startTime = System.nanoTime();;
-		System.out.println(currentBestSolution);
+		
 		// "Nodemap" is the input graph for the algorithm.
-		//for (int i = 1; i <= _numProcessors; i++) {
 		Timer time2;
 		int timeDelay = 100;
 		int timeDelay2 = 50;
@@ -67,7 +70,6 @@ public class Scheduler {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//System.out.println("FIRE");
 				fire();
 
 			}
@@ -93,7 +95,7 @@ public class Scheduler {
 
 				PartialSchedule schedule = new PartialSchedule(nodeMap, _numProcessors, totalTaskTime);
 				schedule.decideIndex();
-				schedule.solve(n, 1);
+				schedule.update(n, 1);
 				schedules.add(schedule);
 
 			}
@@ -105,11 +107,12 @@ public class Scheduler {
 		time2.stop();
 		fire();
 
-		System.out.println(time);
-		System.out.println("Best Solution: "+currentBestSolution);
-
+		outputSolution();
 	}
 
+	/**
+	 * Fires an event to VisualController to notify the graph to update its state.
+	 */
 	private void fire() {
 		_vc.setSchedule(_currentSchedule);
 		_numSchedules++;
@@ -128,6 +131,11 @@ public class Scheduler {
 		}
 	}
 
+
+	/**
+	 * Sets the visual controller.
+	 * @param vc
+	 */
 	public void setVisualController(VisualController vc){
 		_vc = vc;
 	}
@@ -141,28 +149,42 @@ public class Scheduler {
 			n.setBottomLevel(findMaxBottomLevel(nodeMap, n.getID()));
 		}
 	}
+	
+	/**
+	 * Outputs the solution in a dot file format.
+	 * @throws IOException
+	 */
+	public void outputSolution() throws IOException{
+		OutputParser outputParse = new OutputParser();
+		outputParse.setFileName(LaunchScheduler._fileName);
+		DirectedAcyclicGraph<Node, Edge> graph = LaunchScheduler.dotParser.getGraph();
+		PartialSchedule graphSolution = bestSchedule.getCurrentBestSchedule();
+		int[] processors = graphSolution.getNodeProcessors();
+		double[] endTimes = graphSolution.getEndTimes();
+		double[] startTimes = graphSolution.getStartTimes();
+		for(Object n:graph.vertexSet()){
+			Node node = (Node) n;
+			int index = graphSolution.getNodeOrdering().get(node.getID());
+			node.setStartTime(startTimes[index]);
+			node.setEndTime(endTimes[index]);
+			node.setProcessor(processors[index]);
+		}
+		outputParse.setGraph(LaunchScheduler.dotParser.getGraph());
+		outputParse.outputDot();
+		outputParse.formatFile();
+		System.out.println("Output file is " +LaunchScheduler._fileName.replaceAll(".dot", "Output")+".dot");
+	}
 
 	/**
 	 * Iterative approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem.
 	 *
-
-	public void fire(){
-		_vc.setGraph(nodeMap);
-	}
-
-	/**
-	 * Recursive approach to DFS for a given graph, used in search in the state
-	 * space of the scheduling problem.
-	 *
-
 	 *
 	 * @param graph
 	 *            This is the input graph
 	 * @param nodeName
 	 *            This is the node which we are starting off from
 	 **/
-
 	public void dfs() {
 
 		// set the node as being completed
@@ -183,14 +205,14 @@ public class Scheduler {
 						if(time == 0.0 && !discovered) {
 							discovered = true;
 							PartialSchedule childSchedule = schedule.makeChildSchedule();
-							childSchedule.solve(n, i);
+							childSchedule.update(n, i);
 							double maxHeuristic = childSchedule.getMaxHeuristic(n);
 							if(maxHeuristic < currentBestSolution) {
 								scheduleStack.push(childSchedule);
 							}
 						} else if(time != 0.0){
 							PartialSchedule childSchedule = schedule.makeChildSchedule();
-							childSchedule.solve(n, i);
+							childSchedule.update(n, i);
 							double maxHeuristic = childSchedule.getMaxHeuristic(n);
 							if(maxHeuristic < currentBestSolution) {
 								scheduleStack.push(childSchedule);
@@ -204,7 +226,7 @@ public class Scheduler {
 
 						PartialSchedule childSchedule = schedule.makeChildSchedule();
 
-						childSchedule.solve(n, i);
+						childSchedule.update(n, i);
 						double maxHeuristic = childSchedule.getMaxHeuristic(n);
 						if(maxHeuristic < currentBestSolution) {
 							scheduleStack.push(childSchedule);
@@ -237,7 +259,12 @@ public class Scheduler {
 		}
 	}
 
-
+	/**
+	 * Heuristic for critical path by finding the maximum bottom level of a node within a graph.
+	 * @param graph
+	 * @param initialNode
+	 * @return
+	 */
 	public double findMaxBottomLevel(HashMap<String, Node> graph, String initialNode){
 		Stack<String> s = new Stack<String>();
 		s.add(initialNode);
