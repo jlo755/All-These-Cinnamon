@@ -28,7 +28,9 @@ import javax.swing.SwingUtilities;
 public class VisualController implements ScheduleListener {
 
    private VisualGraph vg;
+   private VisualStatistics vs;
    private HashMap<String, dataStructure.Node> _graph;
+   ArrayList<Double> bestTimes;
    private SingleGraph graph;
    private ArrayList<dataStructure.Node> _nodes = new ArrayList<>();
    private JPanel panel;
@@ -39,6 +41,8 @@ public class VisualController implements ScheduleListener {
       panel = Panel;
       _graph = g;
       vg = new VisualGraph(g, panel);
+      vs = new VisualStatistics();
+      vs.createStateSpaceGraph();
       graph = vg.graph;
       panel.setBorder(BorderFactory.createLineBorder(Color.blue, 5));
       Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
@@ -51,7 +55,11 @@ public class VisualController implements ScheduleListener {
    public void setSchedule(PartialSchedule schedule){
 	   _schedule = schedule;
    }
-   
+
+   public void setScatterPlotInput(ArrayList<Double> bestTimes){
+      this.bestTimes = bestTimes;
+   }
+
    public void updateGraph(){
 		double[] endTimes = _schedule.getEndTimes();
 		int[] processors = _schedule.getNodeProcessors();
@@ -66,11 +74,6 @@ public class VisualController implements ScheduleListener {
    }
 
    public void updateGUI(){
-      Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-      viewer.enableAutoLayout();
-      //panel.removeAll();
-      ViewPanel viewPanel = viewer.addDefaultView(false);
-      //panel.add(viewPanel);
       _nodes = sortStartTimes();
       this.update();
    }
@@ -100,6 +103,8 @@ public class VisualController implements ScheduleListener {
 
    @Override
    public void update() {
+
       vg.startTraversal( _nodes);
+    //  vs.updatePlot(bestTimes);
    }
 }
