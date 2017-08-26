@@ -41,6 +41,8 @@ public class VisualController implements ScheduleListener {
       panel = Panel;
       _graph = g;
       vg = new VisualGraph(g, panel);
+      vs = new VisualStatistics();
+      vs.createStateSpaceGraph();
       graph = vg.graph;
       panel.setBorder(BorderFactory.createLineBorder(Color.blue, 5));
       Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
