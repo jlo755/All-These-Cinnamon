@@ -45,6 +45,7 @@ public class Scheduler {
 	protected double time = 0;
 	private VisualController _vc;
 	private PartialSchedule _currentSchedule;
+	private long startTime;
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
@@ -63,8 +64,7 @@ public class Scheduler {
 		
 		// "Nodemap" is the input graph for the algorithm.
 		Timer time2;
-		int timeDelay = 100;
-		int timeDelay2 = 50;
+		int timeDelay = 300;
 		ActionListener time;
 		time = new ActionListener() {
 
@@ -81,13 +81,13 @@ public class Scheduler {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//System.out.println("FIRE");
-				fireSecondUpdate();
+				fireLabelUpdate();
 
 			}
 		};
 		Timer Time2;
-		Time2 = new Timer(timeDelay2, Time);
-
+		Time2 = new Timer(timeDelay, Time);
+		startTime = System.nanoTime();
 		time2 = new Timer(timeDelay, time);
 		for (Node n : nodeMap.values()) {
 			// If a node doesn't have parents, it is a starting node
@@ -103,9 +103,9 @@ public class Scheduler {
 		time2.start();
 		Time2.start();
 		dfs();
-		Time2.start();
 		time2.stop();
-		fire();
+		Time2.stop();
+		fireBest();
 
 		outputSolution();
 	}
@@ -119,14 +119,24 @@ public class Scheduler {
 		_vc.updateGraph();
 
 	}
+	
+	private void fireLabelUpdate(){
+		_vc.setStateLabel(this.sumAdding+"");
+	}
+	
+	private void fireBest() {
+		_vc.setSchedule(bestSchedule.getCurrentBestSchedule());
+		//_numSchedules++;
+		_vc.updateGraph();
+
+	}
 
 	private void fireSecondUpdate() {
-		if(!(bestTimesCopy.size() == 0)) {
+		if(bestTimesCopy.size() != 0) {
 			_vc.setScatterPlotInput(bestTimesCopy);
-			for(Double d: bestTimesCopy){
-				System.out.println("Hi");
-			}
 			//System.out.println("Hi");
+			//System.out.println((System.nanoTime()-startTime)/1000000000.0);
+			_vc.updateStats((System.nanoTime()-startTime)/1000000000.0);
 			bestTimesCopy.clear();
 		}
 	}
@@ -186,13 +196,13 @@ public class Scheduler {
 	 *            This is the node which we are starting off from
 	 **/
 	public void dfs() {
-
 		// set the node as being completed
 		Stack<PartialSchedule> scheduleStack = new Stack<PartialSchedule>();
 		for(PartialSchedule schedule:schedules) {
 			scheduleStack.add(schedule);
 		}
 		while(!scheduleStack.isEmpty()) {
+			sumAdding++;
 			PartialSchedule schedule = scheduleStack.pop();
 			_currentSchedule = schedule;
 			ArrayList<String> reachable = schedule.getReachable();
@@ -249,6 +259,7 @@ public class Scheduler {
 					bestTimes.add(endTime);
 					bestTimesCopy.add(endTime);
 					sumAdding++;
+					fireSecondUpdate();
 				}
 
 				if(endTime < currentBestSolution) {

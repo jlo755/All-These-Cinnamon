@@ -21,9 +21,7 @@ public class ScheduleWorker extends SwingWorker{
 
 	@Override
 	protected Object doInBackground() throws Exception {
-		//Thread.sleep(2000);
 		// Parse the dot graph input and schedule an optimal solution.
-		long startTime = System.nanoTime();
 		//scheduler.setPanel(contentPane);
 		_scheduler.schedule();
 		// Output the solution in a dot format file.
