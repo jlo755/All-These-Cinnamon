@@ -4,6 +4,9 @@ import javax.swing.SwingWorker;
 import inputParse.DotParser;
 import visualisation.VisualController;
 
+/**
+ * SwingWorker implementation that handles the updating of GUI representations of schedule solution calculation.
+ */
 public class ScheduleWorker extends SwingWorker{
 	private Scheduler _scheduler;
 	private int _noOfProcessors;
@@ -19,13 +22,12 @@ public class ScheduleWorker extends SwingWorker{
 		vc.setVisualModel(_scheduler);
 	}
 
+	/**
+	 * Calculates optimal schedules in the background while GUI updates.
+	 */
 	@Override
 	protected Object doInBackground() throws Exception {
-		// Parse the dot graph input and schedule an optimal solution.
-		//scheduler.setPanel(contentPane);
 		_scheduler.schedule();
-		// Output the solution in a dot format file.
-		//outputSolution(_fileName);
 		return null;
 	}
 

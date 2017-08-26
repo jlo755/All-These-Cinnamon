@@ -58,16 +58,4 @@ public class FinalState {
 			System.out.println("Processor: "+processors[index]);
 		}
 	}
-
-	/**
-	public void finalStateToGraph(HashMap<String, dataStructure.Node> g, JPanel contentPane){
-		VisualController gc = new VisualController();
-		ArrayList<dataStructure.Node> nodes = new ArrayList<dataStructure.Node>();
-		for(Node n : g.values()){
-			nodes.add(n);
-		}
-		Collections.sort(nodes, Node.startTimes());
-		gc.createGraph(g, nodes, contentPane);
-		gc.updateGraph();
-	}*/
 }

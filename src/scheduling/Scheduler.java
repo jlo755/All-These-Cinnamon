@@ -58,7 +58,7 @@ public class Scheduler {
 	 * Processes the input graph with DFS to calculate an optimal schedule.
 	 * @throws IOException 
 	 */
-	public void schedule() throws IOException {
+	public void schedule() {
 
 		initializeNodes();
 		
@@ -107,7 +107,11 @@ public class Scheduler {
 		Time2.stop();
 		fireBest();
 
-		outputSolution();
+		try {
+			outputSolution();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	/**

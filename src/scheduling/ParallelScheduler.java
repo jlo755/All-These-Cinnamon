@@ -23,7 +23,7 @@ import java.util.ArrayList;//####[14]####
 import java.util.List;//####[14]####
 //####[14]####
 /**
- * 
+ *
  * This class produces an optimal solution to a multi-processor scheduling
  * problem. This is based on an input graph representing a series of tasks costs
  * and their dependencies, as well as the number of processors specified.
@@ -54,7 +54,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
         }//####[30]####
     }//####[30]####
     /**
-	 * Parallel multi-task version of processSchedule(). This should enable 
+	 * Parallel multi-task version of processSchedule(). This should enable
 	 * parallel running of the processSchedule() method when calculating
 	 * an optimal scheduling solution.
 	 *///####[30]####
@@ -63,7 +63,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
         return processScheduleTask(scheduleStack, new TaskInfo());//####[30]####
     }//####[30]####
     /**
-	 * Parallel multi-task version of processSchedule(). This should enable 
+	 * Parallel multi-task version of processSchedule(). This should enable
 	 * parallel running of the processSchedule() method when calculating
 	 * an optimal scheduling solution.
 	 *///####[30]####
@@ -78,7 +78,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
         return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[30]####
     }//####[30]####
     /**
-	 * Parallel multi-task version of processSchedule(). This should enable 
+	 * Parallel multi-task version of processSchedule(). This should enable
 	 * parallel running of the processSchedule() method when calculating
 	 * an optimal scheduling solution.
 	 *///####[30]####
@@ -87,7 +87,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
         return processScheduleTask(scheduleStack, new TaskInfo());//####[30]####
     }//####[30]####
     /**
-	 * Parallel multi-task version of processSchedule(). This should enable 
+	 * Parallel multi-task version of processSchedule(). This should enable
 	 * parallel running of the processSchedule() method when calculating
 	 * an optimal scheduling solution.
 	 *///####[30]####
@@ -104,7 +104,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
         return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[30]####
     }//####[30]####
     /**
-	 * Parallel multi-task version of processSchedule(). This should enable 
+	 * Parallel multi-task version of processSchedule(). This should enable
 	 * parallel running of the processSchedule() method when calculating
 	 * an optimal scheduling solution.
 	 *///####[30]####
@@ -113,7 +113,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
         return processScheduleTask(scheduleStack, new TaskInfo());//####[30]####
     }//####[30]####
     /**
-	 * Parallel multi-task version of processSchedule(). This should enable 
+	 * Parallel multi-task version of processSchedule(). This should enable
 	 * parallel running of the processSchedule() method when calculating
 	 * an optimal scheduling solution.
 	 *///####[30]####
@@ -130,7 +130,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
         return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[30]####
     }//####[30]####
     /**
-	 * Parallel multi-task version of processSchedule(). This should enable 
+	 * Parallel multi-task version of processSchedule(). This should enable
 	 * parallel running of the processSchedule() method when calculating
 	 * an optimal scheduling solution.
 	 *///####[30]####
@@ -145,7 +145,7 @@ public class ParallelScheduler extends Scheduler {//####[23]####
     /**
 	 * Recursive approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem.
-	 * 
+	 *
 	 *
 	 * @param graph
 	 *            This is the input graph
