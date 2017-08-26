@@ -60,7 +60,6 @@ public class VisualGraph{
 
 	public void startTraversal(ArrayList<dataStructure.Node> a){
 		for(dataStructure.Node n : _taskGraph.values()) {
-			_panel.setVisible(false);
 			Node next = graph.getNode(n.getID());
 			if (n.getProcessor() == 1) {
 				next.setAttribute("ui.class", "processor1");
@@ -83,8 +82,7 @@ public class VisualGraph{
 			} else if(n.getProcessor() == 7) {
 				next.setAttribute("ui.class", "processor7");
 			}
-			_panel.setVisible(true);
-			//sleep();
+
 		}
 	}
 
