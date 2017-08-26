@@ -103,9 +103,13 @@ public class VisualController implements ScheduleListener {
 	public JPanel getStatsPanel(){
 		return panel2;
 	}
-	
-	public void setStateLabel(String text){
-		_ps.setNewLabel(text);
+
+	public void setStateLabel(String text,Double input3){
+		_ps.setNewLabel(text, input3);
+	}
+
+	public void setStateLabel2(String text,long input3){
+		_ps.setNewLabel2(text, input3);
 	}
 
 	public ArrayList<dataStructure.Node> sortStartTimes(){
