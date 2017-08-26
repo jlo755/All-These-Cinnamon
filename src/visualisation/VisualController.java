@@ -6,6 +6,8 @@ import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
 import scheduling.PartialSchedule;
 import scheduling.ScheduleListener;
 import scheduling.ScheduleWorker;
@@ -21,6 +23,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
 
 /**
  * Created by DarthPenguin on 22/08/17.
@@ -33,23 +36,29 @@ public class VisualController implements ScheduleListener {
    ArrayList<Double> bestTimes;
    private SingleGraph graph;
    private ArrayList<dataStructure.Node> _nodes = new ArrayList<>();
-   private JPanel panel;
+   private JPanel panel1;
+   private JPanel panel2;
    private Scheduler _model;
    private PartialSchedule _schedule;
 
-   public VisualController(HashMap<String, dataStructure.Node> g, JPanel Panel){
-      panel = Panel;
+   public VisualController(HashMap<String, Node> g, JPanel Panel1, JPanel Panel2){
+      panel1 = Panel1;
+      panel2 = Panel2;
       _graph = g;
-      vg = new VisualGraph(g, panel);
+      vg = new VisualGraph(g, panel1);
       vs = new VisualStatistics();
-      vs.createStateSpaceGraph();
+      JFreeChart chart = vs.createStateSpaceGraph();
       graph = vg.graph;
-      panel.setBorder(BorderFactory.createLineBorder(Color.blue, 5));
+      panel1.setBorder(BorderFactory.createLineBorder(Color.blue, 5));
       Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
       viewer.enableAutoLayout();
       ViewPanel viewPanel = viewer.addDefaultView(false);
-      panel.add(viewPanel);
-      _nodes = this.sortStartTimes();
+      panel1.add(viewPanel);
+      ChartPanel CP = new ChartPanel(chart);
+      CP.setBorder(new LineBorder(new Color(0, 0, 0)));
+      CP.setBounds(0, 0, 572, 434);
+      panel2.add(CP);
+      //_nodes = this.sortStartTimes();
    }
 
    public void setSchedule(PartialSchedule schedule){
@@ -82,8 +91,12 @@ public class VisualController implements ScheduleListener {
       return _graph;
    }
 
-   public JPanel getPanel(){
-      return panel;
+   public JPanel getGraphPanel(){
+      return panel1;
+   }
+
+   public JPanel getStatsPanel(){
+      return panel2;
    }
 
    public ArrayList<dataStructure.Node> sortStartTimes(){
