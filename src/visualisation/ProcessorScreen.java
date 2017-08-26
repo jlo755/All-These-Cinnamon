@@ -40,6 +40,7 @@ public class ProcessorScreen extends JFrame {
 	private JPanel  statisticsPanel;
 	private VisualGraph _visualGraph;
 	private VisualController vc;
+	JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -91,7 +92,7 @@ public class ProcessorScreen extends JFrame {
 		contentPane.add(statisticsPanel);
 		statisticsPanel.setLayout(null);
 
-        vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), graphPanel, statisticsPanel);
+        vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), graphPanel, statisticsPanel, this);
 
         LaunchScheduler ls = new LaunchScheduler();
         //_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
@@ -144,7 +145,7 @@ public class ProcessorScreen extends JFrame {
 		 lblCurrentBestCost.setBounds(22, 120, 550, 14);
 		 ProcessingDetailsPanel.add(lblCurrentBestCost);
 
-		 JLabel lblNewLabel = new JLabel("Number of States Processed:");
+		 lblNewLabel = new JLabel("Number of States Processed:");
 		 lblNewLabel.setFont(new Font("Leelawadee", Font.PLAIN, 15));
 		 lblNewLabel.setBounds(22, 145, 550, 14);
 		 ProcessingDetailsPanel.add(lblNewLabel);
@@ -209,5 +210,9 @@ public class ProcessorScreen extends JFrame {
 
 
 
+	}
+	
+	public void setNewLabel(String lblNewLabel){
+		this.lblNewLabel.setText("Number of states processed: "+lblNewLabel);
 	}
 }

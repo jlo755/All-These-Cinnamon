@@ -30,49 +30,51 @@ import javax.swing.border.LineBorder;
  */
 public class VisualController implements ScheduleListener {
 
-   private VisualGraph vg;
-   private VisualStatistics vs;
-   private HashMap<String, dataStructure.Node> _graph;
-   ArrayList<Double> bestTimes;
-   private SingleGraph graph;
-   private ArrayList<dataStructure.Node> _nodes = new ArrayList<>();
-   private JPanel panel1;
-   private JPanel panel2;
-   private Scheduler _model;
-   private PartialSchedule _schedule;
-   private JFreeChart chart;
-   private int count;
+	private VisualGraph vg;
+	private VisualStatistics vs;
+	private HashMap<String, dataStructure.Node> _graph;
+	ArrayList<Double> bestTimes;
+	private SingleGraph graph;
+	private ArrayList<dataStructure.Node> _nodes = new ArrayList<>();
+	private JPanel panel1;
+	private JPanel panel2;
+	private Scheduler _model;
+	private PartialSchedule _schedule;
+	private JFreeChart chart;
+	private int count;
+	private ProcessorScreen _ps;
 
-   public VisualController(HashMap<String, Node> g, JPanel Panel1, JPanel Panel2){
-      panel1 = Panel1;
-      panel2 = Panel2;
-      _graph = g;
-      vg = new VisualGraph(g, panel1);
-      graph = vg.graph;
-      vs = new VisualStatistics();
-      chart = vs.createStateSpaceGraph();
-      panel1.setBorder(BorderFactory.createLineBorder(Color.blue, 5));
-      Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-      viewer.enableAutoLayout();
-      ViewPanel viewPanel = viewer.addDefaultView(false);
-      panel1.add(viewPanel);
-      ChartPanel CP = new ChartPanel(chart);
-      CP.setBorder(new LineBorder(new Color(0, 0, 0)));
-      CP.setBounds(0, 0, 572, 434);
-      panel2.add(CP);
-      //_nodes = this.sortStartTimes();
-   }
+	public VisualController(HashMap<String, Node> g, JPanel Panel1, JPanel Panel2, ProcessorScreen ps){
+		panel1 = Panel1;
+		panel2 = Panel2;
+		_graph = g;
+		vg = new VisualGraph(g, panel1);
+		graph = vg.graph;
+		_ps = ps;
+		vs = new VisualStatistics();
+		chart = vs.createStateSpaceGraph();
+		panel1.setBorder(BorderFactory.createLineBorder(Color.blue, 5));
+		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+		viewer.enableAutoLayout();
+		ViewPanel viewPanel = viewer.addDefaultView(false);
+		panel1.add(viewPanel);
+		ChartPanel CP = new ChartPanel(chart);
+		CP.setBorder(new LineBorder(new Color(0, 0, 0)));
+		CP.setBounds(0, 0, 572, 434);
+		panel2.add(CP);
+		//_nodes = this.sortStartTimes();
+	}
 
-   public void setSchedule(PartialSchedule schedule){
-	   _schedule = schedule;
-   }
+	public void setSchedule(PartialSchedule schedule){
+		_schedule = schedule;
+	}
 
-   public void setScatterPlotInput(ArrayList<Double> bestTimes){
-      this.bestTimes = bestTimes;
-      updateStats();
-   }
+	public void setScatterPlotInput(ArrayList<Double> bestTimes){
+		this.bestTimes = bestTimes;
+		//updateStats();
+	}
 
-   public void updateGraph(){
+	public void updateGraph(){
 		double[] endTimes = _schedule.getEndTimes();
 		int[] processors = _schedule.getNodeProcessors();
 		double[] startTimes = _schedule.getStartTimes();
@@ -83,58 +85,64 @@ public class VisualController implements ScheduleListener {
 			node.setProcessor(processors[index]);
 		}
 		updateGUI();
-   }
+	}
 
-   public void updateGUI(){
-      _nodes = sortStartTimes();
-      this.update();
-   }
+	public void updateGUI(){
+		_nodes = sortStartTimes();
+		this.update();
+	}
 
-   public HashMap<String, dataStructure.Node> getGraph(){
-      return _graph;
-   }
+	public HashMap<String, dataStructure.Node> getGraph(){
+		return _graph;
+	}
 
-   public JPanel getGraphPanel(){
-      return panel1;
-   }
+	public JPanel getGraphPanel(){
+		return panel1;
+	}
 
-   public JPanel getStatsPanel(){
-      return panel2;
-   }
+	public JPanel getStatsPanel(){
+		return panel2;
+	}
+	
+	public void setStateLabel(String text){
+		_ps.setNewLabel(text);
+	}
 
-   public ArrayList<dataStructure.Node> sortStartTimes(){
-      if(_nodes.size()>0) {
-         _nodes.clear();
-      }
-      for(dataStructure.Node n : _graph.values()){
-         _nodes.add(n);
-      }
-      Collections.sort(_nodes, Node.startTimes());
-      return _nodes;
-   }
+	public ArrayList<dataStructure.Node> sortStartTimes(){
+		if(_nodes.size()>0) {
+			_nodes.clear();
+		}
+		for(dataStructure.Node n : _graph.values()){
+			_nodes.add(n);
+		}
+		Collections.sort(_nodes, Node.startTimes());
+		return _nodes;
+	}
 
-   public void setVisualModel(Scheduler model){
-	   _model = model;
-   }
+	public void setVisualModel(Scheduler model){
+		_model = model;
+	}
 
-   public void setScheduleCount(int count){
-      this.count = count;
-   }
+	public void setScheduleCount(int count){
+		this.count = count;
+	}
 
-   @Override
-   public void update() {
+	@Override
+	public void update() {
 
-      vg.startTraversal( _nodes);
-   }
+		vg.startTraversal( _nodes);
+	}
 
-   public void updateStats() {
+	public void updateStats(double time) {
 
-      if(bestTimes.size() != 0) {
-         panel2.setVisible(false);
-         vs.updatePlot(bestTimes);
-         //chart = vs.createStateSpaceGraph();
-         panel2.setVisible(true);
-      }
-   }
+		if(bestTimes.size() != 0) {
+			for(double d:bestTimes){
+				//panel2.setVisible(false);
+				vs.updatePlot(d, time);
+				//chart = vs.createStateSpaceGraph();
+				//panel2.setVisible(true);
+			}
+		}
+	}
 
 }
