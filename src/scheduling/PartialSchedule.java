@@ -6,7 +6,12 @@ import java.util.LinkedHashMap;
 
 import dataStructure.Node;
 
+/**
+ * This class represents a partially completed solution for multi-processor task scheduling.
+ *
+ */
 public class PartialSchedule {
+	
 	
 	private double _totalIdleTime;
 	private double _totalTaskTime;
@@ -33,52 +38,85 @@ public class PartialSchedule {
 		_taskGraph = taskGraph;
 		_nodeOrdering = new HashMap<String, Integer>();
 		_bottomLevels = new double[size];
-		//decideIndex();
 	}
 	
+	/**
+	 * Sets the idle time.
+	 * @param idleTime
+	 */
 	public void setIdleTime(double idleTime) {
 		_totalIdleTime = idleTime;
 	}
 	
+	/**
+	 * Sets the processor times.
+	 * @param processorTimes
+	 */
 	public void setProcessorTimes(double[] processorTimes) {
 		for(int i = 0; i<processorTimes.length; i++) {
 			_processorTimes[i] = processorTimes[i];
 		}
 	}
 
+	/**
+	 * Sets the completed nodes' status.
+	 * @param completed
+	 */
 	public void setCompleted(boolean[] completed) {
 		for(int i = 0; i<completed.length; i++) {
 			_completed[i] = completed[i];
 		}
 	}
 	
+	/**
+	 * Sets the end times of the nodes.
+	 * @param endTimes
+	 */
 	public void setEndTimes(double[] endTimes) {
 		for(int i = 0; i<endTimes.length; i++) {
 			_endTimes[i] = endTimes[i];
 		}
 	}
 	
+	/**
+	 * Sets the start times of the nodes.
+	 * @param startTimes
+	 */
 	public void setStartTimes(double[] startTimes) {
 		for(int i = 0; i<startTimes.length; i++) {
 			_startTimes[i] = startTimes[i];
 		}
 	}
 	
+	/**
+	 * Sets what processor the node is on.
+	 * @param processors
+	 */
 	public void setProcessors(int[] processors) {
 		for(int i = 0; i<processors.length; i++) {
 			_processors[i] = processors[i];
 		}
 	}
 	
+	/**
+	 * Set the bottom level of the node.
+	 * @param bottomLevels
+	 */
 	public void setBottomLevel(double[] bottomLevels) {
 		_bottomLevels = bottomLevels;
 	}
 	
+	/**
+	 * Sets the order for the new child schedule.
+	 * @param nodeOrdering
+	 */
 	public void setOrder(HashMap<String, Integer> nodeOrdering) {
 		_nodeOrdering = nodeOrdering;
 	}
 	
-	
+	/**
+	 * Decides the index of all the node for arrays.
+	 */
 	public void decideIndex() {
 		int index = -1;
 		for(Node n:_taskGraph.values()) {
@@ -88,7 +126,12 @@ public class PartialSchedule {
 		}
 	}
 	
-	public void solve(Node node, int processor) {
+	/**
+	 * Updates all of the states of this partial schedule and calculates the earliest start time of the node on the processor.
+	 * @param node
+	 * @param processor
+	 */
+	public void update(Node node, int processor) {
 		int index = _nodeOrdering.get(node.getID());
 		_completed[index] = true;
 		_processors[index] = processor;
@@ -99,6 +142,11 @@ public class PartialSchedule {
 		_endTimes[index] = earliestStartTime + node.getCost();
 	}
 	
+	/**
+	 * Calculates the earliest time a node can be placed on a processor.
+	 * @param node
+	 * @return
+	 */
 	public double calculateTime(Node node) {
 		double maxCost = 0.0, maxProcessorTime = 0.0;
 		int index = _nodeOrdering.get(node.getID());
@@ -211,20 +259,33 @@ public class PartialSchedule {
 		return ccost;
 	}
 	
+	/**
+	 * Updates the new idle time of the node.
+	 * @param node
+	 * @return
+	 */
 	public double updateIdleTime(Node node){
 		int index = _nodeOrdering.get(node.getID());
 		double processorTime = this.calculateMaxCurrentProcessorTime(_processors[index]);
 		double earliestStartTime = calculateTime(node);
 		double idleTime = earliestStartTime - processorTime;
-		//totalIdleTime += idleTime;
 		return idleTime;
 	}
 	
+	/**
+	 * Retrieves the end time of a node.
+	 * @param node
+	 * @return
+	 */
 	public double getNodeEndTime(Node node) {
 		int index = _nodeOrdering.get(node.getID());
 		return _endTimes[index];
 	}
 	
+	/**
+	 * Get all of the reachable nodes from the current partial schedule.
+	 * @return
+	 */
 	public ArrayList<String> getReachable() {
 		ArrayList<String> reachableNodeNames = new ArrayList<String>();
 		for (String nodeName : _taskGraph.keySet()) {
@@ -252,6 +313,10 @@ public class PartialSchedule {
 		return reachableNodeNames;
 	}
 	
+	/**
+	 * Create a new child schedule from this partial schedule.
+	 * @return
+	 */
 	public PartialSchedule makeChildSchedule() {
 		PartialSchedule newSchedule = new PartialSchedule(_taskGraph, _numProcessors, _totalTaskTime);
 		newSchedule.setStartTimes(_startTimes);
@@ -265,8 +330,12 @@ public class PartialSchedule {
 		return newSchedule;
 	}
 	
+	/**
+	 * Use the more dominating heuristic function between critical path and perfect load balancing.
+	 * @param n
+	 * @return
+	 */
 	public double getMaxHeuristic(Node n) {
-		int index = _nodeOrdering.get(n.getID());
 		double totalIdleTime = (_totalIdleTime+_totalTaskTime)/this._numProcessors;
 		double max = 0;
 		for(int i = 0; i<_startTimes.length; i++) {
@@ -278,27 +347,50 @@ public class PartialSchedule {
 		return Math.max(totalIdleTime, max);
 	}
 
+	/**
+	 * Gets all processors' times from this partial schedule.
+	 * @return
+	 */
 	public double[] getProcessorTimes() {
 		return _processorTimes;
 	}
 	
+	/**
+	 * Gets all end times of nodes from this partial schedule.
+	 * @return
+	 */
 	public double[] getEndTimes() {
 		return _endTimes;
 	}
 	
+	/**
+	 * Gets all start times of nodes from this partial schedule.
+	 * @return
+	 */
 	public double[] getStartTimes() {
 		return _startTimes;
 	}
 	
+	/**
+	 * Returns the indexing used for the nodes.
+	 * @return
+	 */
 	public HashMap<String, Integer> getNodeOrdering(){
-		return _nodeOrdering;
-		
+		return _nodeOrdering;	
 	}
 	
+	/**
+	 * Returns the processor numbers for the nodes.
+	 * @return
+	 */
 	public int[] getNodeProcessors() {
 		return _processors;
 	}
 	
+	/**
+	 * Finding out which processors have a current start time of zero.
+	 * @return
+	 */
 	public int startTimeZeroProcessors() {
 		int count = 0;
 		for(int i = 0; i<_processorTimes.length; i++) {
@@ -309,11 +401,21 @@ public class PartialSchedule {
 		return count;
 	}
 	
+	/**
+	 * Gets the current time for the specified processor.
+	 * @param processor
+	 * @return
+	 */
 	public double getProcessorTime(int processor) {
 		return _processorTimes[processor-1];
 		
 	}
 
+	/**
+	 * Gets the starting time of the specified node.
+	 * @param node
+	 * @return
+	 */
 	public double getNodeStartTime(Node node) {
 		int index = _nodeOrdering.get(node.getID());
 		return _startTimes[index];
