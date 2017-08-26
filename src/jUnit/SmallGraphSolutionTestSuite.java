@@ -24,7 +24,7 @@ public class SmallGraphSolutionTestSuite {
 	}
 	
 	//Test for 7 nodes and processors of 2 4 and 8
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void test7Nodes2Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_7_OutTree.dot");
 		scheduler.setProcessorNumber(2);
@@ -34,7 +34,7 @@ public class SmallGraphSolutionTestSuite {
 		assertEquals((int)scheduler.getCurrentBestSolution(), 28);
 	}
 	
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void test7Nodes4Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_7_OutTree.dot");
 		scheduler.setProcessorNumber(4);
@@ -45,7 +45,7 @@ public class SmallGraphSolutionTestSuite {
 	}
 	
 	
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void test7Nodes8Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_7_OutTree.dot");
 		scheduler.setProcessorNumber(8);
@@ -57,7 +57,7 @@ public class SmallGraphSolutionTestSuite {
 
 	
 	//Test for 8 nodes and processors of 2 4 and 8
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void test8Nodes2Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_8_Random.dot");
 		scheduler.setProcessorNumber(2);
@@ -67,7 +67,7 @@ public class SmallGraphSolutionTestSuite {
 		assertEquals(581,(int)scheduler.getCurrentBestSolution());
 	}
 
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void test8Nodes4Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_8_Random.dot");
 		scheduler.setProcessorNumber(4);
@@ -78,7 +78,7 @@ public class SmallGraphSolutionTestSuite {
 	}
 
 
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void test8Nodes8Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_8_Random.dot");
 		scheduler.setProcessorNumber(8);
@@ -90,7 +90,7 @@ public class SmallGraphSolutionTestSuite {
 	
 	
 	//Test for 9 nodes and processors of 2 4 and 8
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void test9Nodes2Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_9_SeriesParallel.dot");
 		scheduler.setProcessorNumber(2);
@@ -100,7 +100,7 @@ public class SmallGraphSolutionTestSuite {
 		assertEquals(55,(int)scheduler.getCurrentBestSolution());
 	}
 
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void test9Nodes4Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_9_SeriesParallel.dot");
 		scheduler.setProcessorNumber(4);
@@ -111,7 +111,7 @@ public class SmallGraphSolutionTestSuite {
 	}
 
 
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void test9Nodes8Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_9_SeriesParallel.dot");
 		scheduler.setProcessorNumber(8);
@@ -122,7 +122,7 @@ public class SmallGraphSolutionTestSuite {
 	}
 	
 	//this checks the correct solution for one processor
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void testForkTree1Processor() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeSmallHighTaskLowCC.dot");
 		scheduler.setProcessorNumber(1);
@@ -133,7 +133,7 @@ public class SmallGraphSolutionTestSuite {
 	}
 
 	//this will have high task cost and low communication cost between nodes with 2 4 8 processors respectively
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void testForkTreeSmallHighTaskLowCC2Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeSmallHighTaskLowCC.dot");
 		scheduler.setProcessorNumber(2);
@@ -143,7 +143,7 @@ public class SmallGraphSolutionTestSuite {
 		assertEquals(128,(int)scheduler.getCurrentBestSolution());
 	}
 	
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void testForkTreeSmallHighTaskLowCC4Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeSmallHighTaskLowCC.dot");
 		scheduler.setProcessorNumber(4);
@@ -153,7 +153,7 @@ public class SmallGraphSolutionTestSuite {
 		assertEquals(89,(int)scheduler.getCurrentBestSolution());
 	}
 
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void testForkTreeSmallHighTaskLowCC8Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeSmallHighTaskLowCC.dot");
 		scheduler.setProcessorNumber(8);
@@ -164,7 +164,7 @@ public class SmallGraphSolutionTestSuite {
 	}
 
 	//this will have low task cost and high communication cost between nodes with 2 4 8 processors respectively
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void testForkTreeSmallLowTaskHighCC2Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeSmallLowTaskHighCC.dot");
 		scheduler.setProcessorNumber(2);
@@ -174,7 +174,7 @@ public class SmallGraphSolutionTestSuite {
 		assertEquals(18,(int)scheduler.getCurrentBestSolution());
 	}
 
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void testForkTreeSmallLowTaskHighCC4Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeSmallLowTaskHighCC.dot");
 		scheduler.setProcessorNumber(4);
@@ -184,7 +184,7 @@ public class SmallGraphSolutionTestSuite {
 		assertEquals(18,(int)scheduler.getCurrentBestSolution());
 	}
 
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void testForkTreeSmallLowTaskHighCC8Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeSmallLowTaskHighCC.dot");
 		scheduler.setProcessorNumber(8);
@@ -195,7 +195,7 @@ public class SmallGraphSolutionTestSuite {
 	}
 
 	//independent task of 5 nodes
-	@Test(timeout=18000000)
+	@Test(timeout=1800000)
 	public void testIndependentTasksSmall() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("Independent_Nodes_5_WeightType_Random.dot");
 		scheduler.setProcessorNumber(2);
