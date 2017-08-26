@@ -46,6 +46,8 @@ public class Scheduler {
 	private VisualController _vc;
 	private PartialSchedule _currentSchedule;
 	private long startTime;
+	private long actualMemUsed;
+	private String status = "Current Status: Processing...";
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
@@ -56,12 +58,13 @@ public class Scheduler {
 
 	/**
 	 * Processes the input graph with DFS to calculate an optimal schedule.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void schedule() {
+		long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
 
 		initializeNodes();
-		
+
 		// "Nodemap" is the input graph for the algorithm.
 		Timer time2;
 		int timeDelay = 300;
@@ -108,6 +111,10 @@ public class Scheduler {
 		fireBest();
 
 		try {
+			long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+			status="Current Status: Finished";
+			actualMemUsed=afterUsedMem-beforeUsedMem;
+			_vc.setStateLabel2(status,actualMemUsed);
 			outputSolution();
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -123,11 +130,11 @@ public class Scheduler {
 		_vc.updateGraph();
 
 	}
-	
+
 	private void fireLabelUpdate(){
-		_vc.setStateLabel(this.sumAdding+"");
+		_vc.setStateLabel(this.sumAdding+"",currentBestSolution);
 	}
-	
+
 	private void fireBest() {
 		_vc.setSchedule(bestSchedule.getCurrentBestSchedule());
 		//_numSchedules++;
@@ -163,7 +170,7 @@ public class Scheduler {
 			n.setBottomLevel(findMaxBottomLevel(nodeMap, n.getID()));
 		}
 	}
-	
+
 	/**
 	 * Outputs the solution in a dot file format.
 	 * @throws IOException
