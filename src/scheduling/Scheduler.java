@@ -34,6 +34,7 @@ public class Scheduler {
 	protected double totalTaskTime = 0;
 	protected int _numProcessors;
 	protected ArrayList<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
+	protected ArrayList<Double> bestTimes = new ArrayList<Double>();
 	protected double time = 0;
 	private VisualController _vc;
 	private PartialSchedule _currentSchedule;
@@ -93,6 +94,8 @@ public class Scheduler {
 	private void fire() {
 		_vc.setSchedule(_currentSchedule);
 		_vc.updateGraph();
+		_vc.setScatterPlotInput(bestTimes);
+
 	}
 	
 	public void setVisualController(VisualController vc){
@@ -140,6 +143,7 @@ public class Scheduler {
 		while(!scheduleStack.isEmpty()) {
 			PartialSchedule schedule = scheduleStack.pop();
 			_currentSchedule = schedule;
+			bestTimes.add(currentBestSolution);
 			ArrayList<String> reachable = schedule.getReachable();
 			for(String s:reachable) {
 				if(schedule.startTimeZeroProcessors() > 1) {

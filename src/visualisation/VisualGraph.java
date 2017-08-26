@@ -88,11 +88,6 @@ public class VisualGraph{
 		}
 	}
 
-	protected void sleep() {
-		try { Thread.sleep(1000); } catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 
 }
