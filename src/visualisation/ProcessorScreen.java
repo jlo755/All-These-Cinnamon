@@ -14,6 +14,7 @@ import visualisation.VisualGraph;
 
 import scheduling.LaunchScheduler;
 import scheduling.ScheduleWorker;
+import statistics.LineGraph;
 import statistics.compareSchedules;
 
 import javax.swing.JTextField;
@@ -31,14 +32,15 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 
 public class ProcessorScreen extends JFrame {
 
 	private JPanel contentPane;
-	private String _fileName;
+	private String _file;
 	private JTextField processorCountTextField;
-	private Integer _noOfProcessors;
+	private Integer _processors;
 	private JPanel graphPanel;
 	private VisualGraph _visualGraph;
 	private VisualController vc;
@@ -67,7 +69,7 @@ public class ProcessorScreen extends JFrame {
 	 */
 	public ProcessorScreen() throws IOException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1100, 700);
+		setBounds(100, 100, 1194, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -85,7 +87,7 @@ public class ProcessorScreen extends JFrame {
                 return new Dimension(460,567);
             }
         };
-        graphPanel.setBounds(10, 30, 460, 567);
+        graphPanel.setBounds(10, 11, 460, 640);
         contentPane.add(graphPanel);
         vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), graphPanel);
 
@@ -94,99 +96,105 @@ public class ProcessorScreen extends JFrame {
         //ls.setFileName(_fileName);
         //ls.setProcessor(_noOfProcessors);
 
-		compareSchedules compare = new compareSchedules();
-
-		JFreeChart chart = compare.createStateSpaceGraph();
-
+		//compareSchedules compare = new compareSchedules();
+        LineGraph compare = new LineGraph();
+		JFreeChart chart = compare.createLineGraph();
 		 JPanel scatterPanel = new JPanel();
-		 scatterPanel.setBounds(492, 30, 582, 426);
+		 scatterPanel.setBounds(492, 11, 572, 435);
 		 contentPane.add(scatterPanel);
 		 scatterPanel.setLayout(null);
 		 ChartPanel CP = new ChartPanel(chart);
 		 CP.setBorder(new LineBorder(new Color(0, 0, 0)));
-		 CP.setBounds(0, 0, 582, 426);
+		 CP.setBounds(0, 0, 572, 434);
 		 scatterPanel.add(CP);
 
 		 JPanel ProcessingDetailsPanel = new JPanel();
 		 ProcessingDetailsPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		 ProcessingDetailsPanel.setBounds(492, 467, 582, 130);
+		 ProcessingDetailsPanel.setBounds(492, 450, 572, 201);
 		 contentPane.add(ProcessingDetailsPanel);
 		 ProcessingDetailsPanel.setLayout(null);
 
-		 JLabel lblNodeName = new JLabel("Node Name:");
+		 LaunchScheduler launchS = new LaunchScheduler();
+		 _file = launchS._fileName;
+		 _processors = launchS._noOfProcessors;
+		 JLabel lblNodeName = new JLabel("Number Of Processors: "+ _processors);
 		 lblNodeName.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		 lblNodeName.setBounds(22, 11, 107, 14);
+		 lblNodeName.setBounds(22, 11, 550, 14);
 		 ProcessingDetailsPanel.add(lblNodeName);
 
-		 JLabel lblStartTime = new JLabel("Start Time:");
+		 JLabel lblStartTime = new JLabel("Processing File: " + _file);
 		 lblStartTime.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		 lblStartTime.setBounds(22, 36, 74, 21);
+		 lblStartTime.setBounds(22, 36, 550, 21);
 		 ProcessingDetailsPanel.add(lblStartTime);
 
-		 JLabel lblEndTime = new JLabel("End Time:");
+		 JLabel lblEndTime = new JLabel("Current Status:");
 		 lblEndTime.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		 lblEndTime.setBounds(22, 60, 74, 28);
+		 lblEndTime.setBounds(22, 60, 550, 28);
 		 ProcessingDetailsPanel.add(lblEndTime);
 
-		 JLabel lblProcessor = new JLabel("Processor:");
+		 JLabel lblProcessor = new JLabel("Time Elapsed:");
 		 lblProcessor.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		 lblProcessor.setBounds(22, 95, 74, 14);
+		 lblProcessor.setBounds(22, 88, 550, 21);
 		 ProcessingDetailsPanel.add(lblProcessor);
 
-		 JLabel NodeNameOuputLabel = new JLabel("-");
-		 NodeNameOuputLabel.setFont(new Font("Leelawadee", Font.PLAIN, 14));
-		 NodeNameOuputLabel.setBounds(139, 11, 418, 14);
-		 ProcessingDetailsPanel.add(NodeNameOuputLabel);
+		 JLabel lblCurrentBestCost = new JLabel("Current Best Cost Found:");
+		 lblCurrentBestCost.setFont(new Font("Leelawadee", Font.PLAIN, 15));
+		 lblCurrentBestCost.setBounds(22, 120, 550, 14);
+		 ProcessingDetailsPanel.add(lblCurrentBestCost);
 
-		 JLabel StartTimeOutputLabel = new JLabel("-");
-		 StartTimeOutputLabel.setBounds(139, 41, 433, 14);
-		 ProcessingDetailsPanel.add(StartTimeOutputLabel);
+		 JLabel lblNewLabel = new JLabel("Number of States Processed:");
+		 lblNewLabel.setFont(new Font("Leelawadee", Font.PLAIN, 15));
+		 lblNewLabel.setBounds(22, 145, 550, 14);
+		 ProcessingDetailsPanel.add(lblNewLabel);
 
-		 JLabel EndTimeOutputLabel = new JLabel("-");
-		 EndTimeOutputLabel.setBounds(139, 69, 435, 14);
-		 ProcessingDetailsPanel.add(EndTimeOutputLabel);
-
-		 JLabel ProcessorOuputLabel = new JLabel("-");
-		 ProcessorOuputLabel.setBounds(139, 97, 435, 14);
-		 ProcessingDetailsPanel.add(ProcessorOuputLabel);
-
-		 JPanel timerPanel = new JPanel();
-		 FlowLayout flowLayout = (FlowLayout) timerPanel.getLayout();
-		 flowLayout.setAlignment(FlowLayout.LEFT);
-		 timerPanel.setBounds(677, 628, 169, 30);
-		 contentPane.add(timerPanel);
-
-		 JLabel lblNewLabel = new JLabel("Time Elapsed:");
-		 lblNewLabel.setFont(new Font("Leelawadee", Font.PLAIN, 16));
-		 timerPanel.add(lblNewLabel);
-
-		 JLabel lblTime = new JLabel("00:00:00");
-		 lblTime.setFont(new Font("Leelawadee", Font.PLAIN, 16));
-		 timerPanel.add(lblTime);
+		 JLabel lblMemoryUsage = new JLabel("Memory Usage:");
+		 lblMemoryUsage.setFont(new Font("Leelawadee", Font.PLAIN, 15));
+		 lblMemoryUsage.setBounds(22, 170, 550, 20);
+		 ProcessingDetailsPanel.add(lblMemoryUsage);
 
 
+		 JButton ScatterButton = new JButton("<html><center>State Space Time Plot</center></html>");
+		 JButton LineButton = new JButton("<html><center>Schedules Time Chart</center></html>");
 
-		 /// START PROCESSING
-
-
-
-
-		 JButton btnStartProcessing = new JButton("Start Processing");
-		 btnStartProcessing.setVisible(false);
-		 btnStartProcessing.setFont(new Font("Leelawadee", Font.PLAIN, 16));
-		 btnStartProcessing.addActionListener(new ActionListener() {
-		 	public void actionPerformed(ActionEvent e) {
-
-
-
-
-
+		 ScatterButton.addActionListener(new ActionListener() {
+		 	public void actionPerformed(ActionEvent arg0) {
+				 LineButton.setEnabled(true);
+//		 		compareSchedules compare = new compareSchedules();
+//		       // LineGraph compare = new LineGraph();
+//				JFreeChart chart = compare.createStateSpaceGraph();
+//				 JPanel scatterPanel = new JPanel();
+//				 scatterPanel.setBounds(492, 11, 572, 435);
+//				 contentPane.add(scatterPanel);
+//				 scatterPanel.setLayout(null);
+//				 ChartPanel CP = new ChartPanel(chart);
+//				 CP.setBorder(new LineBorder(new Color(0, 0, 0)));
+//				 CP.setBounds(0, 0, 572, 434);
+//				 scatterPanel.add(CP);
+			 ScatterButton.setEnabled(false);
 
 
 		 	}
 		 });
-		 btnStartProcessing.setBounds(856, 628, 218, 23);
-		 contentPane.add(btnStartProcessing);
+		 LineButton.addActionListener(new ActionListener() {
+			 	public void actionPerformed(ActionEvent e) {
+			 		ScatterButton.setEnabled(true);
+
+			 		LineButton.setEnabled(false);
+
+			 	}
+			 });
+		 ScatterButton.setVerticalAlignment(SwingConstants.TOP);
+		 ScatterButton.setFont(new Font("Leelawadee", Font.PLAIN, 14));
+
+
+		 ScatterButton.setBounds(1074, 11, 94, 81);
+		 contentPane.add(ScatterButton);
+
+
+		 LineButton.setVerticalAlignment(SwingConstants.TOP);
+		 LineButton.setFont(new Font("Leelawadee", Font.PLAIN, 14));
+		 LineButton.setBounds(1074, 100, 94, 81);
+		 contentPane.add(LineButton);
 
 
 
