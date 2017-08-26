@@ -23,10 +23,10 @@ public class VisualGraph{
 	HashMap<String, dataStructure.Node> _taskGraph;
 	protected String styleSheet =
 			"node {" + "size: 40px; shape: circle; fill-color: white; stroke-mode: plain; stroke-color: black; text-alignment: center;}"+
-					"node.processor1 { fill-color: red; }"+
-					"node.processor2 { fill-color: green; }" +
-					"node.processor3 { fill-color: yellow; } " +
-					"node.processor4 {fill-color: blue; }" +
+					"node.processor1 {fill-color: rgb(220,40,80); }"+
+					"node.processor2 {fill-color: rgb(37,128,57); }" +
+					"node.processor3 {fill-color: rgb(255,236,92); } " +
+					"node.processor4 {fill-color: rgb(72,151,216); }" +
 					"node.processor5 {fill-color: rgb(139,0,139); }" +
 					"node.processor6 {fill-color: rgb(255,140,0); }" +
 					"node.processor7 {fill-color: rgb(128,128,0); }"
