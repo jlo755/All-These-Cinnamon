@@ -38,8 +38,10 @@ public class Scheduler {
 	protected double sumAdding = 0;
 	protected double totalTaskTime = 0;
 	protected int _numProcessors;
+	protected int _numSchedules=0;
 	protected ArrayList<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
 	protected ArrayList<Double> bestTimes = new ArrayList<Double>();
+	protected ArrayList<Double> bestTimesCopy = new ArrayList<Double>();
 	protected double time = 0;
 	private VisualController _vc;
 	private PartialSchedule _currentSchedule;
@@ -61,7 +63,8 @@ public class Scheduler {
 		
 		// "Nodemap" is the input graph for the algorithm.
 		Timer time2;
-		int timeDelay = 500;
+		int timeDelay = 100;
+		int timeDelay2 = 50;
 		ActionListener time;
 		time = new ActionListener() {
 
@@ -71,6 +74,19 @@ public class Scheduler {
 
 			}
 		};
+
+		ActionListener Time;
+		Time = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//System.out.println("FIRE");
+				fireSecondUpdate();
+
+			}
+		};
+		Timer Time2;
+		Time2 = new Timer(timeDelay2, Time);
 
 		time2 = new Timer(timeDelay, time);
 		for (Node n : nodeMap.values()) {
@@ -85,8 +101,11 @@ public class Scheduler {
 			}
 		}
 		time2.start();
+		Time2.start();
 		dfs();
+		Time2.start();
 		time2.stop();
+		fire();
 
 		try {
 			outputSolution();
@@ -100,8 +119,22 @@ public class Scheduler {
 	 */
 	private void fire() {
 		_vc.setSchedule(_currentSchedule);
+		_numSchedules++;
 		_vc.updateGraph();
+
 	}
+
+	private void fireSecondUpdate() {
+		if(!(bestTimesCopy.size() == 0)) {
+			_vc.setScatterPlotInput(bestTimesCopy);
+			for(Double d: bestTimesCopy){
+				System.out.println("Hi");
+			}
+			//System.out.println("Hi");
+			bestTimesCopy.clear();
+		}
+	}
+
 
 	/**
 	 * Sets the visual controller.
@@ -166,7 +199,6 @@ public class Scheduler {
 		while(!scheduleStack.isEmpty()) {
 			PartialSchedule schedule = scheduleStack.pop();
 			_currentSchedule = schedule;
-			bestTimes.add(currentBestSolution);
 			ArrayList<String> reachable = schedule.getReachable();
 			for(String s:reachable) {
 				if(schedule.startTimeZeroProcessors() > 1) {
@@ -207,13 +239,22 @@ public class Scheduler {
 				}
 			}
 			if(reachable.isEmpty()) {
+
 				double[] solution = schedule.getEndTimes();
 				double endTime = 0;
+
 				for(int i = 0; i<solution.length; i++) {
 					if(solution[i] > endTime) {
 						endTime = solution[i];
 					}
 				}
+
+				if(!bestTimes.contains(endTime)) {
+					bestTimes.add(endTime);
+					bestTimesCopy.add(endTime);
+					sumAdding++;
+				}
+
 				if(endTime < currentBestSolution) {
 					currentBestSolution = endTime;
 					bestSchedule.setCurrentBestState(schedule);

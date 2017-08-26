@@ -40,15 +40,17 @@ public class VisualController implements ScheduleListener {
    private JPanel panel2;
    private Scheduler _model;
    private PartialSchedule _schedule;
+   private JFreeChart chart;
+   private int count;
 
    public VisualController(HashMap<String, Node> g, JPanel Panel1, JPanel Panel2){
       panel1 = Panel1;
       panel2 = Panel2;
       _graph = g;
       vg = new VisualGraph(g, panel1);
-      vs = new VisualStatistics();
-      JFreeChart chart = vs.createStateSpaceGraph();
       graph = vg.graph;
+      vs = new VisualStatistics();
+      chart = vs.createStateSpaceGraph();
       panel1.setBorder(BorderFactory.createLineBorder(Color.blue, 5));
       Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
       viewer.enableAutoLayout();
@@ -67,6 +69,7 @@ public class VisualController implements ScheduleListener {
 
    public void setScatterPlotInput(ArrayList<Double> bestTimes){
       this.bestTimes = bestTimes;
+      updateStats();
    }
 
    public void updateGraph(){
@@ -114,10 +117,24 @@ public class VisualController implements ScheduleListener {
 	   _model = model;
    }
 
+   public void setScheduleCount(int count){
+      this.count = count;
+   }
+
    @Override
    public void update() {
 
       vg.startTraversal( _nodes);
-    //  vs.updatePlot(bestTimes);
    }
+
+   public void updateStats() {
+
+      if(bestTimes.size() != 0) {
+         panel2.setVisible(false);
+         vs.updatePlot(bestTimes);
+         //chart = vs.createStateSpaceGraph();
+         panel2.setVisible(true);
+      }
+   }
+
 }

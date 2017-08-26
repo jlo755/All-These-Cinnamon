@@ -14,7 +14,7 @@ import java.util.HashSet;
 import dataStructure.Node;
 
 /**
- * 
+ *
  * This class produces an optimal solution to a multi-processor scheduling
  * problem. This is based on an input graph representing a series of tasks costs
  * and their dependencies, as well as the number of processors specified.
@@ -23,7 +23,7 @@ import dataStructure.Node;
 public class ParallelScheduler extends Scheduler{
 
 	/**
-	 * Parallel multi-task version of processSchedule(). This should enable 
+	 * Parallel multi-task version of processSchedule(). This should enable
 	 * parallel running of the processSchedule() method when calculating
 	 * an optimal scheduling solution.
 	 */
@@ -36,7 +36,7 @@ public class ParallelScheduler extends Scheduler{
 	/**
 	 * Recursive approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem.
-	 * 
+	 *
 	 *
 	 * @param graph
 	 *            This is the input graph
@@ -83,29 +83,29 @@ public class ParallelScheduler extends Scheduler{
 						if(time == 0.0 && !discovered) {
 							discovered = true;
 							PartialSchedule childSchedule = schedule.makeChildSchedule();
-							childSchedule.solve(n, i);
+							childSchedule.update(n, i);
 							double maxHeuristic = childSchedule.getMaxHeuristic(n);
 							if(maxHeuristic < currentBestSolution) {
 								scheduleStack.push(childSchedule);
 							}
 						} else if(time != 0.0){
 							PartialSchedule childSchedule = schedule.makeChildSchedule();
-							childSchedule.solve(n, i);
+							childSchedule.update(n, i);
 							double maxHeuristic = childSchedule.getMaxHeuristic(n);
 							if(maxHeuristic < currentBestSolution) {
 								scheduleStack.push(childSchedule);
 							}
-						} 
+						}
 					}
 				}
 				else {
 					for(int i = 1; i<=_numProcessors; i++) {
-						
+
 						Node n = nodeMap.get(s);
-						
+
 						PartialSchedule childSchedule = schedule.makeChildSchedule();
-						
-						childSchedule.solve(n, i);
+
+						childSchedule.update(n, i);
 						double maxHeuristic = childSchedule.getMaxHeuristic(n);
 						if(maxHeuristic < currentBestSolution) {
 							scheduleStack.push(childSchedule);
@@ -114,7 +114,7 @@ public class ParallelScheduler extends Scheduler{
 				}
 			}
 			if(reachable.isEmpty()) {
-				
+
 				double[] solution = schedule.getEndTimes();
 				double endTime = 0;
 				for(int i = 0; i<solution.length; i++) {

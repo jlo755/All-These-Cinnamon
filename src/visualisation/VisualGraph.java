@@ -58,8 +58,9 @@ public class VisualGraph{
 		_taskGraph = graph;
 	}
 
-	public void startTraversal(ArrayList<dataStructure.Node> a){
-		for(dataStructure.Node n : _taskGraph.values()) {
+	public void startTraversal(ArrayList<dataStructure.Node> a) {
+		for (dataStructure.Node n : _taskGraph.values()) {
+			_panel.setVisible(false);
 			Node next = graph.getNode(n.getID());
 			if (n.getProcessor() == 1) {
 				next.setAttribute("ui.class", "processor1");
@@ -70,20 +71,28 @@ public class VisualGraph{
 			} else if (n.getProcessor() == 3) {
 				next.setAttribute("ui.class", "processor3");
 
-			} else if(n.getProcessor() == 4) {
+			} else if (n.getProcessor() == 4) {
 				next.setAttribute("ui.class", "processor4");
 
-			}else if(n.getProcessor() == 5) {
+			} else if (n.getProcessor() == 5) {
 				next.setAttribute("ui.class", "processor5");
 
-			} else if(n.getProcessor() == 6) {
+			} else if (n.getProcessor() == 6) {
 				next.setAttribute("ui.class", "processor6");
 
-			} else if(n.getProcessor() == 7) {
+			} else if (n.getProcessor() == 7) {
 				next.setAttribute("ui.class", "processor7");
 			}
+			_panel.setVisible(true);
+			//sleep();
 
 		}
+	}
+
+		protected void sleep() {
+			try { Thread.sleep(4); } catch (Exception e) {
+				e.printStackTrace();
+			}
 	}
 
 
