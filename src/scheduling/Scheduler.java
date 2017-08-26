@@ -34,6 +34,7 @@ public class Scheduler {
 	protected double totalTaskTime = 0;
 	protected int _numProcessors;
 	protected ArrayList<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
+	protected ArrayList<Double> bestTimes = new ArrayList<Double>();
 	protected double time = 0;
 	private VisualController _vc;
 	private PartialSchedule _currentSchedule;
@@ -93,8 +94,10 @@ public class Scheduler {
 	private void fire() {
 		_vc.setSchedule(_currentSchedule);
 		_vc.updateGraph();
+		//_vc.setScatterPlotInput(bestTimes);
+
 	}
-	
+
 	public void setVisualController(VisualController vc){
 		_vc = vc;
 	}
@@ -112,7 +115,7 @@ public class Scheduler {
 	/**
 	 * Iterative approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem.
-	 * 
+	 *
 
 	public void fire(){
 		_vc.setGraph(nodeMap);
@@ -140,6 +143,7 @@ public class Scheduler {
 		while(!scheduleStack.isEmpty()) {
 			PartialSchedule schedule = scheduleStack.pop();
 			_currentSchedule = schedule;
+			bestTimes.add(currentBestSolution);
 			ArrayList<String> reachable = schedule.getReachable();
 			for(String s:reachable) {
 				if(schedule.startTimeZeroProcessors() > 1) {
@@ -162,7 +166,7 @@ public class Scheduler {
 							if(maxHeuristic < currentBestSolution) {
 								scheduleStack.push(childSchedule);
 							}
-						} 
+						}
 					}
 				}
 				else {
@@ -226,13 +230,13 @@ public class Scheduler {
 			}
 			n.setOptimalBottomLevel(0.0);
 		}
-		
+
 		return max;
 	}
 
 	/**
 	 * Returns the currentBestSolution field.
-	 * 
+	 *
 	 * @return
 	 */
 	public double getCurrentBestSolution() {
@@ -241,7 +245,7 @@ public class Scheduler {
 
 	/**
 	 * Returns the bestState field.
-	 * 
+	 *
 	 * @return
 	 */
 	public FinalState getBestState() {
@@ -254,7 +258,7 @@ public class Scheduler {
 
 	/**
 	 * Sets the bestState field.
-	 * 
+	 *
 	 * @param newBestState
 	 */
 	public void setBestState(FinalState newBestState) {
@@ -264,7 +268,7 @@ public class Scheduler {
 	/**
 	 * Pass a task dependency graph in the form of a HashMap to the Scheduler to
 	 * process.
-	 * 
+	 *
 	 * @param taskGraph
 	 */
 	public void provideTaskGraph(LinkedHashMap<String, Node> taskGraph) {
