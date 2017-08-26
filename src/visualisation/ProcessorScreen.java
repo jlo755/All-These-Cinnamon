@@ -12,10 +12,6 @@ import org.jfree.chart.JFreeChart;
 import scheduling.LaunchScheduler;
 import scheduling.ScheduleWorker;
 
-
-
-
-
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Color;
@@ -41,6 +37,7 @@ public class ProcessorScreen extends JFrame {
 	private JTextField processorCountTextField;
 	private Integer _processors;
 	private JPanel graphPanel;
+	private JPanel  statisticsPanel;
 	private VisualGraph _visualGraph;
 	private VisualController vc;
 
@@ -88,7 +85,13 @@ public class ProcessorScreen extends JFrame {
         };
         graphPanel.setBounds(10, 11, 460, 640);
         contentPane.add(graphPanel);
-        vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), graphPanel);
+
+		statisticsPanel = new JPanel();
+		statisticsPanel.setBounds(492, 11, 572, 435);
+		contentPane.add(statisticsPanel);
+		statisticsPanel.setLayout(null);
+
+        vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), graphPanel, statisticsPanel);
 
         LaunchScheduler ls = new LaunchScheduler();
         //_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
@@ -105,14 +108,7 @@ public class ProcessorScreen extends JFrame {
 		//JFreeChart chart = compare.createStateSpaceGraph();
 
 
-		 JPanel scatterPanel = new JPanel();
-		 scatterPanel.setBounds(492, 11, 572, 435);
-		 contentPane.add(scatterPanel);
-		 scatterPanel.setLayout(null);
-//		 ChartPanel CP = new ChartPanel(chart);
-//		 CP.setBorder(new LineBorder(new Color(0, 0, 0)));
-//		 CP.setBounds(0, 0, 572, 434);
-//		 scatterPanel.add(CP);
+
 
 		 JPanel ProcessingDetailsPanel = new JPanel();
 		 ProcessingDetailsPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
