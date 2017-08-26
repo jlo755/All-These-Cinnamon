@@ -1,4 +1,5 @@
 package dataStructure;
+import java.util.Comparator;
 import java.util.HashMap;
 /**
  * This class is responsible for storing all the nodes along
@@ -184,5 +185,21 @@ public class Node implements Comparable{
 		} else {
 			return 1;
 		}
+	}
+
+	public static Comparator<Node> startTimes() {
+		return new Comparator<Node>() {
+			@Override
+			public int compare(Node arg0, Node arg1) {
+				double num = arg0.getStartTime()-arg1.getStartTime();
+				if( num > 0 ){
+					return 1;
+				}else if( num < 0){
+					return -1;
+				}else{
+					return 0;
+				}
+			}
+		};
 	}
 }

@@ -1,4 +1,5 @@
 package scheduling;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -10,12 +11,13 @@ import java.util.concurrent.ForkJoinPool;
 
 import dataStructure.Node;
 
+
 /**
- * 
- * This class produces an optimal solution to a multi-processor 
- * scheduling problem. This is based on an input graph representing a 
- * series of tasks costs and their dependencies, as well as the 
- * number of processors specified. 
+ *
+ * This class produces an optimal solution to a multi-processor
+ * scheduling problem. This is based on an input graph representing a
+ * series of tasks costs and their dependencies, as well as the
+ * number of processors specified.
  *
  */
 public class Scheduler {
@@ -28,7 +30,8 @@ public class Scheduler {
 	protected int _numProcessors;
 	protected ArrayList<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
 	protected double time = 0;
-	
+	private VisualController _vc;
+
 	/**
 	 * Initialize the best solution so far to infinity on starting.
 	 */
@@ -39,14 +42,38 @@ public class Scheduler {
 	/**
 	 * Processes the input graph with DFS to calculate an optimal schedule.
 	 */
+  
 	public void schedule() {
 		
 		initializeNodes();
 		System.out.println(currentBestSolution);
 		
-		// "Nodemap" is the input graph for the algorithm.
-		for (Node n : nodeMap.values()) {
+  }
 
+	public void setVisualController(VisualController vc){
+		_vc = vc;
+	}
+
+	public void schedule() {
+		long startTime = System.nanoTime();;
+		System.out.println(currentBestSolution);
+		// "Nodemap" is the input graph for the algorithm.
+		//for (int i = 1; i <= _numProcessors; i++) {
+		Timer time2;
+		int timeDelay = 500;
+		ActionListener time;
+		time = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//System.out.println("FIRE");
+				fire();
+
+			}
+		};
+
+		time2 = new Timer(timeDelay, time);
+		for (Node n : nodeMap.values()) {
 			// If a node doesn't have parents, it is a starting node
 			if (n.getParents().isEmpty()) {
 				
@@ -57,7 +84,9 @@ public class Scheduler {
 				
 			}
 		}
+    time2.start()
 		dfs();
+    time2.stop();
 
 		System.out.println(time);
 		System.out.println("Best Solution: "+currentBestSolution);
@@ -77,13 +106,23 @@ public class Scheduler {
 	 * Iterative approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem.
 	 * 
+
+	public void fire(){
+		_vc.setGraph(nodeMap);
+	}
+
+	/**
+	 * Recursive approach to DFS for a given graph, used in search in the state
+	 * space of the scheduling problem.
+	 *
+
 	 *
 	 * @param graph
 	 *            This is the input graph
 	 * @param nodeName
 	 *            This is the node which we are starting off from
-	 */
-
+	 **/
+  
 	public void dfs() {
 
 		// set the node as being completed
@@ -147,7 +186,6 @@ public class Scheduler {
 			}
 		}
 
-	}
 
 	public double findMaxBottomLevel(HashMap<String, Node> graph, String initialNode){
 		Stack<String> s = new Stack<String>();
@@ -166,12 +204,22 @@ public class Scheduler {
 			if(node.getID() != initialNode) {
 				double test = 0;
 				for(Node parent:node.getParents().keySet()) {
+					//System.out.println("Parent: "+parent.getID());
+					//System.out.println("Cost: "+parent.getOptimalBottomLevel())
+          
 					if(test<parent.getOptimalBottomLevel()) {
 						test = parent.getOptimalBottomLevel();
 					}
 				}
 				node.setOptimalBottomLevel(test+node.getCost());
 			}
+				//System.out.println(node.getCost());
+				node.setOptimalBottomLevel(test+node.getCost());
+			}
+			/*totalTime += node.getCost();
+			if(totalTime > max){
+				max = totalTime;
+			}*/
 		}
 		for(Node n:graph.values()) {
 			if(n.getOptimalBottomLevel() > max && n.getChildren().isEmpty()) {
