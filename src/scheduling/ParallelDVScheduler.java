@@ -66,47 +66,23 @@ public class ParallelDVScheduler extends DVScheduler{
 		ExecutorService e = Executors.newFixedThreadPool(threadsToUse);
 		e.submit(new Runnable() {
 			public void run() {
-				Timer time2;
-				int timeDelay = 100;
-				ActionListener time;
-				time = new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						fire();
-
-					}
-				};
-
-				ActionListener Time;
-				Time = new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						//System.out.println("FIRE");
-						fireLabelUpdate();
-
-					}
-				};
-				Timer Time2;
-				Time2 = new Timer(timeDelay, Time);
-				time2 = new Timer(timeDelay, time);
-				time2.start();
-				Time2.start();
 				startTime = System.nanoTime();
 
 				processScheduleTask(scheduleStack);
 
-
-				time2.stop();
-				Time2.stop();
 				long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+				
 				status="Current Status: Finished";
 				_vc.setStateLabel2(status,actualMemUsed);
 
 				long endTime = System.nanoTime();
 				System.out.println("Hello");
 				System.out.println((endTime-startTime)/1000000000.0);
+				time2.stop();
+				Time2.stop();
+				fireBest();
+				fireLabelUpdate();
+				fireSecondUpdate();
 			  }
 		});
 		

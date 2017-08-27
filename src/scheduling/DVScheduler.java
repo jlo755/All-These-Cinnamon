@@ -42,6 +42,8 @@ public class DVScheduler extends Scheduler {
 	protected long actualMemUsed;
 	protected String status = "Current Status: Processing...";
 	protected int schedulesProcessed;
+	protected Timer Time2;
+	protected Timer time2;
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
@@ -59,7 +61,6 @@ public class DVScheduler extends Scheduler {
 		initializeNodes();
 
 		// "Nodemap" is the input graph for the algorithm.
-		Timer time2;
 		int timeDelay = 100;
 		ActionListener time;
 		time = new ActionListener() {
@@ -81,7 +82,6 @@ public class DVScheduler extends Scheduler {
 
 			}
 		};
-		Timer Time2;
 		Time2 = new Timer(timeDelay, Time);
 		startTime = System.nanoTime();
 		time2 = new Timer(timeDelay, time);
@@ -102,9 +102,6 @@ public class DVScheduler extends Scheduler {
 		dfs();
 		long endTime = System.nanoTime();
 		System.out.println((endTime-startTime)/100000000.0);
-		time2.stop();
-		Time2.stop();
-		//fireBest();
 
 			long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
 			status="Current Status: Finished";
@@ -236,6 +233,11 @@ public class DVScheduler extends Scheduler {
 				}
 			}
 		}
+		time2.stop();
+		Time2.stop();
+		fireBest();
+		fireLabelUpdate();
+		fireSecondUpdate();
 	}
 
 }
