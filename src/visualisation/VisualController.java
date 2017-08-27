@@ -134,7 +134,7 @@ public class VisualController implements ScheduleListener {
 	@Override
 	public void update() {
 
-		vg.startTraversal( _nodes);
+		vg.startTraversal( _nodes, _ps.getProcessorCount());
 	}
 
 	public void updateStats(double time) {
