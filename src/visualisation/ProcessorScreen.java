@@ -230,5 +230,9 @@ public class ProcessorScreen extends JFrame {
 		this.lblMemoryUsage.setText("Memory Usage: " + mem);
 	}
 
+	public int getProcessorCount(){
+		return _processors;
+	}
+
 
 }
