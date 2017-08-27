@@ -57,7 +57,6 @@ public class ProcessorScreen extends JFrame {
 					//ProcessorScreen frame = new ProcessorScreen();
 					setVisible(true);
 					if(ScheduleFactory.getInstance().getParallelise() > 1) {
-						System.out.println("This one?");
 						DVScheduler _scheduler = LaunchScheduler._scheduler;
 						_scheduler.setVisualController(vc);
 						vc.setVisualModel(_scheduler);
@@ -225,9 +224,9 @@ public class ProcessorScreen extends JFrame {
 		this.lblCurrentBestCost.setText("Current Best Cost Found: " + bestCost);
 	}
 
-	public void setNewLabel2(String status, long mem){
+	public void setNewLabel2(String status, String string){
 		this.lblEndTime.setText(status);
-		this.lblMemoryUsage.setText("Memory Usage: " + mem);
+		this.lblMemoryUsage.setText("Memory Usage: " + string);
 	}
 
 	public int getProcessorCount(){

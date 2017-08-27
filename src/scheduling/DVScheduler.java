@@ -98,15 +98,7 @@ public class DVScheduler extends Scheduler {
 		}
 		time2.start();
 		Time2.start();
-		long startTime = System.nanoTime();
 		dfs();
-		long endTime = System.nanoTime();
-		System.out.println((endTime-startTime)/100000000.0);
-
-			long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-			status="Current Status: Finished";
-			actualMemUsed=afterUsedMem-beforeUsedMem;
-			_vc.setStateLabel2(status,actualMemUsed);
 	}
 
 	/**
@@ -167,7 +159,6 @@ public class DVScheduler extends Scheduler {
 			scheduleStack.add(schedule);
 		}
 		while(!scheduleStack.isEmpty()) {
-			schedulesProcessed++;
 			PartialSchedule schedule = scheduleStack.pop();
 			_currentSchedule = schedule;
 			ArrayList<String> reachable = schedule.getReachable();
@@ -181,15 +172,19 @@ public class DVScheduler extends Scheduler {
 							discovered = true;
 							PartialSchedule childSchedule = schedule.makeChildSchedule();
 							childSchedule.update(n, i);
+							String id = childSchedule.generateId();
 							double maxHeuristic = childSchedule.getMaxHeuristic(n);
-							if(maxHeuristic < currentBestSolution) {
+							if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+								_prevSchedules.add(id);
 								scheduleStack.push(childSchedule);
 							}
 						} else if(time != 0.0){
 							PartialSchedule childSchedule = schedule.makeChildSchedule();
 							childSchedule.update(n, i);
+							String id = childSchedule.generateId();
 							double maxHeuristic = childSchedule.getMaxHeuristic(n);
-							if(maxHeuristic < currentBestSolution) {
+							if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+								_prevSchedules.add(id);
 								scheduleStack.push(childSchedule);
 							}
 						}
@@ -202,8 +197,10 @@ public class DVScheduler extends Scheduler {
 						PartialSchedule childSchedule = schedule.makeChildSchedule();
 
 						childSchedule.update(n, i);
+						String id = childSchedule.generateId();
 						double maxHeuristic = childSchedule.getMaxHeuristic(n);
-						if(maxHeuristic < currentBestSolution) {
+						if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+							_prevSchedules.add(id);
 							scheduleStack.push(childSchedule);
 						}
 					}
@@ -238,6 +235,12 @@ public class DVScheduler extends Scheduler {
 		fireBest();
 		fireLabelUpdate();
 		fireSecondUpdate();
+
+		long afterUsedMem=(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024;
+		status="Current Status: Finished";
+		//actualMemUsed=afterUsedMem-beforeUsedMem;
+		_vc.setStateLabel2(status,afterUsedMem+"MB");
+		System.out.println(_prevSchedules.size());
 	}
 
 }

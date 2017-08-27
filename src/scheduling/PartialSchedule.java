@@ -12,7 +12,6 @@ import dataStructure.Node;
  */
 public class PartialSchedule {
 	
-	
 	private double _totalIdleTime;
 	private double _totalTaskTime;
 	private double[] _processorTimes;
@@ -419,5 +418,13 @@ public class PartialSchedule {
 	public double getNodeStartTime(Node node) {
 		int index = _nodeOrdering.get(node.getID());
 		return _startTimes[index];
+	}
+	
+	public String generateId() {
+		String id = "";
+		for(int i = 0; i<_endTimes.length; i++) {
+			id=id+_endTimes[i];
+		}
+		return id;
 	}
 }

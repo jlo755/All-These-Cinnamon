@@ -108,8 +108,8 @@ public class VisualController implements ScheduleListener {
 		_ps.setNewLabel(text, input3);
 	}
 
-	public void setStateLabel2(String text,long input3){
-		_ps.setNewLabel2(text, input3);
+	public void setStateLabel2(String text,String string){
+		_ps.setNewLabel2(text, string);
 	}
 
 	public ArrayList<dataStructure.Node> sortStartTimes(){

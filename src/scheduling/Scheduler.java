@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.ForkJoinPool;
 
@@ -39,12 +41,14 @@ public class Scheduler {
 	protected int _numProcessors;
 	protected ArrayList<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
 	private PartialSchedule _currentSchedule;
+	protected Set<String> _prevSchedules;
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
 	 */
 	public Scheduler() {
 		currentBestSolution = Double.POSITIVE_INFINITY;
+		_prevSchedules = new HashSet<String>();
 	}
 
 	/**
@@ -64,10 +68,14 @@ public class Scheduler {
 				schedule.decideIndex();
 				schedule.update(n, 1);
 				schedules.add(schedule);
+				_prevSchedules.add(schedule.generateId());
 
 			}
 		}
+		long startTime = System.nanoTime();
 		dfs();
+		System.out.println("This took: "+(System.nanoTime()-startTime)/1000000000.0);
+		System.out.println(currentBestSolution);
 	}
 
 
@@ -136,15 +144,19 @@ public class Scheduler {
 							discovered = true;
 							PartialSchedule childSchedule = schedule.makeChildSchedule();
 							childSchedule.update(n, i);
+							String id = childSchedule.generateId();
 							double maxHeuristic = childSchedule.getMaxHeuristic(n);
-							if(maxHeuristic < currentBestSolution) {
+							if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+								_prevSchedules.add(id);
 								scheduleStack.push(childSchedule);
 							}
 						} else if(time != 0.0){
 							PartialSchedule childSchedule = schedule.makeChildSchedule();
 							childSchedule.update(n, i);
+							String id = childSchedule.generateId();
 							double maxHeuristic = childSchedule.getMaxHeuristic(n);
-							if(maxHeuristic < currentBestSolution) {
+							if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+								_prevSchedules.add(id);
 								scheduleStack.push(childSchedule);
 							}
 						}
@@ -157,8 +169,10 @@ public class Scheduler {
 						PartialSchedule childSchedule = schedule.makeChildSchedule();
 
 						childSchedule.update(n, i);
+						String id = childSchedule.generateId();
 						double maxHeuristic = childSchedule.getMaxHeuristic(n);
-						if(maxHeuristic < currentBestSolution) {
+						if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+							_prevSchedules.add(id);
 							scheduleStack.push(childSchedule);
 						}
 					}

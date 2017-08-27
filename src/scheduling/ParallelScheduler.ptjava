@@ -41,6 +41,7 @@ public class ParallelScheduler extends Scheduler{
 
 		// set the node as being completed
 		Stack<PartialSchedule> scheduleStack = new Stack<PartialSchedule>();
+		long startTime = System.nanoTime();
 		for (PartialSchedule schedule : schedules) {
 			scheduleStack.add(schedule);
 		}
@@ -53,6 +54,7 @@ public class ParallelScheduler extends Scheduler{
 
 		try {
 			g.waitTillFinished();
+			System.out.println((System.nanoTime()-startTime)/1000000000.0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,15 +79,10 @@ public class ParallelScheduler extends Scheduler{
 							discovered = true;
 							PartialSchedule childSchedule = schedule.makeChildSchedule();
 							childSchedule.update(n, i);
+							String id = childSchedule.generateId();
 							double maxHeuristic = childSchedule.getMaxHeuristic(n);
-							if(maxHeuristic < currentBestSolution) {
-								scheduleStack.push(childSchedule);
-							}
-						} else if(time != 0.0){
-							PartialSchedule childSchedule = schedule.makeChildSchedule();
-							childSchedule.update(n, i);
-							double maxHeuristic = childSchedule.getMaxHeuristic(n);
-							if(maxHeuristic < currentBestSolution) {
+							if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+								_prevSchedules.add(id);
 								scheduleStack.push(childSchedule);
 							}
 						}
@@ -93,14 +90,15 @@ public class ParallelScheduler extends Scheduler{
 				}
 				else {
 					for(int i = 1; i<=_numProcessors; i++) {
-
 						Node n = nodeMap.get(s);
 
 						PartialSchedule childSchedule = schedule.makeChildSchedule();
 
 						childSchedule.update(n, i);
+						String id = childSchedule.generateId();
 						double maxHeuristic = childSchedule.getMaxHeuristic(n);
-						if(maxHeuristic < currentBestSolution) {
+						if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+							_prevSchedules.add(id);
 							scheduleStack.push(childSchedule);
 						}
 					}

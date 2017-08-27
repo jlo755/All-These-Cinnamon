@@ -37,7 +37,6 @@ public class LaunchScheduler {
 				}
 			}
 		}
-		System.out.println(threads);
 		ScheduleFactory factory = ScheduleFactory.getInstance();
 		factory.setParallelize(threads);
 		factory.setProcessorNumber(_noOfProcessors);
@@ -54,8 +53,6 @@ public class LaunchScheduler {
 			scheduler.schedule();
 			scheduler.outputSolution();
 		}
-		long endTime = System.nanoTime();
-		System.out.println((endTime-startTime)/1000000000.0);
 	}
 
 	public void setProcessor(int processorCount) {
