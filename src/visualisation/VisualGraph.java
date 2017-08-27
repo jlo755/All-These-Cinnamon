@@ -43,7 +43,7 @@ public class VisualGraph{
 		_taskGraph = g;
 		for(dataStructure.Node node : g.values()) {
 			for (dataStructure.Node parent : node.getParents().keySet()) {
-				graph.addEdge("" + node.getID() + parent.getID(), "" + node.getID(), "" + parent.getID());
+				graph.addEdge("" + node.getID() + parent.getID(), "" + parent.getID(), "" + node.getID(), true);
 			}
 		}
 
