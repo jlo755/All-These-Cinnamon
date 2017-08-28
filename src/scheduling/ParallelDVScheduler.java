@@ -156,7 +156,7 @@ public class ParallelDVScheduler extends DVScheduler {//####[26]####
             fireSecondUpdate();//####[78]####
             long afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();//####[79]####
             status = "Current Status: Finished";//####[81]####
-            _vc.setStateLabel2(status, afterUsedMem / 1024 / 1024 + "MB");//####[82]####
+            _vc.setLabelProcessorScreen(status, afterUsedMem / 1024 / 1024 + "MB");//####[82]####
         } catch (Exception e) {//####[83]####
             e.printStackTrace();//####[84]####
         }//####[85]####

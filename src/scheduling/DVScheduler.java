@@ -121,7 +121,7 @@ public class DVScheduler extends Scheduler {
 		_numSchedules++;
 		_vc.updateGraph();
 		long afterUsedMem=(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024;
-		_vc.setStateLabel2("Status: Processing",afterUsedMem+"MB");
+		_vc.setLabelProcessorScreen("Status: Processing",afterUsedMem+"MB");
 
 	}
 
@@ -258,7 +258,7 @@ public class DVScheduler extends Scheduler {
 		long afterUsedMem=(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024;
 		status="Current Status: Finished";
 		//actualMemUsed=afterUsedMem-beforeUsedMem;
-		_vc.setStateLabel2(status,afterUsedMem+"MB");
+		_vc.setLabelProcessorScreen(status,afterUsedMem+"MB");
 	}
 
 }
