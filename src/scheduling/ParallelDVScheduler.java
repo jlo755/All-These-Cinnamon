@@ -71,9 +71,9 @@ public class ParallelDVScheduler extends DVScheduler{
 				processScheduleTask(scheduleStack);
 
 				long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-				
+
 				status="Current Status: Finished";
-				_vc.setStateLabel2(status,actualMemUsed);
+				_vc.setStateLabel2(status,actualMemUsed+"");
 
 				long endTime = System.nanoTime();
 				System.out.println("Hello");
@@ -85,7 +85,7 @@ public class ParallelDVScheduler extends DVScheduler{
 				fireSecondUpdate();
 			  }
 		});
-		
+
 
 	}
 
