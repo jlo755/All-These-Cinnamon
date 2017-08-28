@@ -1,7 +1,6 @@
 package scheduling;
 import java.io.IOException;
 import org.jgrapht.ext.ImportException;
-
 import inputParse.DotParser;
 import visualisation.ProcessorScreen;
 
@@ -63,14 +62,4 @@ public class LaunchScheduler {
 		_noOfProcessors = processorCount;
 
 	}
-	
-	/**
-	 * Set the input graph file name.
-	 * @param fileName
-	 */
-	public void setFileName(String fileName) {
-		_fileName = fileName;
-
-	}
-
 }
