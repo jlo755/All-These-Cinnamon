@@ -3,6 +3,8 @@ package scheduling;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -102,9 +104,13 @@ public class DVScheduler extends Scheduler {
 		long startTime = System.nanoTime();
 		dfs();
 		long endTime = System.nanoTime();
-		_overallTimer =(endTime-startTime)/100000000000.0;
-		setTimeLabel();
+		_overallTimer =(endTime-startTime)/1000000000.0;
+		Double toBeTruncated = new Double(""+_overallTimer);
 
+		_overallTimer = BigDecimal.valueOf(toBeTruncated)
+		    .setScale(4, RoundingMode.HALF_UP)
+		    .doubleValue();
+		setTimeLabel();
 	}
 
 	/**
