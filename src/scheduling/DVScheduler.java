@@ -99,8 +99,8 @@ public class DVScheduler extends Scheduler {
 
 			}
 		}
-		time2.start();
-		Time2.start();
+		//time2.start();
+		//Time2.start();
 		long startTime = System.nanoTime();
 		dfs();
 		long endTime = System.nanoTime();

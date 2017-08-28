@@ -105,13 +105,15 @@ public class ParallelDVScheduler extends DVScheduler {//####[26]####
         return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[29]####
     }//####[29]####
     public void __pt__processScheduleTask(Stack<PartialSchedule> scheduleStack) {//####[29]####
-        while (!scheduleStack.isEmpty()) //####[30]####
-        {//####[30]####
-            processSchedule(scheduleStack);//####[31]####
-        }//####[32]####
-    }//####[33]####
-//####[33]####
-//####[46]####
+        time2.start();//####[30]####
+        Time2.start();//####[31]####
+        while (!scheduleStack.isEmpty()) //####[32]####
+        {//####[32]####
+            processSchedule(scheduleStack);//####[33]####
+        }//####[34]####
+    }//####[35]####
+//####[35]####
+//####[48]####
     /**
 	 * Iterative approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem. This algorithm has been incorporated
@@ -121,140 +123,138 @@ public class ParallelDVScheduler extends DVScheduler {//####[26]####
 	 *            This is the input graph
 	 * @param nodeName
 	 *            This is the node which we are starting off from
-	 *///####[46]####
-    public void dfs() {//####[46]####
-        threadsToUse = ScheduleFactory.getInstance().getParallelise();//####[47]####
-        for (Node n : nodeMap.values()) //####[48]####
-        {//####[48]####
-            if (n.getParents().isEmpty()) //####[50]####
-            {//####[50]####
-                PartialSchedule schedule = new PartialSchedule(nodeMap, _numProcessors, totalTaskTime);//####[52]####
-                schedule.decideIndex();//####[53]####
-                schedule.update(n, 1);//####[54]####
-                schedules.add(schedule);//####[55]####
-            }//####[57]####
-        }//####[58]####
-        Stack<PartialSchedule> scheduleStack = new Stack<PartialSchedule>();//####[59]####
-        for (PartialSchedule schedule : schedules) //####[60]####
-        {//####[60]####
-            scheduleStack.add(schedule);//####[61]####
-        }//####[62]####
-        TaskIDGroup g = new TaskIDGroup(2);//####[63]####
-        for (int i = 0; i < 2; i++) //####[65]####
-        {//####[65]####
-            TaskID id = processScheduleTask(scheduleStack);//####[66]####
-            g.add(id);//####[67]####
-        }//####[68]####
-        try {//####[70]####
-            time2.start();//####[71]####
-            Time2.start();//####[72]####
-            g.waitTillFinished();//####[73]####
-            time2.stop();//####[74]####
-            Time2.stop();//####[75]####
-            fireBest();//####[76]####
-            fireLabelUpdate();//####[77]####
-            fireSecondUpdate();//####[78]####
-            long afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();//####[79]####
-            status = "Current Status: Finished";//####[81]####
-            _vc.setLabelProcessorScreen(status, afterUsedMem / 1024 / 1024 + "MB");//####[82]####
-        } catch (Exception e) {//####[83]####
-            e.printStackTrace();//####[84]####
-        }//####[85]####
-    }//####[86]####
-//####[92]####
+	 *///####[48]####
+    public void dfs() {//####[48]####
+        threadsToUse = ScheduleFactory.getInstance().getParallelise();//####[49]####
+        for (Node n : nodeMap.values()) //####[50]####
+        {//####[50]####
+            if (n.getParents().isEmpty()) //####[52]####
+            {//####[52]####
+                PartialSchedule schedule = new PartialSchedule(nodeMap, _numProcessors, totalTaskTime);//####[54]####
+                schedule.decideIndex();//####[55]####
+                schedule.update(n, 1);//####[56]####
+                schedules.add(schedule);//####[57]####
+            }//####[59]####
+        }//####[60]####
+        Stack<PartialSchedule> scheduleStack = new Stack<PartialSchedule>();//####[61]####
+        for (PartialSchedule schedule : schedules) //####[62]####
+        {//####[62]####
+            scheduleStack.add(schedule);//####[63]####
+        }//####[64]####
+        TaskIDGroup g = new TaskIDGroup(2);//####[65]####
+        for (int i = 0; i < 2; i++) //####[67]####
+        {//####[67]####
+            TaskID id = processScheduleTask(scheduleStack);//####[68]####
+            g.add(id);//####[69]####
+        }//####[70]####
+        try {//####[72]####
+            g.waitTillFinished();//####[74]####
+            time2.stop();//####[75]####
+            Time2.stop();//####[76]####
+            fireBest();//####[77]####
+            fireLabelUpdate();//####[78]####
+            fireSecondUpdate();//####[79]####
+            long afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();//####[80]####
+            status = "Current Status: Finished";//####[82]####
+            _vc.setLabelProcessorScreen(status, afterUsedMem / 1024 / 1024 + "MB");//####[83]####
+        } catch (Exception e) {//####[84]####
+            e.printStackTrace();//####[85]####
+        }//####[86]####
+    }//####[87]####
+//####[93]####
     /**
 	 * Processes a partial schedule from the stack through DFS. To be used
 	 * in parallel computing.
-	 *///####[92]####
-    private synchronized void processSchedule(Stack<PartialSchedule> scheduleStack) {//####[92]####
-        try {//####[93]####
-            schedulesProcessed++;//####[94]####
-            PartialSchedule schedule = scheduleStack.pop();//####[95]####
-            _currentSchedule = schedule;//####[96]####
-            ArrayList<String> reachable = schedule.getReachable();//####[97]####
-            for (String s : reachable) //####[98]####
-            {//####[98]####
-                if (schedule.startTimeZeroProcessors() > 1) //####[99]####
-                {//####[99]####
-                    Node n = nodeMap.get(s);//####[100]####
-                    boolean discovered = false;//####[101]####
-                    for (int i = 1; i <= _numProcessors; i++) //####[102]####
-                    {//####[102]####
-                        double time = schedule.getProcessorTime(i);//####[103]####
-                        if (time == 0.0 && !discovered) //####[104]####
-                        {//####[104]####
-                            discovered = true;//####[105]####
-                            PartialSchedule childSchedule = schedule.makeChildSchedule();//####[106]####
-                            childSchedule.update(n, i);//####[107]####
-                            String id = childSchedule.generateId();//####[108]####
-                            double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[109]####
-                            if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[110]####
-                            {//####[110]####
-                                _prevSchedules.add(id);//####[111]####
-                                scheduleStack.push(childSchedule);//####[112]####
-                            }//####[113]####
-                        } else if (time != 0.0) //####[114]####
-                        {//####[114]####
-                            PartialSchedule childSchedule = schedule.makeChildSchedule();//####[115]####
-                            childSchedule.update(n, i);//####[116]####
-                            String id = childSchedule.generateId();//####[117]####
-                            double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[118]####
-                            if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[119]####
-                            {//####[119]####
-                                _prevSchedules.add(id);//####[120]####
-                                scheduleStack.push(childSchedule);//####[121]####
-                            }//####[122]####
-                        }//####[123]####
-                    }//####[124]####
-                } else {//####[126]####
-                    for (int i = 1; i <= _numProcessors; i++) //####[127]####
-                    {//####[127]####
-                        Node n = nodeMap.get(s);//####[128]####
-                        PartialSchedule childSchedule = schedule.makeChildSchedule();//####[130]####
-                        childSchedule.update(n, i);//####[132]####
-                        String id = childSchedule.generateId();//####[133]####
-                        double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[134]####
-                        if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[135]####
-                        {//####[135]####
-                            _prevSchedules.add(id);//####[136]####
-                            scheduleStack.push(childSchedule);//####[137]####
-                        }//####[138]####
-                    }//####[139]####
-                }//####[140]####
-            }//####[141]####
-            if (reachable.isEmpty()) //####[142]####
-            {//####[142]####
-                double[] solution = schedule.getEndTimes();//####[144]####
-                double endTime = 0;//####[145]####
-                for (int i = 0; i < solution.length; i++) //####[147]####
-                {//####[147]####
-                    if (solution[i] > endTime) //####[148]####
-                    {//####[148]####
-                        endTime = solution[i];//####[149]####
-                    }//####[150]####
-                }//####[151]####
-                if (!bestTimes.contains(endTime)) //####[153]####
-                {//####[153]####
-                    bestTimes.add(endTime);//####[154]####
-                    bestTimesCopy.add(endTime);//####[155]####
-                    schedulesProcessed++;//####[156]####
-                    fireSecondUpdate();//####[157]####
-                }//####[158]####
-                if (endTime < currentBestSolution) //####[160]####
-                {//####[160]####
-                    currentBestSolution = endTime;//####[161]####
-                    bestSchedule.setCurrentBestState(schedule);//####[162]####
-                }//####[163]####
-            }//####[164]####
-        } catch (EmptyStackException e) {//####[165]####
-        }//####[167]####
-    }//####[168]####
-//####[174]####
+	 *///####[93]####
+    private synchronized void processSchedule(Stack<PartialSchedule> scheduleStack) {//####[93]####
+        try {//####[94]####
+            schedulesProcessed++;//####[95]####
+            PartialSchedule schedule = scheduleStack.pop();//####[96]####
+            _currentSchedule = schedule;//####[97]####
+            ArrayList<String> reachable = schedule.getReachable();//####[98]####
+            for (String s : reachable) //####[99]####
+            {//####[99]####
+                if (schedule.startTimeZeroProcessors() > 1) //####[100]####
+                {//####[100]####
+                    Node n = nodeMap.get(s);//####[101]####
+                    boolean discovered = false;//####[102]####
+                    for (int i = 1; i <= _numProcessors; i++) //####[103]####
+                    {//####[103]####
+                        double time = schedule.getProcessorTime(i);//####[104]####
+                        if (time == 0.0 && !discovered) //####[105]####
+                        {//####[105]####
+                            discovered = true;//####[106]####
+                            PartialSchedule childSchedule = schedule.makeChildSchedule();//####[107]####
+                            childSchedule.update(n, i);//####[108]####
+                            String id = childSchedule.generateId();//####[109]####
+                            double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[110]####
+                            if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[111]####
+                            {//####[111]####
+                                _prevSchedules.add(id);//####[112]####
+                                scheduleStack.push(childSchedule);//####[113]####
+                            }//####[114]####
+                        } else if (time != 0.0) //####[115]####
+                        {//####[115]####
+                            PartialSchedule childSchedule = schedule.makeChildSchedule();//####[116]####
+                            childSchedule.update(n, i);//####[117]####
+                            String id = childSchedule.generateId();//####[118]####
+                            double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[119]####
+                            if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[120]####
+                            {//####[120]####
+                                _prevSchedules.add(id);//####[121]####
+                                scheduleStack.push(childSchedule);//####[122]####
+                            }//####[123]####
+                        }//####[124]####
+                    }//####[125]####
+                } else {//####[127]####
+                    for (int i = 1; i <= _numProcessors; i++) //####[128]####
+                    {//####[128]####
+                        Node n = nodeMap.get(s);//####[129]####
+                        PartialSchedule childSchedule = schedule.makeChildSchedule();//####[131]####
+                        childSchedule.update(n, i);//####[133]####
+                        String id = childSchedule.generateId();//####[134]####
+                        double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[135]####
+                        if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[136]####
+                        {//####[136]####
+                            _prevSchedules.add(id);//####[137]####
+                            scheduleStack.push(childSchedule);//####[138]####
+                        }//####[139]####
+                    }//####[140]####
+                }//####[141]####
+            }//####[142]####
+            if (reachable.isEmpty()) //####[143]####
+            {//####[143]####
+                double[] solution = schedule.getEndTimes();//####[145]####
+                double endTime = 0;//####[146]####
+                for (int i = 0; i < solution.length; i++) //####[148]####
+                {//####[148]####
+                    if (solution[i] > endTime) //####[149]####
+                    {//####[149]####
+                        endTime = solution[i];//####[150]####
+                    }//####[151]####
+                }//####[152]####
+                if (!bestTimes.contains(endTime)) //####[154]####
+                {//####[154]####
+                    bestTimes.add(endTime);//####[155]####
+                    bestTimesCopy.add(endTime);//####[156]####
+                    schedulesProcessed++;//####[157]####
+                    fireSecondUpdate();//####[158]####
+                }//####[159]####
+                if (endTime < currentBestSolution) //####[161]####
+                {//####[161]####
+                    currentBestSolution = endTime;//####[162]####
+                    bestSchedule.setCurrentBestState(schedule);//####[163]####
+                }//####[164]####
+            }//####[165]####
+        } catch (EmptyStackException e) {//####[166]####
+        }//####[168]####
+    }//####[169]####
+//####[175]####
     /**
 	 * Set the number of threads to use for parallel executions.
 	 * @param thread
-	 *///####[174]####
-    public void setThreads(int thread) {//####[174]####
-        this.threadsToUse = thread;//####[175]####
-    }//####[176]####
-}//####[176]####
+	 *///####[175]####
+    public void setThreads(int thread) {//####[175]####
+        this.threadsToUse = thread;//####[176]####
+    }//####[177]####
+}//####[177]####

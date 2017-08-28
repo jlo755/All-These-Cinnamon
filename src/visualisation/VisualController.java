@@ -129,7 +129,7 @@ public class VisualController implements ScheduleListener {
 	 * This method sets the labels in the processor screen
 	 * @param overallTime
 	 */
-	public void setTimeLabel(Double overallTime){
+	public synchronized void setTimeLabel(Double overallTime){
 		_ps.setTotalTimeLabel( overallTime);
 	}
 	/**

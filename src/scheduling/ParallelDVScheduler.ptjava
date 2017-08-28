@@ -27,6 +27,8 @@ public class ParallelDVScheduler extends DVScheduler{
 	int threadsToUse;
 
 	TASK(*) private void processScheduleTask(Stack<PartialSchedule> scheduleStack) {
+		time2.start();
+		Time2.start();
 		while (!scheduleStack.isEmpty()) {
 			processSchedule(scheduleStack);
 		}
@@ -68,8 +70,7 @@ public class ParallelDVScheduler extends DVScheduler{
 		}
 
 		try {
-			time2.start();
-			Time2.start();
+
 			g.waitTillFinished();
 			time2.stop();
 			Time2.stop();
@@ -79,7 +80,7 @@ public class ParallelDVScheduler extends DVScheduler{
 			long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
 
 			status="Current Status: Finished";
-			_vc.setStateLabel2(status,afterUsedMem/1024/1024+"MB");
+			_vc.setLabelProcessorScreen(status,afterUsedMem/1024/1024+"MB");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
