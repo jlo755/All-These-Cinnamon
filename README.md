@@ -5,12 +5,12 @@ This is currently the task scheduling algorithm, and overall data visualization.
 
 ## How to Build Project
 Run the jar file along with the appropriate input ".dot" file, number of processors, and the option.
-On Command line: java -jar scheduler.jar INPUT.dot P [OPTION]
-INPUT= a task graph with integer weights in dot format
-P= number of processors to schedule the INPUT graph on
-[OPTION] =  −p N use N cores for execution in parallel (default is sequential)
-            −v visualise the search
-            −o OUPUT output file is named OUTPUT (default is INPUT−output . dot)
+* On Command line: java -jar scheduler.jar INPUT.dot P [OPTION]
+* INPUT= a task graph with integer weights in dot format
+* P= number of processors to schedule the INPUT graph on
+* [OPTION] =  −p N use N cores for execution in parallel (default is sequential)
+*             −v visualise the search
+*             −o OUPUT output file is named OUTPUT (default is INPUT−output . dot)
 
 The application correctly needs to have the correct file name and the file needs to exists in the directory.
 
