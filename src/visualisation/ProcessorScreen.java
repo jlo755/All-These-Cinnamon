@@ -56,6 +56,7 @@ public class ProcessorScreen extends JFrame {
 	private JLabel lblProcessor_5;
 	private JLabel lblProcessor_6;
 	private JLabel lblProcessor_7;
+	private JLabel lblTimeTaken;
 
 	/**
 	 * Launch the application.
@@ -100,7 +101,7 @@ public class ProcessorScreen extends JFrame {
 		}else{
 		setTitle("Processor Screen");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1089, 778);
+		setBounds(100, 100, 1079, 778);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -122,7 +123,7 @@ public class ProcessorScreen extends JFrame {
 		contentPane.add(graphPanel);
 
 		statisticsPanel = new JPanel();
-		statisticsPanel.setBounds(492, 11, 572, 435);
+		statisticsPanel.setBounds(480, 11, 572, 435);
 		contentPane.add(statisticsPanel);
 		statisticsPanel.setLayout(null);
 
@@ -135,8 +136,6 @@ public class ProcessorScreen extends JFrame {
 
 
 		//compareSchedules compare = new compareSchedules();
-		LineGraph compareLine = new LineGraph();
-		JFreeChart chartLine = compareLine.createLineGraph();
 
 		//VisualStatistics compare = new VisualStatistics();
 
@@ -144,7 +143,7 @@ public class ProcessorScreen extends JFrame {
 
 		JPanel ProcessingDetailsPanel = new JPanel();
 		ProcessingDetailsPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		ProcessingDetailsPanel.setBounds(492, 450, 572, 279);
+		ProcessingDetailsPanel.setBounds(480, 450, 572, 279);
 		contentPane.add(ProcessingDetailsPanel);
 		ProcessingDetailsPanel.setLayout(null);
 
@@ -178,7 +177,7 @@ public class ProcessorScreen extends JFrame {
 		lblMemoryUsage.setBounds(22, 207, 550, 21);
 		ProcessingDetailsPanel.add(lblMemoryUsage);
 
-		JLabel lblTimeTaken = new JLabel("Time Taken:");
+		lblTimeTaken = new JLabel("Time Taken:");
 		lblTimeTaken.setFont(new Font("Leelawadee", Font.PLAIN, 15));
 		lblTimeTaken.setBounds(22, 79, 550, 21);
 		ProcessingDetailsPanel.add(lblTimeTaken);
@@ -201,7 +200,7 @@ public class ProcessorScreen extends JFrame {
 		lblProcessor_3 = new JLabel("Processor 3");
 		lblProcessor_3.setFont(new Font("Leelawadee", Font.PLAIN, 12));
 		lblProcessor_3.setBounds(10, 712, 73, 14);
-		lblProcessor_3.setForeground(new Color(255,20,147));
+		lblProcessor_3.setForeground(new Color(253,110,41));
 		contentPane.add(lblProcessor_3);
 		lblProcessor_3.setVisible(false);
 
@@ -246,14 +245,19 @@ public class ProcessorScreen extends JFrame {
 		//getContentPane().add(imageLabel);
 
 
-
-
 	}
+
 
 	public void setNewLabel(String lblNewLabel, Double bestCost){
 		this.lblNewLabel.setText("Number of states processed: "+lblNewLabel);
 		this.lblCurrentBestCost.setText("Current Best Cost Found: " + bestCost);
+
 	}
+	public void setLabelTime(Double overallTimer){
+		this.lblTimeTaken.setText("Time Taken: " + overallTimer + " Seconds" );
+
+	}
+
 
 	public void setNewLabel2(String status, String string){
 		this.lblEndTime.setText(status);

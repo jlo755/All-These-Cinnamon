@@ -107,6 +107,9 @@ public class VisualController implements ScheduleListener {
 	public void setStateLabel(String text,Double input3){
 		_ps.setNewLabel(text, input3);
 	}
+	public void setTimeLabel(Double overallTime){
+		_ps.setLabelTime( overallTime);
+	}
 
 	public void setStateLabel2(String text,String string){
 		_ps.setNewLabel2(text, string);
