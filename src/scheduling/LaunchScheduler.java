@@ -1,7 +1,6 @@
 package scheduling;
 import java.io.IOException;
 import org.jgrapht.ext.ImportException;
-
 import inputParse.DotParser;
 import visualisation.ProcessorScreen;
 
@@ -20,7 +19,6 @@ public class LaunchScheduler {
 
 	public static void main(String[] args) throws IOException, ImportException, NumberFormatException {
 
-		long startTime = System.nanoTime();
 		_fileName=args[0];
 		_noOfProcessors = Integer.parseInt(args[1]);
 		boolean visualisation = false;
@@ -59,9 +57,6 @@ public class LaunchScheduler {
 		_noOfProcessors = processorCount;
 
 	}
-	public void setFileName(String fileName) {
-		_fileName = fileName;
 
-	}
 
 }
