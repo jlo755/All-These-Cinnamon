@@ -65,16 +65,16 @@ public class VisualController implements ScheduleListener {
 		//_nodes = this.sortStartTimes();
 	}
 
-	public void setSchedule(PartialSchedule schedule){
+	public synchronized void setSchedule(PartialSchedule schedule){
 		_schedule = schedule;
 	}
 
-	public void setScatterPlotInput(ArrayList<Double> bestTimes){
+	public synchronized void setScatterPlotInput(ArrayList<Double> bestTimes){
 		this.bestTimes = bestTimes;
 		//updateStats();
 	}
 
-	public void updateGraph(){
+	public synchronized void updateGraph(){
 		double[] endTimes = _schedule.getEndTimes();
 		int[] processors = _schedule.getNodeProcessors();
 		double[] startTimes = _schedule.getStartTimes();
@@ -87,32 +87,32 @@ public class VisualController implements ScheduleListener {
 		updateGUI();
 	}
 
-	public void updateGUI(){
+	public synchronized void updateGUI(){
 		_nodes = sortStartTimes();
 		this.update();
 	}
 
-	public HashMap<String, dataStructure.Node> getGraph(){
+	public synchronized HashMap<String, dataStructure.Node> getGraph(){
 		return _graph;
 	}
 
-	public JPanel getGraphPanel(){
+	public synchronized JPanel getGraphPanel(){
 		return panel1;
 	}
 
-	public JPanel getStatsPanel(){
+	public synchronized JPanel getStatsPanel(){
 		return panel2;
 	}
 
-	public void setStateLabel(String text,Double input3){
+	public synchronized void setStateLabel(String text,Double input3){
 		_ps.setNewLabel(text, input3);
 	}
 
-	public void setStateLabel2(String text,String string){
+	public synchronized void setStateLabel2(String text,String string){
 		_ps.setNewLabel2(text, string);
 	}
 
-	public ArrayList<dataStructure.Node> sortStartTimes(){
+	public synchronized ArrayList<dataStructure.Node> sortStartTimes(){
 		if(_nodes.size()>0) {
 			_nodes.clear();
 		}
@@ -123,21 +123,21 @@ public class VisualController implements ScheduleListener {
 		return _nodes;
 	}
 
-	public void setVisualModel(Scheduler model){
+	public synchronized void setVisualModel(Scheduler model){
 		_model = model;
 	}
 
-	public void setScheduleCount(int count){
+	public synchronized void setScheduleCount(int count){
 		this.count = count;
 	}
 
 	@Override
-	public void update() {
+	public synchronized void update() {
 
 		vg.startTraversal( _nodes, _ps.getProcessorCount());
 	}
 
-	public void updateStats(double time) {
+	public synchronized void updateStats(double time) {
 
 		if(bestTimes.size() != 0) {
 			for(double d:bestTimes){
