@@ -12,14 +12,17 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 
 /**
- * Created by DarthPenguin on 23/08/17.
+ * This class produces the scatter plot
  */
 public class VisualStatistics {
 	private ArrayList<Double> arrayList;
-	private XYSeriesCollection dataset2;
-	private XYSeries series1;
-	private int count;
-
+	private XYSeriesCollection dataset;
+	private XYSeries series;
+	private int branchCount;
+/**
+ * This method sets the required fields and values for the scatter plot and then returns it
+ * @return chart
+ */
 	public synchronized JFreeChart createStateSpaceGraph() {
 
 		XYDataset dataset = createDataset(arrayList);
@@ -34,32 +37,41 @@ public class VisualStatistics {
 		return chart;
 
 	}
-
+/**
+ * This creates a dataset for the scatter plot
+ * @param arrayList
+ * @return
+ */
 	private synchronized XYDataset createDataset(ArrayList<Double> arrayList) {
-		dataset2 = new XYSeriesCollection();
-		series1 = new XYSeries("Current Best Schedule");
+		dataset = new XYSeriesCollection();
+		series = new XYSeries("Current Best Schedule");
 		setBranchNumber(0);
 
-		dataset2.addSeries(series1);
-		return dataset2;
+		dataset.addSeries(series);
+		return dataset;
 	}
-
+/**
+ * Method sets the array list according to the input array list values for the scatter plot points
+ * @param arrayList
+ */
 	public synchronized void setInput(ArrayList<Double> arrayList){
 		this.arrayList = arrayList;
 	}
 
-
+/**
+ * This increments the number of branches field
+ */
 	public synchronized void incrementBranchNumber(){
-		count++;
+		branchCount++;
 	}
 
 	public synchronized void setBranchNumber(int count){
-		this.count=count;
+		this.branchCount=count;
 	}
 
 	public synchronized void updatePlot(double a, double time){
 		//setInput(arrayList);
-		series1.add(time, a);
+		series.add(time, a);
 		incrementBranchNumber();
 	}
 

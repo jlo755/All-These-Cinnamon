@@ -16,7 +16,7 @@ import javax.swing.SwingWorker;
 
 
 /**
- * This class creates the graph using Graph stream
+ * This class creates the graph using Graph stream.
  */
 public class VisualGraph{
 	SingleGraph graph;
@@ -34,7 +34,12 @@ public class VisualGraph{
 					"node.processor7 {fill-color: rgb(128,128,0); text-color: rgb(72,151,216); }"
 					;
 
-
+/**
+ * Method which sets the visual graph and sets the initial input hash map of nodes into a graph instance.
+ * It also sets the styling of the graph nodes and sets the node connections of parent and child
+ * @param g
+ * @param panel
+ */
 	public VisualGraph(HashMap<String, dataStructure.Node> g, JPanel panel){
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		_panel = panel;
@@ -55,10 +60,18 @@ public class VisualGraph{
 
 
 	}
-
+/**
+ * This sets the graph task in this class
+ * @param graph
+ */
 	public synchronized void setTaskGraph(HashMap<String, dataStructure.Node> graph){
 		_taskGraph = graph;
 	}
+	/**
+	 * This starts the node traversal and sets the node into one of the available processors
+	 * @param a
+	 * @param numOfprocessors
+	 */
 
 	public synchronized void startTraversal(ArrayList<dataStructure.Node> a, int numOfprocessors) {
 		for (dataStructure.Node n : _taskGraph.values()) {
