@@ -11,6 +11,10 @@ import org.junit.Test;
 import inputParse.DotParser;
 import scheduling.Scheduler;
 
+/**
+ * Test class that tests proper exception being thrown
+ * when an invalid dot file is input for parsing.
+ */
 public class ExceptionTestSuite {
 	Scheduler scheduler;
 	DotParser dotParser;
@@ -20,6 +24,10 @@ public class ExceptionTestSuite {
 		scheduler = new Scheduler();
 	}
 	
+	/**
+	 * Tests parsing a non-existent file throws an exception.
+	 * @throws ImportException
+	 */
 	@Test
 	public void TestNoFile() throws ImportException {
 		try {
@@ -28,11 +36,15 @@ public class ExceptionTestSuite {
 			fail("Should have failed: no file found");
 		} catch (Exception e) {
 			// Nothing here - just ignore the fact that the
-			// exception occurred (since that’s the expected
+			// exception occurred (since that's the expected
 			// behaviour in this case).
 		}
 	}
 	
+	/**
+	 * Tests parsing an empty dot file throws an exception.
+	 * @throws ImportException
+	 */
 	@Test
 	public void TestEmptyFile() throws ImportException {
 		try {
@@ -41,7 +53,7 @@ public class ExceptionTestSuite {
 			fail("Should have failed: empty found");
 		} catch (Exception e) {
 			// Nothing here - just ignore the fact that the
-			// exception occurred (since that’s the expected
+			// exception occurred (since that's the expected
 			// behaviour in this case).
 		}
 	}
