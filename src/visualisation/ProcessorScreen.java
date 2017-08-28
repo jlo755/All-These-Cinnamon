@@ -88,15 +88,22 @@ public class ProcessorScreen extends JFrame {
 	 */
 	public ProcessorScreen() throws IOException {
 		LaunchScheduler launchS = new LaunchScheduler();
+
+		//get command line arguments
 		_file = launchS._fileName;
 		_processorCount = launchS._noOfProcessors;
+
+		//error handling for invalid processor count argument
 		if(_processorCount < 1){
 			JOptionPane.showMessageDialog(this,
 				    "Please change the processor count input to something valid",
 				    "ERROR",
 				    JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
-		}else{
+		}
+		else
+			{
+				//sets up GUI after successful error check
 		setTitle("Data Visualization of Scheduler");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1079, 740);
@@ -105,6 +112,7 @@ public class ProcessorScreen extends JFrame {
 		setContentPane(_contentPane);
 		_contentPane.setLayout(null);
 
+		//sets up panel for the graph
 		_graphPanel = new JPanel(new GridLayout()){
 			@Override
 			public Dimension getPreferredSize() {
@@ -114,20 +122,24 @@ public class ProcessorScreen extends JFrame {
 		_graphPanel.setBounds(10, 11, 460, 640);
 		_contentPane.add(_graphPanel);
 
+		//sets up panel for the scatter plot
 		_statisticsPanel = new JPanel();
 		_statisticsPanel.setBounds(480, 11, 572, 435);
 		_contentPane.add(_statisticsPanel);
 		_statisticsPanel.setLayout(null);
 
+		//instantiates controller for our MVC design where the schedule is the model
 		_vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), _graphPanel, _statisticsPanel, this);
 
 
+		//holds all the stats
 		JPanel ProcessingDetailsPanel = new JPanel();
 		ProcessingDetailsPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		ProcessingDetailsPanel.setBounds(480, 450, 572, 251);
 		_contentPane.add(ProcessingDetailsPanel);
 		ProcessingDetailsPanel.setLayout(null);
 
+		//shows arguments on the GUI
 		JLabel lblNodeName = new JLabel("Number Of Processors: "+ _processorCount);
 		lblNodeName.setFont(new Font("Leelawadee", Font.PLAIN, 15));
 		lblNodeName.setBounds(22, 11, 550, 21);
@@ -138,6 +150,7 @@ public class ProcessorScreen extends JFrame {
 		lblStartTime.setBounds(22, 44, 550, 21);
 		ProcessingDetailsPanel.add(lblStartTime);
 
+		//shows status of the program
 		lblEndTime = new JLabel("Current Status: Processing...");
 		lblEndTime.setFont(new Font("Leelawadee", Font.PLAIN, 15));
 		lblEndTime.setBounds(22, 76, 550, 21);
@@ -163,6 +176,7 @@ public class ProcessorScreen extends JFrame {
 		lblTimeTaken.setBounds(22, 204, 550, 21);
 		ProcessingDetailsPanel.add(lblTimeTaken);
 
+		//Labels to map the colours of the tasks to the processor they are being scheduled on
 		processorLegendLabel1 = new JLabel("Processor 1");
 		processorLegendLabel1.setFont(new Font("Leelawadee", Font.PLAIN, 12));
 		processorLegendLabel1.setBounds(10, 662, 73, 14);
@@ -227,7 +241,7 @@ public class ProcessorScreen extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public void setNewLabel(String lblNewLabel, Double bestCost){
+	public void setDynamicLabel(String lblNewLabel, Double bestCost){
 		this.lblProcessorCount.setText("Number of states processed: "+lblNewLabel);
 		this.lblCurrentBestCost.setText("Current Best Cost Found: " + bestCost);
 
@@ -236,7 +250,7 @@ public class ProcessorScreen extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public void setLabelTime(Double overallTimer){
+	public void setTotalTimeLabel(Double overallTimer){
 		this.lblTimeTaken.setText("Time Taken: " + overallTimer + " Seconds" );
 
 	}
@@ -244,7 +258,7 @@ public class ProcessorScreen extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public void setNewLabel2(String status, String string){
+	public void setDynamicLabelForMoreFrequentFire(String status, String string){
 		this.lblEndTime.setText(status);
 		this.lblMemoryUsage.setText("Memory Usage: " + string);
 	}
