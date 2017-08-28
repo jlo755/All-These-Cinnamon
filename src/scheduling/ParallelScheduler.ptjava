@@ -45,6 +45,8 @@ public class ParallelScheduler extends Scheduler{
 		for (PartialSchedule schedule : schedules) {
 			scheduleStack.add(schedule);
 		}
+		
+		
 		TaskIDGroup g = new TaskIDGroup(threadsToUse);
 
 			for (int i = 0; i < threadsToUse; i++) {
