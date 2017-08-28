@@ -56,11 +56,11 @@ public class VisualGraph{
 
 	}
 
-	public void setTaskGraph(HashMap<String, dataStructure.Node> graph){
+	public synchronized void setTaskGraph(HashMap<String, dataStructure.Node> graph){
 		_taskGraph = graph;
 	}
 
-	public void startTraversal(ArrayList<dataStructure.Node> a, int numOfprocessors) {
+	public synchronized void startTraversal(ArrayList<dataStructure.Node> a, int numOfprocessors) {
 		for (dataStructure.Node n : _taskGraph.values()) {
 			_panel.setVisible(false);
 			Node next = graph.getNode(n.getID());
@@ -91,17 +91,8 @@ public class VisualGraph{
 				}
 			}
 			_panel.setVisible(true);
-			//sleep();
 
 		}
 	}
-
-		protected void sleep() {
-			try { Thread.sleep(4); } catch (Exception e) {
-				e.printStackTrace();
-			}
-	}
-
-
 
 }

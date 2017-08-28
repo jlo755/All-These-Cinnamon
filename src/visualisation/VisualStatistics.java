@@ -20,7 +20,7 @@ public class VisualStatistics {
 	private XYSeries series1;
 	private int count;
 
-	public JFreeChart createStateSpaceGraph() {
+	public synchronized JFreeChart createStateSpaceGraph() {
 
 		XYDataset dataset = createDataset(arrayList);
 
@@ -35,7 +35,7 @@ public class VisualStatistics {
 
 	}
 
-	private XYDataset createDataset(ArrayList<Double> arrayList) {
+	private synchronized XYDataset createDataset(ArrayList<Double> arrayList) {
 		dataset2 = new XYSeriesCollection();
 		series1 = new XYSeries("Current Best Schedule");
 		setBranchNumber(0);
@@ -44,20 +44,20 @@ public class VisualStatistics {
 		return dataset2;
 	}
 
-	public void setInput(ArrayList<Double> arrayList){
+	public synchronized void setInput(ArrayList<Double> arrayList){
 		this.arrayList = arrayList;
 	}
 
 
-	public void incrementBranchNumber(){
+	public synchronized void incrementBranchNumber(){
 		count++;
 	}
 
-	public void setBranchNumber(int count){
+	public synchronized void setBranchNumber(int count){
 		this.count=count;
 	}
 
-	public void updatePlot(double a, double time){
+	public synchronized void updatePlot(double a, double time){
 		//setInput(arrayList);
 		series1.add(time, a);
 		incrementBranchNumber();

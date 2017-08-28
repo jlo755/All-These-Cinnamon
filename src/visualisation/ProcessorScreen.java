@@ -22,15 +22,20 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.border.LineBorder;
+
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.awt.event.ActionEvent;
+
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
@@ -72,7 +77,15 @@ public class ProcessorScreen extends JFrame {
 						DVScheduler _scheduler = LaunchScheduler._scheduler;
 						_scheduler.setVisualController(vc);
 						vc.setVisualModel(_scheduler);
-						_scheduler.schedule();
+						ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
+						threadExecutor.submit(new Runnable(){
+
+							@Override
+							public void run() {
+								_scheduler.schedule();
+							}
+
+						});
 					} else {
 						ScheduleWorker sw = new ScheduleWorker(LaunchScheduler._noOfProcessors, vc);
 						sw.execute();

@@ -116,14 +116,16 @@ public class DVScheduler extends Scheduler {
 	/**
 	 * Fires an event to VisualController to notify the graph to update its state.
 	 */
-	public void fire() {
+	public synchronized void fire() {
 		_vc.setSchedule(_currentSchedule);
 		_numSchedules++;
 		_vc.updateGraph();
+		long afterUsedMem=(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024;
+		_vc.setStateLabel2("Status: Processing",afterUsedMem+"MB");
 
 	}
 
-	public void fireLabelUpdate(){
+	public synchronized void fireLabelUpdate(){
 		_vc.setStateLabel(this.schedulesProcessed+"",currentBestSolution);
 	}
 
@@ -131,14 +133,14 @@ public class DVScheduler extends Scheduler {
 		_vc.setTimeLabel(_overallTimer);
 	}
 
-	public void fireBest() {
+	public synchronized void fireBest() {
 		_vc.setSchedule(bestSchedule.getCurrentBestSchedule());
 		//_numSchedules++;
 		_vc.updateGraph();
 
 	}
 
-	public void fireSecondUpdate() {
+	public synchronized void fireSecondUpdate() {
 		if(bestTimesCopy.size() != 0) {
 			_vc.setScatterPlotInput(bestTimesCopy);
 			//System.out.println("Hi");
