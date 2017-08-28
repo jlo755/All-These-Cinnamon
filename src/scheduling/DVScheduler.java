@@ -99,8 +99,6 @@ public class DVScheduler extends Scheduler {
 
 			}
 		}
-		//time2.start();
-		//Time2.start();
 		long startTime = System.nanoTime();
 		dfs();
 		long endTime = System.nanoTime();
@@ -171,6 +169,8 @@ public class DVScheduler extends Scheduler {
 	 *            This is the node which we are starting off from
 	 **/
 	public void dfs() {
+		time2.start();
+		Time2.start();
 		// set the node as being completed
 		Stack<PartialSchedule> scheduleStack = new Stack<PartialSchedule>();
 		for(PartialSchedule schedule:schedules) {
