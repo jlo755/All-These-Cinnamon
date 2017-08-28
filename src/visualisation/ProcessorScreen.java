@@ -6,15 +6,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-
 import scheduling.DVScheduler;
 import scheduling.LaunchScheduler;
 import scheduling.ScheduleFactory;
 import scheduling.ScheduleWorker;
 
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -25,30 +21,20 @@ import javax.swing.border.LineBorder;
 
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Window;
-import java.awt.FlowLayout;
 
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.awt.event.ActionEvent;
 
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 
 public class ProcessorScreen extends JFrame {
 
 	private JPanel contentPane;
 	private String _file;
-	private JTextField processorCountTextField;
 	private Integer _processors;
 	private JPanel graphPanel;
 	private JPanel  statisticsPanel;
-	private VisualGraph _visualGraph;
 	private VisualController vc;
 	JLabel lblNewLabel;
 	JLabel lblEndTime;
@@ -70,7 +56,6 @@ public class ProcessorScreen extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//ProcessorScreen frame = new ProcessorScreen();
 					setVisible(true);
 					setProcessorLabels();
 					if(ScheduleFactory.getInstance().getParallelise() > 1) {
@@ -91,7 +76,7 @@ public class ProcessorScreen extends JFrame {
 						sw.execute();
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+
 				}
 			}
 		});
@@ -120,12 +105,6 @@ public class ProcessorScreen extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		//VisualStatistics chart = new VisualStatistics("School Vs Years" , "Number of Schools vs years");
-
-		//chart.pack( );
-		//RefineryUtilities.centerFrameOnScreen( chart );
-		//chart.setVisible( true );
-
 		graphPanel = new JPanel(new GridLayout()){
 			@Override
 			public Dimension getPreferredSize() {
@@ -142,17 +121,6 @@ public class ProcessorScreen extends JFrame {
 
 		vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), graphPanel, statisticsPanel, this);
 
-		LaunchScheduler ls = new LaunchScheduler();
-		//_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
-		//ls.setFileName(_fileName);
-		//ls.setProcessor(_noOfProcessors);
-
-
-		//compareSchedules compare = new compareSchedules();
-
-		//VisualStatistics compare = new VisualStatistics();
-
-		//JFreeChart chart = compare.createStateSpaceGraph();
 
 		JPanel ProcessingDetailsPanel = new JPanel();
 		ProcessingDetailsPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -253,34 +221,44 @@ public class ProcessorScreen extends JFrame {
 		}
 
 
-		//BufferedImage myPicture = ImageIO.read(new File("./P1"));
-		//JLabel imageLabel = new JLabel(new ImageIcon(myPicture));
-		//imageLabel.setBounds(10, 608, 109, 14);
-		//getContentPane().add(imageLabel);
-
 	}
 
 
-
+	/**
+	 * Launch the application.
+	 */
 	public void setNewLabel(String lblNewLabel, Double bestCost){
 		this.lblNewLabel.setText("Number of states processed: "+lblNewLabel);
 		this.lblCurrentBestCost.setText("Current Best Cost Found: " + bestCost);
 
 	}
+
+	/**
+	 * Launch the application.
+	 */
 	public void setLabelTime(Double overallTimer){
 		this.lblTimeTaken.setText("Time Taken: " + overallTimer + " Seconds" );
 
 	}
 
-
+	/**
+	 * Launch the application.
+	 */
 	public void setNewLabel2(String status, String string){
 		this.lblEndTime.setText(status);
 		this.lblMemoryUsage.setText("Memory Usage: " + string);
 	}
 
+	/**
+	 * Launch the application.
+	 */
 	public int getProcessorCount(){
 		return _processors;
 	}
+
+	/**
+	 * Launch the application.
+	 */
 	public void setProcessorLabels(){
 		if(_processors > 7){
 			lblProcessor_1.setText("Live updates are not supported for more than 7 processors");
