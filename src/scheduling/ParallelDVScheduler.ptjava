@@ -81,6 +81,7 @@ public class ParallelDVScheduler extends DVScheduler{
 
 			status="Current Status: Finished";
 			_vc.setLabelProcessorScreen(status,afterUsedMem/1024/1024+"MB");
+			outputSolution();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
