@@ -75,8 +75,6 @@ public class Scheduler {
 		}
 		long startTime = System.nanoTime();
 		dfs();
-		System.out.println("This took: "+(System.nanoTime()-startTime)/1000000000.0);
-		System.out.println(currentBestSolution);
 	}
 
 

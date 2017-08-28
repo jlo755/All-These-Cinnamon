@@ -10,9 +10,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import scheduling.PartialSchedule;
 import scheduling.ScheduleListener;
-import scheduling.ScheduleWorker;
 import scheduling.Scheduler;
-import visualisation.VisualGraph;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -20,9 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
 /**
@@ -127,14 +123,14 @@ public class VisualController implements ScheduleListener {
 	 * @param input3
 	 */
 	public synchronized void setStateLabel(String text,Double input3){
-		_ps.setNewLabel(text, input3);
+		_ps.setDynamicLabel(text, input3);
 	}
 	/**
 	 * This method sets the labels in the processor screen
 	 * @param overallTime
 	 */
 	public void setTimeLabel(Double overallTime){
-		_ps.setLabelTime( overallTime);
+		_ps.setTotalTimeLabel( overallTime);
 	}
 	/**
 	 * This method sets the labels in the processor screen
@@ -142,7 +138,7 @@ public class VisualController implements ScheduleListener {
 	 * @param string
 	 */
 	public synchronized void setStateLabel2(String text,String string){
-		_ps.setNewLabel2(text, string);
+		_ps.setDynamicLabelForMoreFrequentFire(text, string);
 	}
 	/**
 	 * This method sorts the start times of the node arraylist so that they are ordered
