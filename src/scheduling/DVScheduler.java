@@ -3,6 +3,8 @@ package scheduling;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -44,6 +46,7 @@ public class DVScheduler extends Scheduler {
 	protected int schedulesProcessed;
 	protected Timer Time2;
 	protected Timer time2;
+	protected double _overallTimer;
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
@@ -98,7 +101,16 @@ public class DVScheduler extends Scheduler {
 		}
 		time2.start();
 		Time2.start();
+		long startTime = System.nanoTime();
 		dfs();
+		long endTime = System.nanoTime();
+		_overallTimer =(endTime-startTime)/1000000000.0;
+		Double toBeTruncated = new Double(""+_overallTimer);
+
+		_overallTimer = BigDecimal.valueOf(toBeTruncated)
+		    .setScale(4, RoundingMode.HALF_UP)
+		    .doubleValue();
+		setTimeLabel();
 	}
 
 	/**
@@ -115,6 +127,10 @@ public class DVScheduler extends Scheduler {
 
 	public synchronized void fireLabelUpdate(){
 		_vc.setStateLabel(this.schedulesProcessed+"",currentBestSolution);
+	}
+
+	public void setTimeLabel(){
+		_vc.setTimeLabel(_overallTimer);
 	}
 
 	public synchronized void fireBest() {
@@ -242,7 +258,6 @@ public class DVScheduler extends Scheduler {
 		status="Current Status: Finished";
 		//actualMemUsed=afterUsedMem-beforeUsedMem;
 		_vc.setStateLabel2(status,afterUsedMem+"MB");
-		System.out.println(_prevSchedules.size());
 	}
 
 }

@@ -25,11 +25,11 @@ public class VisualStatistics {
 		XYDataset dataset = createDataset(arrayList);
 
 		JFreeChart chart = ChartFactory.createScatterPlot(
-				"State Space Time Graph",
-				"Time Discovered", "Time", dataset);
+				"State Space Time Scatter Plot",
+				"Time Discovered", "Best Time/Cost Estimate", dataset);
 
 		XYPlot plot = (XYPlot)chart.getPlot();
-		plot.setBackgroundPaint(new Color(255,228,196));
+		plot.setBackgroundPaint(new Color(201,216,215));
 
 		return chart;
 
@@ -37,7 +37,7 @@ public class VisualStatistics {
 
 	private synchronized XYDataset createDataset(ArrayList<Double> arrayList) {
 		dataset2 = new XYSeriesCollection();
-		series1 = new XYSeries("State Space Time");
+		series1 = new XYSeries("Current Best Schedule");
 		setBranchNumber(0);
 
 		dataset2.addSeries(series1);
