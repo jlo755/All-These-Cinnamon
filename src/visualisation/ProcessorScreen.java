@@ -104,13 +104,14 @@ public class ProcessorScreen extends JFrame {
 		}
 
 		else {
-		setTitle("Processor Screen");
+		setTitle("Data Visualization of Scheduler");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1079, 778);
+		setBounds(100, 100, 1079, 740);
 		_contentPane = new JPanel();
 		_contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(_contentPane);
 		_contentPane.setLayout(null);
+
 
 		_graphPanel = new JPanel(new GridLayout()){
 			@Override
@@ -118,6 +119,7 @@ public class ProcessorScreen extends JFrame {
 				return new Dimension(460,567);
 			}
 		};
+
 		_graphPanel.setBounds(10, 11, 460, 640);
 		_contentPane.add(_graphPanel);
 
@@ -128,21 +130,11 @@ public class ProcessorScreen extends JFrame {
 
 		_vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), _graphPanel, _statisticsPanel, this);
 
-		LaunchScheduler ls = new LaunchScheduler();
-		//_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
-		//ls.setFileName(_fileName);
-		//ls.setProcessor(_noOfProcessors);
-
-
-		//compareSchedules compare = new compareSchedules();
-
-		//VisualStatistics compare = new VisualStatistics();
-
-		//JFreeChart chart = compare.createStateSpaceGraph();
-
 		JPanel ProcessingDetailsPanel = new JPanel();
 		ProcessingDetailsPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		ProcessingDetailsPanel.setBounds(480, 450, 572, 279);
+		_contentPane.add(ProcessingDetailsPanel);
+		ProcessingDetailsPanel.setBounds(480, 450, 572, 251);
 		_contentPane.add(ProcessingDetailsPanel);
 		ProcessingDetailsPanel.setLayout(null);
 
@@ -243,8 +235,8 @@ public class ProcessorScreen extends JFrame {
 		//imageLabel.setBounds(10, 608, 109, 14);
 		//getContentPane().add(imageLabel);
 
-
 	}
+
 
 
 	public void setNewLabel(String lblNewLabel, Double bestCost){
