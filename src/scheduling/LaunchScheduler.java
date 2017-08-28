@@ -17,8 +17,8 @@ public class LaunchScheduler {
 	public static int _noOfProcessors;
 	public static String _fileName;
 	public static DVScheduler _scheduler;
-	
-	public static void main(String[] args) throws IOException, ImportException {
+
+	public static void main(String[] args) throws IOException, ImportException, NumberFormatException {
 
 		long startTime = System.nanoTime();
 		_fileName=args[0];
