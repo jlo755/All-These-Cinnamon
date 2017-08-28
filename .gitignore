@@ -1,5 +1,51 @@
 # Compiled class file
 *.class
+*.classpath
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+*.xml
+*.iml
+.DS_Store
+/build/
+.idea/All-These-Cinnamon.iml
+.idea/misc.xml
+.idea/modules.xml
+*.xml
+.DS_Store
+*.xml
+*.xml
+.classpath
+*.prefs
+.project
+*.dot
+/bin/
+bin/application/mainMenu.fxml
+bin/application/application.css
+/bin/
+*.fxml
+*.css
+*.java
+*.java
+# Compiled class file
+*.class
 
 # Log file
 *.log
