@@ -50,7 +50,7 @@ public class ProcessorScreen extends JFrame {
 	private JLabel lblTimeTaken;
 
 	/**
-	 * Launch the application.
+	 * Launch the application that includes the Data Visualization GUI and the actual program
 	 */
 	public void beginProcessing() {
 		EventQueue.invokeLater(new Runnable() {
@@ -83,10 +83,9 @@ public class ProcessorScreen extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
-	 * @throws IOException
+	 * Creates the GUI frame.
 	 */
-	public ProcessorScreen() throws IOException {
+	public ProcessorScreen() {
 		LaunchScheduler launchS = new LaunchScheduler();
 
 		//get command line arguments
