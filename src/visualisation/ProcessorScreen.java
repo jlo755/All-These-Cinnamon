@@ -6,11 +6,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+
 import scheduling.DVScheduler;
 import scheduling.LaunchScheduler;
 import scheduling.ScheduleFactory;
 import scheduling.ScheduleWorker;
 
+import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -21,49 +25,58 @@ import javax.swing.border.LineBorder;
 
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Window;
+import java.awt.FlowLayout;
 
+import javax.swing.JButton;
+
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.awt.event.ActionEvent;
+
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 
 public class ProcessorScreen extends JFrame {
 
-	private JPanel _contentPane;
+	private JPanel contentPane;
 	private String _file;
-	private Integer _processorCount;
-	private JPanel _graphPanel;
-	private JPanel _statisticsPanel;
-	private VisualController _vc;
-	private JLabel noOfProcessorsLabel;
-	private JLabel endTimeLabel;
-	private JLabel currentBestCostLabel;
-	private JLabel memoryUsageLabel;
-	private JLabel legendLabel1;
-	private JLabel legendLabel2;
-	private JLabel legendLabel3;
-	private JLabel legendLabel4;
-	private JLabel legendLabel5;
-	private JLabel legendLabel6;
-	private JLabel legendLabel7;
-	private JLabel finalTimeTakenLabel;
+	private JTextField processorCountTextField;
+	private Integer _processors;
+	private JPanel graphPanel;
+	private JPanel  statisticsPanel;
+	private VisualGraph _visualGraph;
+	private VisualController vc;
+	JLabel lblNewLabel;
+	JLabel lblEndTime;
+	JLabel lblCurrentBestCost;
+	JLabel lblMemoryUsage;
+	private JLabel lblProcessor_1;
+	private JLabel lblProcessor_2;
+	private JLabel lblProcessor_3;
+	private JLabel lblProcessor_4;
+	private JLabel lblProcessor_5;
+	private JLabel lblProcessor_6;
+	private JLabel lblProcessor_7;
+	private JLabel lblTimeTaken;
 
 	/**
-	 * Launch the application GUI along with instantiating the ScheduleWorker that implements a SwingWorker to run the
-	 * the algorithm in the background when the GUI is being executed on the ED thread
+	 * Launch the application.
 	 */
 	public void beginProcessing() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					//ProcessorScreen frame = new ProcessorScreen();
 					setVisible(true);
-					//sets the legend for the graph
 					setProcessorLabels();
 					if(ScheduleFactory.getInstance().getParallelise() > 1) {
 						DVScheduler _scheduler = LaunchScheduler._scheduler;
-						_scheduler.setVisualController(_vc);
-						_vc.setVisualModel(_scheduler);
-						//scheduling is done on a seperate thread
+						_scheduler.setVisualController(vc);
+						vc.setVisualModel(_scheduler);
 						ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
 						threadExecutor.submit(new Runnable(){
 
@@ -74,12 +87,11 @@ public class ProcessorScreen extends JFrame {
 
 						});
 					} else {
-						//overridden SwingWorker implementation
-						ScheduleWorker sw = new ScheduleWorker(LaunchScheduler._noOfProcessors, _vc);
-						//runs the algorithm
+						ScheduleWorker sw = new ScheduleWorker(LaunchScheduler._noOfProcessors, vc);
 						sw.execute();
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});
@@ -87,58 +99,68 @@ public class ProcessorScreen extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws IOException
 	 */
 	public ProcessorScreen() throws IOException {
 		LaunchScheduler launchS = new LaunchScheduler();
-
-		//gets arguments from the command line 
 		_file = launchS._fileName;
-		_processorCount = launchS._noOfProcessors;
-
-		if(_processorCount < 1){
+		_processors = launchS._noOfProcessors;
+		if(_processors < 1){
 			JOptionPane.showMessageDialog(this,
 				    "Please change the processor count input to something valid",
 				    "ERROR",
 				    JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
-		}
-
-		else {
+		}else{
 		setTitle("Data Visualization of Scheduler");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1079, 740);
-		_contentPane = new JPanel();
-		_contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(_contentPane);
-		_contentPane.setLayout(null);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
 
+		//VisualStatistics chart = new VisualStatistics("School Vs Years" , "Number of Schools vs years");
 
-		_graphPanel = new JPanel(new GridLayout()){
+		//chart.pack( );
+		//RefineryUtilities.centerFrameOnScreen( chart );
+		//chart.setVisible( true );
+
+		graphPanel = new JPanel(new GridLayout()){
 			@Override
 			public Dimension getPreferredSize() {
 				return new Dimension(460,567);
 			}
 		};
+		graphPanel.setBounds(10, 11, 460, 640);
+		contentPane.add(graphPanel);
 
-		_graphPanel.setBounds(10, 11, 460, 640);
-		_contentPane.add(_graphPanel);
+		statisticsPanel = new JPanel();
+		statisticsPanel.setBounds(480, 11, 572, 435);
+		contentPane.add(statisticsPanel);
+		statisticsPanel.setLayout(null);
 
-		_statisticsPanel = new JPanel();
-		_statisticsPanel.setBounds(480, 11, 572, 435);
-		_contentPane.add(_statisticsPanel);
-		_statisticsPanel.setLayout(null);
+		vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), graphPanel, statisticsPanel, this);
 
-		_vc = new VisualController(LaunchScheduler.dotParser.getNodeMap(), _graphPanel, _statisticsPanel, this);
+		LaunchScheduler ls = new LaunchScheduler();
+		//_noOfProcessors = Integer.parseInt(processorCountTextField.getText());
+		//ls.setFileName(_fileName);
+		//ls.setProcessor(_noOfProcessors);
+
+
+		//compareSchedules compare = new compareSchedules();
+
+		//VisualStatistics compare = new VisualStatistics();
+
+		//JFreeChart chart = compare.createStateSpaceGraph();
 
 		JPanel ProcessingDetailsPanel = new JPanel();
 		ProcessingDetailsPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		ProcessingDetailsPanel.setBounds(480, 450, 572, 279);
-		_contentPane.add(ProcessingDetailsPanel);
 		ProcessingDetailsPanel.setBounds(480, 450, 572, 251);
-		_contentPane.add(ProcessingDetailsPanel);
+		contentPane.add(ProcessingDetailsPanel);
 		ProcessingDetailsPanel.setLayout(null);
 
-		JLabel lblNodeName = new JLabel("Number Of Processors: "+ _processorCount);
+		JLabel lblNodeName = new JLabel("Number Of Processors: "+ _processors);
 		lblNodeName.setFont(new Font("Leelawadee", Font.PLAIN, 15));
 		lblNodeName.setBounds(22, 11, 550, 21);
 		ProcessingDetailsPanel.add(lblNodeName);
@@ -148,84 +170,85 @@ public class ProcessorScreen extends JFrame {
 		lblStartTime.setBounds(22, 44, 550, 21);
 		ProcessingDetailsPanel.add(lblStartTime);
 
-		endTimeLabel = new JLabel("Current Status: Processing...");
-		endTimeLabel.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		endTimeLabel.setBounds(22, 111, 550, 21);
-		ProcessingDetailsPanel.add(endTimeLabel);
+		lblEndTime = new JLabel("Current Status: Processing...");
+		lblEndTime.setFont(new Font("Leelawadee", Font.PLAIN, 15));
+		lblEndTime.setBounds(22, 76, 550, 21);
+		ProcessingDetailsPanel.add(lblEndTime);
 
-		currentBestCostLabel = new JLabel("Current Best Cost Found:");
-		currentBestCostLabel.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		currentBestCostLabel.setBounds(22, 143, 550, 21);
-		ProcessingDetailsPanel.add(currentBestCostLabel);
+		lblCurrentBestCost = new JLabel("Current Best Cost Found:");
+		lblCurrentBestCost.setFont(new Font("Leelawadee", Font.PLAIN, 15));
+		lblCurrentBestCost.setBounds(22, 108, 550, 21);
+		ProcessingDetailsPanel.add(lblCurrentBestCost);
 
-		noOfProcessorsLabel = new JLabel("Number of States Processed:");
-		noOfProcessorsLabel.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		noOfProcessorsLabel.setBounds(22, 175, 550, 21);
-		ProcessingDetailsPanel.add(noOfProcessorsLabel);
+		lblNewLabel = new JLabel("Number of States Processed:");
+		lblNewLabel.setFont(new Font("Leelawadee", Font.PLAIN, 15));
+		lblNewLabel.setBounds(22, 140, 550, 21);
+		ProcessingDetailsPanel.add(lblNewLabel);
 
-		memoryUsageLabel = new JLabel("Memory Usage:");
-		memoryUsageLabel.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		memoryUsageLabel.setBounds(22, 207, 550, 21);
-		ProcessingDetailsPanel.add(memoryUsageLabel);
+		lblMemoryUsage = new JLabel("Memory Usage: ...");
+		lblMemoryUsage.setFont(new Font("Leelawadee", Font.PLAIN, 15));
+		lblMemoryUsage.setBounds(22, 172, 550, 21);
+		ProcessingDetailsPanel.add(lblMemoryUsage);
 
-		finalTimeTakenLabel = new JLabel("Time Taken:");
-		finalTimeTakenLabel.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		finalTimeTakenLabel.setBounds(22, 79, 550, 21);
-		ProcessingDetailsPanel.add(finalTimeTakenLabel);
+		lblTimeTaken = new JLabel("Time Taken: ... ");
+		lblTimeTaken.setFont(new Font("Leelawadee", Font.PLAIN, 15));
+		lblTimeTaken.setBounds(22, 204, 550, 21);
+		ProcessingDetailsPanel.add(lblTimeTaken);
 
-		legendLabel1 = new JLabel("Processor 1");
-		legendLabel1.setFont(new Font("Leelawadee", Font.PLAIN, 12));
-		legendLabel1.setBounds(10, 662, 73, 14);
-		legendLabel1.setForeground(new Color(220,40,80));
-		_contentPane.add(legendLabel1);
-		legendLabel1.setVisible(false);
+		lblProcessor_1 = new JLabel("Processor 1");
+		lblProcessor_1.setFont(new Font("Leelawadee", Font.PLAIN, 12));
+		lblProcessor_1.setBounds(10, 662, 73, 14);
+		lblProcessor_1.setForeground(new Color(220,40,80));
+		contentPane.add(lblProcessor_1);
+		lblProcessor_1.setVisible(false);
 
-		legendLabel2 = new JLabel("Processor 2");
-		legendLabel2.setFont(new Font("Leelawadee", Font.PLAIN, 12));
-		legendLabel2.setBounds(10, 687, 73, 14);
-		legendLabel2.setForeground(new Color(37,128,57));
-		_contentPane.add(legendLabel2);
-		legendLabel2.setVisible(false);
-
-
-		legendLabel3 = new JLabel("Processor 3");
-		legendLabel3.setFont(new Font("Leelawadee", Font.PLAIN, 12));
-		legendLabel3.setBounds(10, 712, 73, 14);
-		legendLabel3.setForeground(new Color(253,110,41));
-		_contentPane.add(legendLabel3);
-		legendLabel3.setVisible(false);
+		lblProcessor_2 = new JLabel("Processor 2");
+		lblProcessor_2.setFont(new Font("Leelawadee", Font.PLAIN, 12));
+		lblProcessor_2.setBounds(93, 662, 73, 14);
+		lblProcessor_2.setForeground(new Color(37,128,57));
+		contentPane.add(lblProcessor_2);
+		lblProcessor_2.setVisible(false);
 
 
-		legendLabel4 = new JLabel("Processor 4");
-		legendLabel4.setFont(new Font("Leelawadee", Font.PLAIN, 12));
-		legendLabel4.setBounds(93, 662, 73, 14);
-		legendLabel4.setForeground(new Color(72,151,216));
-		_contentPane.add(legendLabel4);
-		legendLabel4.setVisible(false);
+		lblProcessor_3 = new JLabel("Processor 3");
+		lblProcessor_3.setFont(new Font("Leelawadee", Font.PLAIN, 12));
+		lblProcessor_3.setBounds(176, 662, 73, 14);
+		lblProcessor_3.setForeground(new Color(253,110,41));
+		contentPane.add(lblProcessor_3);
+		lblProcessor_3.setVisible(false);
 
 
-		legendLabel5 = new JLabel("Processor 5");
-		legendLabel5.setFont(new Font("Leelawadee", Font.PLAIN, 12));
-		legendLabel5.setBounds(93, 688, 73, 14);
-		legendLabel5.setForeground(new Color(139,0,139));
-		_contentPane.add(legendLabel5);
-		legendLabel5.setVisible(false);
+		lblProcessor_4 = new JLabel("Processor 4");
+		lblProcessor_4.setFont(new Font("Leelawadee", Font.PLAIN, 12));
+		lblProcessor_4.setBounds(259, 662, 73, 14);
+		lblProcessor_4.setForeground(new Color(72,151,216));
+		contentPane.add(lblProcessor_4);
+		lblProcessor_4.setVisible(false);
 
 
-		legendLabel6 = new JLabel("Processor 6");
-		legendLabel6.setFont(new Font("Leelawadee", Font.PLAIN, 12));
-		legendLabel6.setBounds(93, 713, 73, 14);
-		legendLabel6.setForeground(new Color(255,140,0));
-		_contentPane.add(legendLabel6);
-		legendLabel6.setVisible(false);
+		lblProcessor_5 = new JLabel("Processor 5");
+		lblProcessor_5.setFont(new Font("Leelawadee", Font.PLAIN, 12));
+		lblProcessor_5.setBounds(342, 662, 73, 14);
+		lblProcessor_5.setForeground(new Color(139,0,139));
+		contentPane.add(lblProcessor_5);
+		lblProcessor_5.setVisible(false);
 
 
-		legendLabel7 = new JLabel("Processor 7");
-		legendLabel7.setFont(new Font("Leelawadee", Font.PLAIN, 12));
-		legendLabel7.setBounds(176, 663, 73, 14);
-		legendLabel7.setForeground(new Color(128,128,0));
-		_contentPane.add(legendLabel7);
-		legendLabel7.setVisible(false);
+		lblProcessor_6 = new JLabel("Processor 6");
+		lblProcessor_6.setFont(new Font("Leelawadee", Font.PLAIN, 12));
+		lblProcessor_6.setBounds(10, 687, 73, 14);
+		lblProcessor_6.setForeground(new Color(199,68,183));
+		contentPane.add(lblProcessor_6);
+		lblProcessor_6.setVisible(false);
+
+
+		lblProcessor_7 = new JLabel("Processor 7");
+		lblProcessor_7.setFont(new Font("Leelawadee", Font.PLAIN, 12));
+		lblProcessor_7.setBounds(93, 687, 73, 14);
+		lblProcessor_7.setForeground(new Color(128,128,0));
+		contentPane.add(lblProcessor_7);
+		lblProcessor_7.setVisible(false);
+		setResizable(false);
 
 		}
 
@@ -240,70 +263,70 @@ public class ProcessorScreen extends JFrame {
 
 
 	public void setNewLabel(String lblNewLabel, Double bestCost){
-		this.noOfProcessorsLabel.setText("Number of states processed: "+lblNewLabel);
-		this.currentBestCostLabel.setText("Current Best Cost Found: " + bestCost);
+		this.lblNewLabel.setText("Number of states processed: "+lblNewLabel);
+		this.lblCurrentBestCost.setText("Current Best Cost Found: " + bestCost);
 
 	}
 	public void setLabelTime(Double overallTimer){
-		this.finalTimeTakenLabel.setText("Time Taken: " + overallTimer + " Seconds" );
+		this.lblTimeTaken.setText("Time Taken: " + overallTimer + " Seconds" );
 
 	}
 
 
 	public void setNewLabel2(String status, String string){
-		this.endTimeLabel.setText(status);
-		this.memoryUsageLabel.setText("Memory Usage: " + string);
+		this.lblEndTime.setText(status);
+		this.lblMemoryUsage.setText("Memory Usage: " + string);
 	}
 
 	public int getProcessorCount(){
-		return _processorCount;
+		return _processors;
 	}
 	public void setProcessorLabels(){
-		if(_processorCount > 7){
-			legendLabel1.setText("Live updates are not supported for more than 7 processors");
-			legendLabel1.setForeground(new Color(0,0,0));
+		if(_processors > 7){
+			lblProcessor_1.setText("Live updates are not supported for more than 7 processors");
+			lblProcessor_1.setForeground(new Color(0,0,0));
 		}
-			for(int i = 1; i<= _processorCount; i++){
+			for(int i =1; i<= _processors; i++){
 				switch (i) {
 
 				case 1:{
-					legendLabel1.setVisible(true);
+					lblProcessor_1.setVisible(true);
 					continue;
 				}
 				case 2:{
 
-					legendLabel2.setVisible(true);
+					lblProcessor_2.setVisible(true);
 					continue;
 				}
 
 				case 3:{
 
-					legendLabel3.setVisible(true);
+					lblProcessor_3.setVisible(true);
 					continue;
 				}
 
 				case 4:{
 
-					legendLabel4.setVisible(true);
+					lblProcessor_4.setVisible(true);
 					continue;
 
 				}
 				case 5:{
 
-					legendLabel5.setVisible(true);
+					lblProcessor_5.setVisible(true);
 					continue;
 
 				}
 				case 6:{
 
-					legendLabel6.setVisible(true);
+					lblProcessor_6.setVisible(true);
 					break;
 
 				}
 
 				case 7:{
 
-					legendLabel7.setVisible(true);
+					lblProcessor_7.setVisible(true);
 					continue;
 				}
 				default:{
