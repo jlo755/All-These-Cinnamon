@@ -16,7 +16,7 @@ import javax.swing.SwingWorker;
 
 
 /**
- * Created by DarthPenguin on 22/08/17.
+ * This class creates the graph using Graph stream
  */
 public class VisualGraph{
 	SingleGraph graph;

@@ -179,6 +179,7 @@ public class DVScheduler extends Scheduler {
 		while(!scheduleStack.isEmpty()) {
 			PartialSchedule schedule = scheduleStack.pop();
 			_currentSchedule = schedule;
+			schedulesProcessed++;
 			ArrayList<String> reachable = schedule.getReachable();
 			for(String s:reachable) {
 				if(schedule.startTimeZeroProcessors() > 1) {
@@ -238,7 +239,7 @@ public class DVScheduler extends Scheduler {
 				if(!bestTimes.contains(endTime)) {
 					bestTimes.add(endTime);
 					bestTimesCopy.add(endTime);
-					schedulesProcessed++;
+					//schedulesProcessed++;
 					fireSecondUpdate();
 				}
 

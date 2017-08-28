@@ -1,256 +1,266 @@
-package scheduling;//####[1]####
-//####[1]####
-import java.awt.event.ActionEvent;//####[3]####
-import java.awt.event.ActionListener;//####[4]####
-import java.io.IOException;//####[5]####
-import java.util.ArrayList;//####[6]####
-import java.util.Comparator;//####[7]####
-import java.util.EmptyStackException;//####[8]####
-import java.util.HashMap;//####[9]####
-import java.util.LinkedHashMap;//####[10]####
-import java.util.PriorityQueue;//####[11]####
-import java.util.Queue;//####[12]####
-import java.util.Stack;//####[13]####
-import java.util.concurrent.ExecutorService;//####[14]####
-import java.util.concurrent.Executors;//####[15]####
-import java.util.concurrent.ForkJoinPool;//####[16]####
-import javax.swing.Timer;//####[18]####
-import org.jgrapht.experimental.dag.DirectedAcyclicGraph;//####[20]####
-import dataStructure.Node;//####[22]####
-import inputParse.Edge;//####[23]####
-import outputParse.OutputParser;//####[24]####
-import pt.runtime.TaskID;//####[25]####
-import pt.runtime.TaskIDGroup;//####[26]####
-import visualisation.VisualController;//####[27]####
-//####[27]####
-//-- ParaTask related imports//####[27]####
-import pt.runtime.*;//####[27]####
-import java.util.concurrent.ExecutionException;//####[27]####
-import java.util.concurrent.locks.*;//####[27]####
-import java.lang.reflect.*;//####[27]####
-import pt.runtime.GuiThread;//####[27]####
-import java.util.concurrent.BlockingQueue;//####[27]####
-import java.util.ArrayList;//####[27]####
-import java.util.List;//####[27]####
-//####[27]####
+package scheduling;//####[2]####
+//####[2]####
+import java.awt.event.ActionEvent;//####[4]####
+import java.awt.event.ActionListener;//####[5]####
+import java.io.IOException;//####[6]####
+import java.util.ArrayList;//####[7]####
+import java.util.Comparator;//####[8]####
+import java.util.EmptyStackException;//####[9]####
+import java.util.HashMap;//####[10]####
+import java.util.LinkedHashMap;//####[11]####
+import java.util.PriorityQueue;//####[12]####
+import java.util.Queue;//####[13]####
+import java.util.Stack;//####[14]####
+import java.util.concurrent.ExecutorService;//####[15]####
+import java.util.concurrent.Executors;//####[16]####
+import java.util.concurrent.ForkJoinPool;//####[17]####
+import javax.swing.Timer;//####[19]####
+import org.jgrapht.experimental.dag.DirectedAcyclicGraph;//####[21]####
+import dataStructure.Node;//####[23]####
+import inputParse.Edge;//####[24]####
+import outputParse.OutputParser;//####[25]####
+import pt.runtime.TaskID;//####[26]####
+import pt.runtime.TaskIDGroup;//####[27]####
+import visualisation.VisualController;//####[28]####
+//####[28]####
+//-- ParaTask related imports//####[28]####
+import pt.runtime.*;//####[28]####
+import java.util.concurrent.ExecutionException;//####[28]####
+import java.util.concurrent.locks.*;//####[28]####
+import java.lang.reflect.*;//####[28]####
+import pt.runtime.GuiThread;//####[28]####
+import java.util.concurrent.BlockingQueue;//####[28]####
+import java.util.ArrayList;//####[28]####
+import java.util.List;//####[28]####
+//####[28]####
 /**
  * Parallel scheduler combined with the data visualization for finding optimal task schedules.
  *
- *///####[32]####
-public class ParallelDVScheduler extends DVScheduler {//####[33]####
-    static{ParaTask.init();}//####[33]####
-    /*  ParaTask helper method to access private/protected slots *///####[33]####
-    public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[33]####
-        if (m.getParameterTypes().length == 0)//####[33]####
-            m.invoke(instance);//####[33]####
-        else if ((m.getParameterTypes().length == 1))//####[33]####
-            m.invoke(instance, arg);//####[33]####
-        else //####[33]####
-            m.invoke(instance, arg, interResult);//####[33]####
-    }//####[33]####
+ *///####[33]####
+public class ParallelDVScheduler extends DVScheduler {//####[34]####
+    static{ParaTask.init();}//####[34]####
+    /*  ParaTask helper method to access private/protected slots *///####[34]####
+    public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[34]####
+        if (m.getParameterTypes().length == 0)//####[34]####
+            m.invoke(instance);//####[34]####
+        else if ((m.getParameterTypes().length == 1))//####[34]####
+            m.invoke(instance, arg);//####[34]####
+        else //####[34]####
+            m.invoke(instance, arg, interResult);//####[34]####
+    }//####[34]####
 //####[35]####
-    private static volatile Method __pt__processScheduleTask_StackPartialSchedule_method = null;//####[35]####
-    private synchronized static void __pt__processScheduleTask_StackPartialSchedule_ensureMethodVarSet() {//####[35]####
-        if (__pt__processScheduleTask_StackPartialSchedule_method == null) {//####[35]####
-            try {//####[35]####
-                __pt__processScheduleTask_StackPartialSchedule_method = ParaTaskHelper.getDeclaredMethod(new ParaTaskHelper.ClassGetter().getCurrentClass(), "__pt__processScheduleTask", new Class[] {//####[35]####
-                    Stack.class//####[35]####
-                });//####[35]####
-            } catch (Exception e) {//####[35]####
-                e.printStackTrace();//####[35]####
-            }//####[35]####
-        }//####[35]####
-    }//####[35]####
-    private TaskIDGroup<Void> processScheduleTask(Stack<PartialSchedule> scheduleStack) {//####[35]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[35]####
-        return processScheduleTask(scheduleStack, new TaskInfo());//####[35]####
-    }//####[35]####
-    private TaskIDGroup<Void> processScheduleTask(Stack<PartialSchedule> scheduleStack, TaskInfo taskinfo) {//####[35]####
-        // ensure Method variable is set//####[35]####
-        if (__pt__processScheduleTask_StackPartialSchedule_method == null) {//####[35]####
-            __pt__processScheduleTask_StackPartialSchedule_ensureMethodVarSet();//####[35]####
-        }//####[35]####
-        taskinfo.setParameters(scheduleStack);//####[35]####
-        taskinfo.setMethod(__pt__processScheduleTask_StackPartialSchedule_method);//####[35]####
-        taskinfo.setInstance(this);//####[35]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[35]####
-    }//####[35]####
-    private TaskIDGroup<Void> processScheduleTask(TaskID<Stack<PartialSchedule>> scheduleStack) {//####[35]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[35]####
-        return processScheduleTask(scheduleStack, new TaskInfo());//####[35]####
-    }//####[35]####
-    private TaskIDGroup<Void> processScheduleTask(TaskID<Stack<PartialSchedule>> scheduleStack, TaskInfo taskinfo) {//####[35]####
-        // ensure Method variable is set//####[35]####
-        if (__pt__processScheduleTask_StackPartialSchedule_method == null) {//####[35]####
-            __pt__processScheduleTask_StackPartialSchedule_ensureMethodVarSet();//####[35]####
-        }//####[35]####
-        taskinfo.setTaskIdArgIndexes(0);//####[35]####
-        taskinfo.addDependsOn(scheduleStack);//####[35]####
-        taskinfo.setParameters(scheduleStack);//####[35]####
-        taskinfo.setMethod(__pt__processScheduleTask_StackPartialSchedule_method);//####[35]####
-        taskinfo.setInstance(this);//####[35]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[35]####
-    }//####[35]####
-    private TaskIDGroup<Void> processScheduleTask(BlockingQueue<Stack<PartialSchedule>> scheduleStack) {//####[35]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[35]####
-        return processScheduleTask(scheduleStack, new TaskInfo());//####[35]####
-    }//####[35]####
-    private TaskIDGroup<Void> processScheduleTask(BlockingQueue<Stack<PartialSchedule>> scheduleStack, TaskInfo taskinfo) {//####[35]####
-        // ensure Method variable is set//####[35]####
-        if (__pt__processScheduleTask_StackPartialSchedule_method == null) {//####[35]####
-            __pt__processScheduleTask_StackPartialSchedule_ensureMethodVarSet();//####[35]####
-        }//####[35]####
-        taskinfo.setQueueArgIndexes(0);//####[35]####
-        taskinfo.setIsPipeline(true);//####[35]####
-        taskinfo.setParameters(scheduleStack);//####[35]####
-        taskinfo.setMethod(__pt__processScheduleTask_StackPartialSchedule_method);//####[35]####
-        taskinfo.setInstance(this);//####[35]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[35]####
-    }//####[35]####
-    public void __pt__processScheduleTask(Stack<PartialSchedule> scheduleStack) {//####[35]####
-        while (!scheduleStack.isEmpty()) //####[36]####
-        {//####[36]####
-            processSchedule(scheduleStack);//####[37]####
-        }//####[38]####
-    }//####[39]####
-//####[39]####
-//####[52]####
+    int threadsToUse;//####[35]####
+//####[37]####
+    private static volatile Method __pt__processScheduleTask_StackPartialSchedule_method = null;//####[37]####
+    private synchronized static void __pt__processScheduleTask_StackPartialSchedule_ensureMethodVarSet() {//####[37]####
+        if (__pt__processScheduleTask_StackPartialSchedule_method == null) {//####[37]####
+            try {//####[37]####
+                __pt__processScheduleTask_StackPartialSchedule_method = ParaTaskHelper.getDeclaredMethod(new ParaTaskHelper.ClassGetter().getCurrentClass(), "__pt__processScheduleTask", new Class[] {//####[37]####
+                    Stack.class//####[37]####
+                });//####[37]####
+            } catch (Exception e) {//####[37]####
+                e.printStackTrace();//####[37]####
+            }//####[37]####
+        }//####[37]####
+    }//####[37]####
+    private TaskIDGroup<Void> processScheduleTask(Stack<PartialSchedule> scheduleStack) {//####[37]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[37]####
+        return processScheduleTask(scheduleStack, new TaskInfo());//####[37]####
+    }//####[37]####
+    private TaskIDGroup<Void> processScheduleTask(Stack<PartialSchedule> scheduleStack, TaskInfo taskinfo) {//####[37]####
+        // ensure Method variable is set//####[37]####
+        if (__pt__processScheduleTask_StackPartialSchedule_method == null) {//####[37]####
+            __pt__processScheduleTask_StackPartialSchedule_ensureMethodVarSet();//####[37]####
+        }//####[37]####
+        taskinfo.setParameters(scheduleStack);//####[37]####
+        taskinfo.setMethod(__pt__processScheduleTask_StackPartialSchedule_method);//####[37]####
+        taskinfo.setInstance(this);//####[37]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[37]####
+    }//####[37]####
+    private TaskIDGroup<Void> processScheduleTask(TaskID<Stack<PartialSchedule>> scheduleStack) {//####[37]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[37]####
+        return processScheduleTask(scheduleStack, new TaskInfo());//####[37]####
+    }//####[37]####
+    private TaskIDGroup<Void> processScheduleTask(TaskID<Stack<PartialSchedule>> scheduleStack, TaskInfo taskinfo) {//####[37]####
+        // ensure Method variable is set//####[37]####
+        if (__pt__processScheduleTask_StackPartialSchedule_method == null) {//####[37]####
+            __pt__processScheduleTask_StackPartialSchedule_ensureMethodVarSet();//####[37]####
+        }//####[37]####
+        taskinfo.setTaskIdArgIndexes(0);//####[37]####
+        taskinfo.addDependsOn(scheduleStack);//####[37]####
+        taskinfo.setParameters(scheduleStack);//####[37]####
+        taskinfo.setMethod(__pt__processScheduleTask_StackPartialSchedule_method);//####[37]####
+        taskinfo.setInstance(this);//####[37]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[37]####
+    }//####[37]####
+    private TaskIDGroup<Void> processScheduleTask(BlockingQueue<Stack<PartialSchedule>> scheduleStack) {//####[37]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[37]####
+        return processScheduleTask(scheduleStack, new TaskInfo());//####[37]####
+    }//####[37]####
+    private TaskIDGroup<Void> processScheduleTask(BlockingQueue<Stack<PartialSchedule>> scheduleStack, TaskInfo taskinfo) {//####[37]####
+        // ensure Method variable is set//####[37]####
+        if (__pt__processScheduleTask_StackPartialSchedule_method == null) {//####[37]####
+            __pt__processScheduleTask_StackPartialSchedule_ensureMethodVarSet();//####[37]####
+        }//####[37]####
+        taskinfo.setQueueArgIndexes(0);//####[37]####
+        taskinfo.setIsPipeline(true);//####[37]####
+        taskinfo.setParameters(scheduleStack);//####[37]####
+        taskinfo.setMethod(__pt__processScheduleTask_StackPartialSchedule_method);//####[37]####
+        taskinfo.setInstance(this);//####[37]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[37]####
+    }//####[37]####
+    public void __pt__processScheduleTask(Stack<PartialSchedule> scheduleStack) {//####[37]####
+        while (!scheduleStack.isEmpty()) //####[38]####
+        {//####[38]####
+            processSchedule(scheduleStack);//####[39]####
+        }//####[40]####
+    }//####[41]####
+//####[41]####
+//####[54]####
     /**
 	 * Iterative approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem. This algorithm has been incorporated
-	 * with data visualization. 
+	 * with data visualization.
 	 *
 	 * @param graph
 	 *            This is the input graph
 	 * @param nodeName
 	 *            This is the node which we are starting off from
-	 *///####[52]####
-    public void dfs() {//####[52]####
-        threadsToUse = ScheduleFactory.getInstance().getParallelise();//####[53]####
-        for (Node n : nodeMap.values()) //####[54]####
-        {//####[54]####
-            if (n.getParents().isEmpty()) //####[56]####
-            {//####[56]####
-                PartialSchedule schedule = new PartialSchedule(nodeMap, _numProcessors, totalTaskTime);//####[58]####
-                schedule.decideIndex();//####[59]####
-                schedule.update(n, 1);//####[60]####
-                schedules.add(schedule);//####[61]####
-            }//####[63]####
-        }//####[64]####
-        Stack<PartialSchedule> scheduleStack = new Stack<PartialSchedule>();//####[65]####
-        for (PartialSchedule schedule : schedules) //####[66]####
-        {//####[66]####
-            scheduleStack.add(schedule);//####[67]####
-        }//####[68]####
-        TaskIDGroup g = new TaskIDGroup(threadsToUse);//####[69]####
-        for (int i = 0; i < threadsToUse; i++) //####[71]####
-        {//####[71]####
-            TaskID id = processScheduleTask(scheduleStack);//####[72]####
-            g.add(id);//####[73]####
-        }//####[74]####
-        try {//####[76]####
-            time2.start();//####[77]####
-            Time2.start();//####[78]####
-            g.waitTillFinished();//####[79]####
-            time2.stop();//####[80]####
-            Time2.stop();//####[81]####
-            fireBest();//####[82]####
-            fireLabelUpdate();//####[83]####
-            fireSecondUpdate();//####[84]####
-            System.out.println((System.nanoTime() - startTime) / 1000000000.0);//####[85]####
-            long afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();//####[86]####
-            status = "Current Status: Finished";//####[88]####
-            _vc.setStateLabel2(status, afterUsedMem / 1024 / 1024 + "MB");//####[89]####
-        } catch (Exception e) {//####[90]####
-            e.printStackTrace();//####[91]####
-        }//####[92]####
-    }//####[93]####
-//####[99]####
+	 *///####[54]####
+    public void dfs() {//####[54]####
+        threadsToUse = ScheduleFactory.getInstance().getParallelise();//####[55]####
+        for (Node n : nodeMap.values()) //####[56]####
+        {//####[56]####
+            if (n.getParents().isEmpty()) //####[58]####
+            {//####[58]####
+                PartialSchedule schedule = new PartialSchedule(nodeMap, _numProcessors, totalTaskTime);//####[60]####
+                schedule.decideIndex();//####[61]####
+                schedule.update(n, 1);//####[62]####
+                schedules.add(schedule);//####[63]####
+            }//####[65]####
+        }//####[66]####
+        Stack<PartialSchedule> scheduleStack = new Stack<PartialSchedule>();//####[67]####
+        for (PartialSchedule schedule : schedules) //####[68]####
+        {//####[68]####
+            scheduleStack.add(schedule);//####[69]####
+        }//####[70]####
+        TaskIDGroup g = new TaskIDGroup(2);//####[71]####
+        for (int i = 0; i < 2; i++) //####[73]####
+        {//####[73]####
+            TaskID id = processScheduleTask(scheduleStack);//####[74]####
+            g.add(id);//####[75]####
+        }//####[76]####
+        try {//####[78]####
+            time2.start();//####[79]####
+            Time2.start();//####[80]####
+            g.waitTillFinished();//####[81]####
+            time2.stop();//####[82]####
+            Time2.stop();//####[83]####
+            fireBest();//####[84]####
+            fireLabelUpdate();//####[85]####
+            fireSecondUpdate();//####[86]####
+            System.out.println((System.nanoTime() - startTime) / 1000000000.0);//####[87]####
+            long afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();//####[88]####
+            status = "Current Status: Finished";//####[90]####
+            _vc.setStateLabel2(status, afterUsedMem / 1024 / 1024 + "MB");//####[91]####
+        } catch (Exception e) {//####[92]####
+            e.printStackTrace();//####[93]####
+        }//####[94]####
+    }//####[114]####
+//####[120]####
     /**
 	 * Processes a partial schedule from the stack through DFS. To be used
 	 * in parallel computing.
-	 *///####[99]####
-    private synchronized void processSchedule(Stack<PartialSchedule> scheduleStack) {//####[99]####
-        try {//####[100]####
-            schedulesProcessed++;//####[101]####
-            PartialSchedule schedule = scheduleStack.pop();//####[102]####
-            _currentSchedule = schedule;//####[103]####
-            ArrayList<String> reachable = schedule.getReachable();//####[104]####
-            for (String s : reachable) //####[105]####
-            {//####[105]####
-                if (schedule.startTimeZeroProcessors() > 1) //####[106]####
-                {//####[106]####
-                    Node n = nodeMap.get(s);//####[107]####
-                    boolean discovered = false;//####[108]####
-                    for (int i = 1; i <= _numProcessors; i++) //####[109]####
-                    {//####[109]####
-                        double time = schedule.getProcessorTime(i);//####[110]####
-                        if (time == 0.0 && !discovered) //####[111]####
-                        {//####[111]####
-                            discovered = true;//####[112]####
-                            PartialSchedule childSchedule = schedule.makeChildSchedule();//####[113]####
-                            childSchedule.update(n, i);//####[114]####
-                            String id = childSchedule.generateId();//####[115]####
-                            double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[116]####
-                            if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[117]####
-                            {//####[117]####
-                                _prevSchedules.add(id);//####[118]####
-                                scheduleStack.push(childSchedule);//####[119]####
-                            }//####[120]####
-                        } else if (time != 0.0) //####[121]####
-                        {//####[121]####
-                            PartialSchedule childSchedule = schedule.makeChildSchedule();//####[122]####
-                            childSchedule.update(n, i);//####[123]####
-                            String id = childSchedule.generateId();//####[124]####
-                            double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[125]####
-                            if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[126]####
-                            {//####[126]####
-                                _prevSchedules.add(id);//####[127]####
-                                scheduleStack.push(childSchedule);//####[128]####
-                            }//####[129]####
-                        }//####[130]####
-                    }//####[131]####
-                } else {//####[133]####
-                    for (int i = 1; i <= _numProcessors; i++) //####[134]####
-                    {//####[134]####
-                        Node n = nodeMap.get(s);//####[135]####
-                        PartialSchedule childSchedule = schedule.makeChildSchedule();//####[137]####
-                        childSchedule.update(n, i);//####[139]####
-                        String id = childSchedule.generateId();//####[140]####
-                        double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[141]####
-                        if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[142]####
+	 *///####[120]####
+    private synchronized void processSchedule(Stack<PartialSchedule> scheduleStack) {//####[120]####
+        try {//####[121]####
+            schedulesProcessed++;//####[122]####
+            PartialSchedule schedule = scheduleStack.pop();//####[123]####
+            _currentSchedule = schedule;//####[124]####
+            ArrayList<String> reachable = schedule.getReachable();//####[125]####
+            for (String s : reachable) //####[126]####
+            {//####[126]####
+                if (schedule.startTimeZeroProcessors() > 1) //####[127]####
+                {//####[127]####
+                    Node n = nodeMap.get(s);//####[128]####
+                    boolean discovered = false;//####[129]####
+                    for (int i = 1; i <= _numProcessors; i++) //####[130]####
+                    {//####[130]####
+                        double time = schedule.getProcessorTime(i);//####[131]####
+                        if (time == 0.0 && !discovered) //####[132]####
+                        {//####[132]####
+                            discovered = true;//####[133]####
+                            PartialSchedule childSchedule = schedule.makeChildSchedule();//####[134]####
+                            childSchedule.update(n, i);//####[135]####
+                            String id = childSchedule.generateId();//####[136]####
+                            double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[137]####
+                            if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[138]####
+                            {//####[138]####
+                                _prevSchedules.add(id);//####[139]####
+                                scheduleStack.push(childSchedule);//####[140]####
+                            }//####[141]####
+                        } else if (time != 0.0) //####[142]####
                         {//####[142]####
-                            _prevSchedules.add(id);//####[143]####
-                            scheduleStack.push(childSchedule);//####[144]####
-                        }//####[145]####
-                    }//####[146]####
-                }//####[147]####
-            }//####[148]####
-            if (reachable.isEmpty()) //####[149]####
-            {//####[149]####
-                double[] solution = schedule.getEndTimes();//####[151]####
-                double endTime = 0;//####[152]####
-                for (int i = 0; i < solution.length; i++) //####[154]####
-                {//####[154]####
-                    if (solution[i] > endTime) //####[155]####
+                            PartialSchedule childSchedule = schedule.makeChildSchedule();//####[143]####
+                            childSchedule.update(n, i);//####[144]####
+                            String id = childSchedule.generateId();//####[145]####
+                            double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[146]####
+                            if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[147]####
+                            {//####[147]####
+                                _prevSchedules.add(id);//####[148]####
+                                scheduleStack.push(childSchedule);//####[149]####
+                            }//####[150]####
+                        }//####[151]####
+                    }//####[152]####
+                } else {//####[154]####
+                    for (int i = 1; i <= _numProcessors; i++) //####[155]####
                     {//####[155]####
-                        endTime = solution[i];//####[156]####
-                    }//####[157]####
-                }//####[158]####
-                if (!bestTimes.contains(endTime)) //####[160]####
-                {//####[160]####
-                    bestTimes.add(endTime);//####[161]####
-                    bestTimesCopy.add(endTime);//####[162]####
-                    schedulesProcessed++;//####[163]####
-                    fireSecondUpdate();//####[164]####
-                }//####[165]####
-                if (endTime < currentBestSolution) //####[167]####
-                {//####[167]####
-                    currentBestSolution = endTime;//####[168]####
-                    bestSchedule.setCurrentBestState(schedule);//####[169]####
-                }//####[170]####
-            }//####[171]####
-        } catch (EmptyStackException e) {//####[172]####
-        }//####[174]####
-    }//####[175]####
-}//####[175]####
+                        Node n = nodeMap.get(s);//####[156]####
+                        PartialSchedule childSchedule = schedule.makeChildSchedule();//####[158]####
+                        childSchedule.update(n, i);//####[160]####
+                        String id = childSchedule.generateId();//####[161]####
+                        double maxHeuristic = childSchedule.getMaxHeuristic(n);//####[162]####
+                        if (maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) //####[163]####
+                        {//####[163]####
+                            _prevSchedules.add(id);//####[164]####
+                            scheduleStack.push(childSchedule);//####[165]####
+                        }//####[166]####
+                    }//####[167]####
+                }//####[168]####
+            }//####[169]####
+            if (reachable.isEmpty()) //####[170]####
+            {//####[170]####
+                double[] solution = schedule.getEndTimes();//####[172]####
+                double endTime = 0;//####[173]####
+                for (int i = 0; i < solution.length; i++) //####[175]####
+                {//####[175]####
+                    if (solution[i] > endTime) //####[176]####
+                    {//####[176]####
+                        endTime = solution[i];//####[177]####
+                    }//####[178]####
+                }//####[179]####
+                if (!bestTimes.contains(endTime)) //####[181]####
+                {//####[181]####
+                    bestTimes.add(endTime);//####[182]####
+                    bestTimesCopy.add(endTime);//####[183]####
+                    schedulesProcessed++;//####[184]####
+                    fireSecondUpdate();//####[185]####
+                }//####[186]####
+                if (endTime < currentBestSolution) //####[188]####
+                {//####[188]####
+                    currentBestSolution = endTime;//####[189]####
+                    bestSchedule.setCurrentBestState(schedule);//####[190]####
+                }//####[191]####
+            }//####[192]####
+        } catch (EmptyStackException e) {//####[193]####
+        }//####[195]####
+    }//####[196]####
+//####[202]####
+    /**
+	 * Set the number of threads to use for parallel executions.
+	 * @param thread
+	 *///####[202]####
+    public void setThreads(int thread) {//####[202]####
+        this.threadsToUse = thread;//####[203]####
+    }//####[204]####
+}//####[204]####

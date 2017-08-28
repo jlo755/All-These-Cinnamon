@@ -133,6 +133,7 @@ public class Scheduler {
 		}
 		while(!scheduleStack.isEmpty()) {
 			PartialSchedule schedule = scheduleStack.pop();
+
 			_currentSchedule = schedule;
 			ArrayList<String> reachable = schedule.getReachable();
 			for(String s:reachable) {
@@ -280,7 +281,7 @@ public class Scheduler {
 		bestSchedule = new FinalState();
 
 	}
-	
+
 	/**
 	 * Set number of cores to use.
 	 * @param threads
