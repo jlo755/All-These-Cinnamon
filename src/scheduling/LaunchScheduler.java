@@ -5,7 +5,7 @@ import org.jgrapht.ext.ImportException;
 import inputParse.DotParser;
 import visualisation.ProcessorScreen;
 
-/*
+/**
  * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
  * we traverse through the entire graph. When a node is visited, we check all possible time costs for that particular node being
  * placed on the different processors. We then check which of these is the best time. This process continues until all the nodes
