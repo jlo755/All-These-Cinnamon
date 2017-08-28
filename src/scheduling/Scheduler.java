@@ -42,6 +42,7 @@ public class Scheduler {
 	protected ArrayList<PartialSchedule> schedules = new ArrayList<PartialSchedule>();
 	private PartialSchedule _currentSchedule;
 	protected Set<String> _prevSchedules;
+	protected int threadsToUse;
 
 	/**
 	 * Initialize the best solution so far to infinity on starting.
@@ -278,6 +279,14 @@ public class Scheduler {
 		nodeMap = taskGraph;
 		bestSchedule = new FinalState();
 
+	}
+	
+	/**
+	 * Set number of cores to use.
+	 * @param threads
+	 */
+	public void setThreads(int threads) {
+		threadsToUse = threads;
 	}
 
 }

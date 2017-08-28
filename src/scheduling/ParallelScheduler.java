@@ -152,8 +152,8 @@ public class ParallelScheduler extends Scheduler {//####[16]####
         {//####[45]####
             scheduleStack.add(schedule);//####[46]####
         }//####[47]####
-        TaskIDGroup g = new TaskIDGroup(2);//####[48]####
-        for (int i = 0; i < 2; i++) //####[50]####
+        TaskIDGroup g = new TaskIDGroup(threadsToUse);//####[48]####
+        for (int i = 0; i < threadsToUse; i++) //####[50]####
         {//####[50]####
             TaskID id = processScheduleTask(scheduleStack);//####[51]####
             g.add(id);//####[52]####

@@ -45,9 +45,9 @@ public class ParallelScheduler extends Scheduler{
 		for (PartialSchedule schedule : schedules) {
 			scheduleStack.add(schedule);
 		}
-		TaskIDGroup g = new TaskIDGroup(2);
+		TaskIDGroup g = new TaskIDGroup(threadsToUse);
 
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < threadsToUse; i++) {
 				TaskID id = processScheduleTask(scheduleStack);
 				g.add(id);
 			}
@@ -122,5 +122,4 @@ public class ParallelScheduler extends Scheduler{
 			// catch exception here and carry on execution
 		}
 	}
-
 }

@@ -44,7 +44,7 @@ public class VisualController implements ScheduleListener {
 	private int count;
 	private ProcessorScreen _ps;
 
-	public VisualController(HashMap<String, Node> g, JPanel Panel1, JPanel Panel2, ProcessorScreen ps){
+	public  VisualController(HashMap<String, Node> g, JPanel Panel1, JPanel Panel2, ProcessorScreen ps){
 		panel1 = Panel1;
 		panel2 = Panel2;
 		_graph = g;

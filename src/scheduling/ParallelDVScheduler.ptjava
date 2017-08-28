@@ -1,3 +1,4 @@
+
 package scheduling;
 
 import java.awt.event.ActionEvent;
@@ -42,7 +43,7 @@ public class ParallelDVScheduler extends DVScheduler{
 	/**
 	 * Iterative approach to DFS for a given graph, used in search in the state
 	 * space of the scheduling problem. This algorithm has been incorporated
-	 * with data visualization. 
+	 * with data visualization.
 	 *
 	 * @param graph
 	 *            This is the input graph
@@ -202,3 +203,181 @@ public class ParallelDVScheduler extends DVScheduler{
 		this.threadsToUse = thread;
 	}
 }
+
+package scheduling;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.EmptyStackException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
+
+import javax.swing.Timer;
+
+import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
+
+import dataStructure.Node;
+import inputParse.Edge;
+import outputParse.OutputParser;
+import pt.runtime.TaskID;
+import pt.runtime.TaskIDGroup;
+import visualisation.VisualController;
+
+/**
+ * Parallel scheduler combined with the data visualization for finding optimal task schedules.
+ *
+ */
+public class ParallelDVScheduler extends DVScheduler{
+
+	TASK(*) private void processScheduleTask(Stack<PartialSchedule> scheduleStack) {
+		while (!scheduleStack.isEmpty()) {
+			processSchedule(scheduleStack);
+		}
+	}
+
+	/**
+	 * Iterative approach to DFS for a given graph, used in search in the state
+	 * space of the scheduling problem. This algorithm has been incorporated
+	 * with data visualization.
+	 *
+	 * @param graph
+	 *            This is the input graph
+	 * @param nodeName
+	 *            This is the node which we are starting off from
+	 */
+
+	public void dfs() {
+		threadsToUse = ScheduleFactory.getInstance().getParallelise();
+		for (Node n : nodeMap.values()) {
+			// If a node doesn't have parents, it is a starting node
+			if (n.getParents().isEmpty()) {
+
+				PartialSchedule schedule = new PartialSchedule(nodeMap, _numProcessors, totalTaskTime);
+				schedule.decideIndex();
+				schedule.update(n, 1);
+				schedules.add(schedule);
+
+			}
+		}
+		Stack<PartialSchedule> scheduleStack = new Stack<PartialSchedule>();
+		for (PartialSchedule schedule : schedules) {
+			scheduleStack.add(schedule);
+		}
+		TaskIDGroup g = new TaskIDGroup(threadsToUse);
+
+		for (int i = 0; i < threadsToUse; i++) {
+			TaskID id = processScheduleTask(scheduleStack);
+			g.add(id);
+		}
+
+		try {
+			time2.start();
+			Time2.start();
+			g.waitTillFinished();
+			time2.stop();
+			Time2.stop();
+			fireBest();
+			fireLabelUpdate();
+			fireSecondUpdate();
+			System.out.println((System.nanoTime()-startTime)/1000000000.0);
+			long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+
+			status="Current Status: Finished";
+			_vc.setStateLabel2(status,afterUsedMem/1024/1024+"MB");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Processes a partial schedule from the stack through DFS. To be used
+	 * in parallel computing.
+	 */
+	private synchronized void processSchedule(Stack<PartialSchedule> scheduleStack) {
+		try{
+			schedulesProcessed++;
+			PartialSchedule schedule = scheduleStack.pop();
+			_currentSchedule = schedule;
+			ArrayList<String> reachable = schedule.getReachable();
+			for(String s:reachable) {
+				if(schedule.startTimeZeroProcessors() > 1) {
+					Node n = nodeMap.get(s);
+					boolean discovered = false;
+					for(int i = 1; i<=_numProcessors; i++) {
+						double time = schedule.getProcessorTime(i);
+						if(time == 0.0 && !discovered) {
+							discovered = true;
+							PartialSchedule childSchedule = schedule.makeChildSchedule();
+							childSchedule.update(n, i);
+							String id = childSchedule.generateId();
+							double maxHeuristic = childSchedule.getMaxHeuristic(n);
+							if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+								_prevSchedules.add(id);
+								scheduleStack.push(childSchedule);
+							}
+						} else if(time != 0.0){
+							PartialSchedule childSchedule = schedule.makeChildSchedule();
+							childSchedule.update(n, i);
+							String id = childSchedule.generateId();
+							double maxHeuristic = childSchedule.getMaxHeuristic(n);
+							if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+								_prevSchedules.add(id);
+								scheduleStack.push(childSchedule);
+							}
+						}
+					}
+				}
+				else {
+					for(int i = 1; i<=_numProcessors; i++) {
+						Node n = nodeMap.get(s);
+
+						PartialSchedule childSchedule = schedule.makeChildSchedule();
+
+						childSchedule.update(n, i);
+						String id = childSchedule.generateId();
+						double maxHeuristic = childSchedule.getMaxHeuristic(n);
+						if(maxHeuristic < currentBestSolution && !_prevSchedules.contains(id)) {
+							_prevSchedules.add(id);
+							scheduleStack.push(childSchedule);
+						}
+					}
+				}
+			}
+			if(reachable.isEmpty()) {
+
+				double[] solution = schedule.getEndTimes();
+				double endTime = 0;
+
+				for(int i = 0; i<solution.length; i++) {
+					if(solution[i] > endTime) {
+						endTime = solution[i];
+					}
+				}
+
+				if(!bestTimes.contains(endTime)) {
+					bestTimes.add(endTime);
+					bestTimesCopy.add(endTime);
+					schedulesProcessed++;
+					fireSecondUpdate();
+				}
+
+				if(endTime < currentBestSolution) {
+					currentBestSolution = endTime;
+					bestSchedule.setCurrentBestState(schedule);
+				}
+			}
+		}   catch (EmptyStackException e){
+			// catch exception here and carry on execution
+		}
+	}
+}
+
