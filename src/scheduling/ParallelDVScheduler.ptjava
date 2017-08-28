@@ -31,7 +31,6 @@ import visualisation.VisualController;
  *
  */
 public class ParallelDVScheduler extends DVScheduler{
-	int threadsToUse;
 
 	TASK(*) private void processScheduleTask(Stack<PartialSchedule> scheduleStack) {
 		while (!scheduleStack.isEmpty()) {
@@ -67,9 +66,9 @@ public class ParallelDVScheduler extends DVScheduler{
 		for (PartialSchedule schedule : schedules) {
 			scheduleStack.add(schedule);
 		}
-		TaskIDGroup g = new TaskIDGroup(2);
+		TaskIDGroup g = new TaskIDGroup(threadsToUse);
 
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < threadsToUse; i++) {
 			TaskID id = processScheduleTask(scheduleStack);
 			g.add(id);
 		}
@@ -91,25 +90,6 @@ public class ParallelDVScheduler extends DVScheduler{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
-		/*startTime = System.nanoTime();
-
-		processScheduleTask(scheduleStack);
-
-		long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-
-		status="Current Status: Finished";
-		_vc.setStateLabel2(status,actualMemUsed+"MB");
-
-		long endTime = System.nanoTime();
-		System.out.println("Hello");
-		System.out.println((endTime-startTime)/1000000000.0);
-		time2.stop();
-		Time2.stop();
-		fireBest();
-		fireLabelUpdate();
-		fireSecondUpdate();*/
 	}
 
 	/**
@@ -192,13 +172,5 @@ public class ParallelDVScheduler extends DVScheduler{
 		}   catch (EmptyStackException e){
 			// catch exception here and carry on execution
 		}
-	}
-
-	/**
-	 * Set the number of threads to use for parallel executions.
-	 * @param thread
-	 */
-	public void setThreads(int thread) {
-		this.threadsToUse = thread;
 	}
 }

@@ -36,6 +36,7 @@ public class ScheduleFactory {
 			ParallelScheduler scheduler = new ParallelScheduler();
 			scheduler.setProcessorNumber(_processors);
 			scheduler.provideTaskGraph(LaunchScheduler.dotParser.getNodeMap());
+			scheduler.setThreads(_parallelize);
 			return scheduler;
 		} else {
 			Scheduler scheduler = new Scheduler();
@@ -50,6 +51,7 @@ public class ScheduleFactory {
 			DVScheduler scheduler = new ParallelDVScheduler();
 			scheduler.setProcessorNumber(_processors);
 			scheduler.provideTaskGraph(LaunchScheduler.dotParser.getNodeMap());
+			scheduler.setThreads(_parallelize);
 			return scheduler;
 		} else {
 			DVScheduler scheduler = new DVScheduler();
