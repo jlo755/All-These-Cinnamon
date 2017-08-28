@@ -29,8 +29,8 @@ public class VisualGraph{
 					"node.processor2 {fill-color: rgb(37,128,57); text-color: rgb(232,219,243); }" +
 					"node.processor3 {fill-color: rgb(255,236,92); } " +
 					"node.processor4 {fill-color: rgb(72,151,216); text-color: rgb(232,219,243); }" +
-					"node.processor5 {fill-color: rgb(139,0,139); text-color: rgb(255,236,92); }}" +
-					"node.processor6 {fill-color: rgb(255,140,0); " +
+					"node.processor5 {fill-color: rgb(139,0,139); text-color: rgb(255,236,92); }" +
+					"node.processor6 {fill-color: rgb(255,140,0);} " +
 					"node.processor7 {fill-color: rgb(128,128,0); text-color: rgb(72,151,216); }"
 					;
 
