@@ -32,8 +32,8 @@ public class VisualController implements ScheduleListener {
 	ArrayList<Double> bestTimes;
 	private SingleGraph graph;
 	private ArrayList<dataStructure.Node> _nodes = new ArrayList<>();
-	private JPanel panel1;
-	private JPanel panel2;
+	private JPanel graphPanel;
+	private JPanel statsPanel;
 	private Scheduler _model;
 	private PartialSchedule _schedule;
 	private JFreeChart ScatterPlotChart;
@@ -41,23 +41,23 @@ public class VisualController implements ScheduleListener {
 	private ProcessorScreen _ps;
 
 	public  VisualController(HashMap<String, Node> g, JPanel Panel1, JPanel Panel2, ProcessorScreen ps){
-		panel1 = Panel1;
-		panel2 = Panel2;
+		graphPanel = Panel1;
+		statsPanel = Panel2;
 		_graph = g;
-		vg = new VisualGraph(g, panel1);
+		vg = new VisualGraph(g, graphPanel);
 		graph = vg.graph;
 		_ps = ps;
 		vs = new VisualStatistics();
 		ScatterPlotChart = vs.createStateSpaceGraph();
-		panel1.setBorder(BorderFactory.createLineBorder(Color.blue, 5));
+		graphPanel.setBorder(BorderFactory.createLineBorder(Color.blue, 5));
 		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
 		viewer.enableAutoLayout();
 		ViewPanel viewPanel = viewer.addDefaultView(false);
-		panel1.add(viewPanel);
+		graphPanel.add(viewPanel);
 		ChartPanel CP = new ChartPanel(ScatterPlotChart);
 		CP.setBorder(new LineBorder(new Color(0, 0, 0)));
 		CP.setBounds(0, 0, 572, 434);
-		panel2.add(CP);
+		statsPanel.add(CP);
 
 	}
 	/**
@@ -108,22 +108,22 @@ public class VisualController implements ScheduleListener {
 	 * @return
 	 */
 	public synchronized JPanel getGraphPanel(){
-		return panel1;
+		return graphPanel;
 	}
 	/**
 	 * This method returns the panel in which the scatter plot is in
 	 * @return
 	 */
 	public synchronized JPanel getStatsPanel(){
-		return panel2;
+		return statsPanel;
 	}
 	/**
 	 * This method sets the labels in the processor screen
-	 * @param text
-	 * @param input3
+	 * @param schedulesProduced
+	 * @param currentBestSolution
 	 */
-	public synchronized void setStateLabel(String text,Double input3){
-		_ps.setDynamicLabel(text, input3);
+	public synchronized void setStateLabel(String schedulesProduced,Double currentBestSolution){
+		_ps.setDynamicLabel(schedulesProduced, currentBestSolution);
 	}
 	/**
 	 * This method sets the labels in the processor screen
@@ -134,11 +134,11 @@ public class VisualController implements ScheduleListener {
 	}
 	/**
 	 * This method sets the labels in the processor screen
-	 * @param text
-	 * @param string
+	 * @param status
+	 * @param memoryUsage
 	 */
-	public synchronized void setStateLabel2(String text,String string){
-		_ps.setDynamicLabelForMoreFrequentFire(text, string);
+	public synchronized void setLabelProcessorScreen(String status,String memoryUsage){
+		_ps.setDynamicLabelForMoreFrequentFire(status, memoryUsage);
 	}
 	/**
 	 * This method sorts the start times of the node arraylist so that they are ordered
