@@ -1,4 +1,6 @@
 package scheduling;
+import java.io.IOException;
+
 import javax.swing.SwingWorker;
 
 import inputParse.DotParser;
@@ -27,11 +29,20 @@ public class ScheduleWorker extends SwingWorker{
 	 */
 	@Override
 	protected Object doInBackground() {
-		long startTime = System.nanoTime();
+
 		_scheduler.schedule();
-		long endTime = System.nanoTime();
-		System.out.println((endTime-startTime)/1000000000.0);
+
 		return null;
+	}
+
+	@Override
+	protected void done(){
+		try {
+			_scheduler.outputSolution();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
