@@ -27,8 +27,10 @@ public class LaunchScheduler {
 		dotParser.parseInput();
 		if(args.length > 2) {
 			for(int i = 2; i<args.length; i++) {
+				//checks if user wants to see visualization
 				if(args[i].equals("-v")) {
 					visualisation = true;
+					//checks if user wants to parallelize the program
 				} else if(args[i].equals("-p")) {
 					i++;
 					threads = Integer.parseInt(args[i]);
@@ -38,6 +40,8 @@ public class LaunchScheduler {
 		ScheduleFactory factory = ScheduleFactory.getInstance();
 		factory.setParallelize(threads);
 		factory.setProcessorNumber(_noOfProcessors);
+
+		//launches the application depending on given the arguments
 		if(visualisation && threads > 1) {
 			_scheduler = factory.produceVisualScheduler();
 			ProcessorScreen processor = new ProcessorScreen();
@@ -53,10 +57,6 @@ public class LaunchScheduler {
 		}
 	}
 
-	public void setProcessor(int processorCount) {
-		_noOfProcessors = processorCount;
-
-	}
 
 
 }
