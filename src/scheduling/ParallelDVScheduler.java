@@ -26,6 +26,10 @@ import pt.runtime.TaskID;
 import pt.runtime.TaskIDGroup;
 import visualisation.VisualController;
 
+/**
+ * Parallel scheduler combined with the data visualization for finding optimal task schedules.
+ *
+ */
 public class ParallelDVScheduler extends DVScheduler{
 	int threadsToUse;
 
@@ -36,9 +40,9 @@ public class ParallelDVScheduler extends DVScheduler{
 	}
 
 	/**
-	 * Recursive approach to DFS for a given graph, used in search in the state
-	 * space of the scheduling problem.
-	 *
+	 * Iterative approach to DFS for a given graph, used in search in the state
+	 * space of the scheduling problem. This algorithm has been incorporated
+	 * with data visualization. 
 	 *
 	 * @param graph
 	 *            This is the input graph
@@ -73,7 +77,7 @@ public class ParallelDVScheduler extends DVScheduler{
 				long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
 				
 				status="Current Status: Finished";
-				_vc.setStateLabel2(status,actualMemUsed);
+				_vc.setStateLabel2(status,actualMemUsed+"MB");
 
 				long endTime = System.nanoTime();
 				System.out.println("Hello");
@@ -167,6 +171,10 @@ public class ParallelDVScheduler extends DVScheduler{
 		}
 	}
 
+	/**
+	 * Set the number of threads to use for parallel executions.
+	 * @param thread
+	 */
 	public void setThreads(int thread) {
 		this.threadsToUse = thread;
 	}
