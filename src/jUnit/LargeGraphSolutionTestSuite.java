@@ -14,11 +14,6 @@ import dataStructure.Node;
 import inputParse.DotParser;
 import scheduling.Scheduler;
 
-/**
- * Test class that tests fast execution speed on graphs
- * (e.g. under 30 minutes)
- *
- */
 public class LargeGraphSolutionTestSuite {
 	Scheduler scheduler;
 	DotParser dotParser;
@@ -27,13 +22,8 @@ public class LargeGraphSolutionTestSuite {
 	public void initialise(){
 		scheduler = new Scheduler();
 	}
-	
-	/**
-	 * Test graph with 7 independent nodes run under 30 minutes.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
-	@Test(timeout=1800000)
+	//independent task of 7 nodes
+	@Test(timeout=18000000)
 	public void testIndependentTasksLarge() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("Independent_Nodes_7_WeightType_Random.dot");
 		scheduler.setProcessorNumber(2);
@@ -43,11 +33,7 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(238,(int)scheduler.getCurrentBestSolution());
 	}
 	
-	/**
-	 * Test graph with 10 nodes on 2 processors run under 30 minutes.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
+	//Test for 10 nodes and processors of 2 4 and 8
 	@Test(timeout=1800000)
 	public void test10Nodes2Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_10_Random.dot");
@@ -58,11 +44,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(50,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test graph with 10 nodes on 4 processors run under 30 minutes.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void test10Nodes4Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_10_Random.dot");
@@ -73,11 +54,7 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(50,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test graph with 10 nodes on 8 processors run under 30 minutes.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
+
 	@Test(timeout=1800000)
 	public void test10Nodes8Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_10_Random.dot");
@@ -89,11 +66,7 @@ public class LargeGraphSolutionTestSuite {
 	}
 
 
-	/**
-	 * Test graph with 11 nodes on 2 processors run under 30 minutes.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
+	//Test for 11 nodes and processors of 2 4 and 8
 	@Test(timeout=1800000)
 	public void test11Nodes2Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_11_OutTree.dot");
@@ -104,11 +77,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(350,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test graph with 11 nodes on 4 processors run under 30 minutes.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void test11Nodes4Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_11_OutTree.dot");
@@ -119,11 +87,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(227,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test graph with 11 nodes on 8 processors run under 30 minutes.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void test11Nodes8Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("Nodes_11_OutTree.dot");
@@ -134,11 +97,7 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(227,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test graph with 13 nodes on 2 processors run under 30 minutes.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
+	//Test for 13 nodes and processors of 2 4 and 8
 	@Test(timeout=1800000)
 	public void test13Nodes2Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("OutTree-Balanced-MaxBf-3_Nodes_10_CCR_10.00_WeightType_Random.dot");
@@ -149,11 +108,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(41,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test graph with 13 nodes on 4 processors run under 30 minutes.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void test13Nodes4Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("OutTree-Balanced-MaxBf-3_Nodes_10_CCR_10.00_WeightType_Random.dot");
@@ -165,11 +119,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(41,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test graph with 13 nodes on 8 processors run under 30 minutes.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void test13Nodes8Processors() throws FileNotFoundException, ImportException{
 		dotParser = new DotParser("OutTree-Balanced-MaxBf-3_Nodes_10_CCR_10.00_WeightType_Random.dot");
@@ -181,11 +130,9 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(41,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a fork tree graph with high task cost and low communication cost between nodes on 2 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
+
+
+	//this will have high task cost and low communication cost between nodes with 2 4 8 processors respectively
 	@Test(timeout=1800000)
 	public void testForkTreeLargeHighTaskLowCC2Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeLargeHighTaskLowCC.dot");
@@ -195,12 +142,10 @@ public class LargeGraphSolutionTestSuite {
 		scheduler.schedule();
 		assertEquals(416,(int)scheduler.getCurrentBestSolution());
 	}
-	
-	/**
-	 * Test a fork tree graph with high task cost and low communication cost between nodes on 4 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
+
+	//******* CHECK ********
+	//fails with 12 nodes and 4 processors
+	//Problem: runs over 30 minutes
 	@Test(timeout=1800000)
 	public void testForkTreeLargeHighTaskLowCC4Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeLargeHighTaskLowCC.dot");
@@ -211,11 +156,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(174,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a fork tree graph with high task cost and low communication cost between nodes on 8 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void testForkTreeLargeHighTaskLowCC8Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeLargeHighTaskLowCC.dot");
@@ -226,11 +166,7 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(174,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a fork tree graph with low task cost and high communication cost between nodes on 2 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
+	//this will have low task cost and high communication cost between nodes with 2 4 8 processors respectively
 	@Test(timeout=1800000)
 	public void testForkTreeLargeLowTaskHighCC2Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeLargeLowTaskHighCC.dot");
@@ -241,11 +177,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(52,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a fork tree graph with low task cost and high communication cost between nodes on 4 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void testForkTreeLargeLowTaskHighCC4Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeLargeLowTaskHighCC.dot");
@@ -256,11 +187,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(52,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a fork tree graph with low task cost and high communication cost between nodes on 8 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void testForkTreeLargeLowTaskHighCC8Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("ForkTreeLargeLowTaskHighCC.dot");
@@ -271,11 +197,11 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(52,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a large fork tree graph with high task cost and low communication cost between nodes on 2 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
+	
+
+	
+	//this will have high task cost and low communication cost between nodes with 2 4 8 processors respectively
+	//contains 10 nodes
 	@Test(timeout=1800000)
 	public void testStencilLargeHighTaskLowCC2Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("StencilLargeHighTaskLowCC.dot");
@@ -286,11 +212,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(418,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a large fork tree graph with low task cost and high communication cost between nodes on 4 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void testStencilLargeHighTaskLowCC4Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("StencilLargeHighTaskLowCC.dot");
@@ -301,11 +222,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(418,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a large fork tree graph with low task cost and high communication cost between nodes on 8 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void testStencilLargeHighTaskLowCC8Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("StencilLargeHighTaskLowCC.dot");
@@ -316,11 +232,7 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(418,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a large fork tree graph with high task cost and low communication cost between nodes on 2 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
+	//this will have low task cost and high communication cost between nodes with 2 4 8 processors respectively
 	@Test(timeout=1800000)
 	public void testStencilLargeLowTaskHighCC2Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("StencilLargeLowTaskHighCC.dot");
@@ -331,11 +243,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(65,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a large fork tree graph with high task cost and low communication cost between nodes on 4 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void testStencilLargeLowTaskHighCC4Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("StencilLargeLowTaskHighCC.dot");
@@ -346,11 +253,6 @@ public class LargeGraphSolutionTestSuite {
 		assertEquals(65,(int)scheduler.getCurrentBestSolution());
 	}
 
-	/**
-	 * Test a large fork tree graph with high task cost and low communication cost between nodes on 8 processors.
-	 * @throws FileNotFoundException
-	 * @throws ImportException
-	 */
 	@Test(timeout=1800000)
 	public void testStencilLargeLowTaskHighCC8Processors() throws FileNotFoundException, ImportException {
 		dotParser = new DotParser("StencilLargeLowTaskHighCC.dot");

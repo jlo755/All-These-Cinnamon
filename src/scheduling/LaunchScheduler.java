@@ -5,9 +5,11 @@ import org.jgrapht.ext.ImportException;
 import inputParse.DotParser;
 import visualisation.ProcessorScreen;
 
-/**
- *  Launches the scheduler with the user's input graph and configurations.
- *
+/*
+ * This class recursively calls the recursive method to get the children nodes of a particular node. As this occurs recursively,
+ * we traverse through the entire graph. When a node is visited, we check all possible time costs for that particular node being
+ * placed on the different processors. We then check which of these is the best time. This process continues until all the nodes
+ * in the network are visited and we have obtained the best scheduling times.
  */
 public class LaunchScheduler {
 
@@ -15,8 +17,8 @@ public class LaunchScheduler {
 	public static int _noOfProcessors;
 	public static String _fileName;
 	public static DVScheduler _scheduler;
-	
-	public static void main(String[] args) throws IOException, ImportException {
+
+	public static void main(String[] args) throws IOException, ImportException, NumberFormatException {
 
 		long startTime = System.nanoTime();
 		_fileName=args[0];
@@ -25,8 +27,6 @@ public class LaunchScheduler {
 		int threads = 0;
 		dotParser = new DotParser(_fileName);
 		dotParser.parseInput();
-		
-		// Processes user input to do parallel computing/produce data visualization.
 		if(args.length > 2) {
 			for(int i = 2; i<args.length; i++) {
 				if(args[i].equals("-v")) {
@@ -37,8 +37,6 @@ public class LaunchScheduler {
 				}
 			}
 		}
-		
-		// Retrieves a ScheduleFactory instance to process the scheduling according to the user's needs.
 		ScheduleFactory factory = ScheduleFactory.getInstance();
 		factory.setParallelize(threads);
 		factory.setProcessorNumber(_noOfProcessors);
@@ -56,20 +54,11 @@ public class LaunchScheduler {
 			scheduler.outputSolution();
 		}
 	}
-	
-	/**
-	 * Sets the number of processors to use in the optimal task schedulng.
-	 * @param processorCount
-	 */
+
 	public void setProcessor(int processorCount) {
 		_noOfProcessors = processorCount;
 
 	}
-	
-	/**
-	 * Set the file name of the input graph.
-	 * @param fileName
-	 */
 	public void setFileName(String fileName) {
 		_fileName = fileName;
 
