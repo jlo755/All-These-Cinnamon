@@ -105,7 +105,6 @@ public class ParallelScheduler extends Scheduler{
 				}
 			}
 			if(reachable.isEmpty()) {
-
 				double[] solution = schedule.getEndTimes();
 				double endTime = 0;
 				for(int i = 0; i<solution.length; i++) {

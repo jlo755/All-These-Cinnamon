@@ -215,22 +215,22 @@ public class ParallelScheduler extends Scheduler {//####[16]####
             }//####[106]####
             if (reachable.isEmpty()) //####[107]####
             {//####[107]####
-                double[] solution = schedule.getEndTimes();//####[109]####
-                double endTime = 0;//####[110]####
-                for (int i = 0; i < solution.length; i++) //####[111]####
-                {//####[111]####
-                    if (solution[i] > endTime) //####[112]####
-                    {//####[112]####
-                        endTime = solution[i];//####[113]####
-                    }//####[114]####
-                }//####[115]####
-                if (endTime < currentBestSolution) //####[116]####
-                {//####[116]####
-                    bestSchedule.setCurrentBestState(schedule);//####[117]####
-                    currentBestSolution = endTime;//####[118]####
-                }//####[119]####
-            }//####[120]####
-        } catch (EmptyStackException e) {//####[121]####
-        }//####[123]####
-    }//####[124]####
-}//####[124]####
+                double[] solution = schedule.getEndTimes();//####[108]####
+                double endTime = 0;//####[109]####
+                for (int i = 0; i < solution.length; i++) //####[110]####
+                {//####[110]####
+                    if (solution[i] > endTime) //####[111]####
+                    {//####[111]####
+                        endTime = solution[i];//####[112]####
+                    }//####[113]####
+                }//####[114]####
+                if (endTime < currentBestSolution) //####[115]####
+                {//####[115]####
+                    bestSchedule.setCurrentBestState(schedule);//####[116]####
+                    currentBestSolution = endTime;//####[117]####
+                }//####[118]####
+            }//####[119]####
+        } catch (EmptyStackException e) {//####[120]####
+        }//####[122]####
+    }//####[123]####
+}//####[123]####
