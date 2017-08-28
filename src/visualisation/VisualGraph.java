@@ -91,7 +91,6 @@ public class VisualGraph{
 				}
 			}
 			_panel.setVisible(true);
-			//sleep();
 
 		}
 	}
