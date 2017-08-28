@@ -37,7 +37,7 @@ public class ProcessorScreen extends JFrame {
 	private JPanel _statisticsPanel;
 	private VisualController _vc;
 	private JLabel lblProcessorCount;
-	private JLabel lblEndTime;
+	private JLabel lblStatus;
 	private JLabel lblCurrentBestCost;
 	private JLabel lblMemoryUsage;
 	private JLabel processorLegendLabel1;
@@ -151,10 +151,10 @@ public class ProcessorScreen extends JFrame {
 		ProcessingDetailsPanel.add(lblStartTime);
 
 		//shows status of the program
-		lblEndTime = new JLabel("Current Status: Processing...");
-		lblEndTime.setFont(new Font("Leelawadee", Font.PLAIN, 15));
-		lblEndTime.setBounds(22, 76, 550, 21);
-		ProcessingDetailsPanel.add(lblEndTime);
+		lblStatus = new JLabel("Current Status: Processing...");
+		lblStatus.setFont(new Font("Leelawadee", Font.PLAIN, 15));
+		lblStatus.setBounds(22, 76, 550, 21);
+		ProcessingDetailsPanel.add(lblStatus);
 
 		lblCurrentBestCost = new JLabel("Current Best Cost Found:");
 		lblCurrentBestCost.setFont(new Font("Leelawadee", Font.PLAIN, 15));
@@ -239,7 +239,7 @@ public class ProcessorScreen extends JFrame {
 
 
 	/**
-	 * Launch the application.
+	 * Method that sets dynamic labels in the statistics
 	 */
 	public void setDynamicLabel(String lblNewLabel, Double bestCost){
 		this.lblProcessorCount.setText("Number of states processed: "+lblNewLabel);
@@ -248,7 +248,7 @@ public class ProcessorScreen extends JFrame {
 	}
 
 	/**
-	 * Launch the application.
+	 * Method that sets final run time label in the statistics
 	 */
 	public void setTotalTimeLabel(Double overallTimer){
 		this.lblTimeTaken.setText("Time Taken: " + overallTimer + " Seconds" );
@@ -256,22 +256,24 @@ public class ProcessorScreen extends JFrame {
 	}
 
 	/**
-	 * Launch the application.
+	 * Method that sets dynamic labels in the statistics
 	 */
 	public void setDynamicLabelForMoreFrequentFire(String status, String string){
-		this.lblEndTime.setText(status);
+		this.lblStatus.setText(status);
 		this.lblMemoryUsage.setText("Memory Usage: " + string);
 	}
 
 	/**
-	 * Launch the application.
+	 * getter that returns number of processors that were passed as one of the arguments as CLI
 	 */
 	public int getProcessorCount(){
 		return _processorCount;
 	}
 
+
 	/**
-	 * Launch the application.
+	 * Sets colour coded labels to enable mapping of the labels to the colours of the nodes being updated
+	 * This can be seen in the legend below the graph panel
 	 */
 	public void setProcessorLabels(){
 		if(_processorCount > 7){
